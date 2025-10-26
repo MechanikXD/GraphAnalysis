@@ -28,19 +28,23 @@ namespace Core.Structure.PlayerController
         {
             Vector2 pos = Input.mousePosition;
             var newNode = Instantiate(_nodePrefab);
-            newNode.transform.position = pos;
+            var worldPos = _camera.ScreenToWorldPoint(pos);
+            worldPos.z = 0;
+            newNode.transform.position = worldPos;
         }
 
         private bool TryGetObjectAt(Vector2 position, out GameObject objectHit)
         {
-            _camera.ScreenToWorldPoint(position);
-            var hit = Physics2D.Raycast(_camera.transform.position, _camera.transform.forward);
+            var ray = _camera.ScreenPointToRay(position);
+            var hit = Physics2D.Raycast(ray.origin, ray.direction);
             if (hit.collider != null)
             {
                 objectHit = hit.collider.gameObject;
+                Debug.Log("hit " + gameObject.name);
                 return true;
             }
 
+            Debug.Log("hit nothing");
             objectHit = null;
             return false;
         }
@@ -51,18 +55,20 @@ namespace Core.Structure.PlayerController
             if (TryGetObjectAt(mousePos, out var hit) &&
                 hit.TryGetComponent<IInteractable>(out var interactable))
             {
+                Debug.Log("interacting with " + hit.name);
                 interactionType(interactable);
                 return true;
             }
             
+            Debug.Log("no interactions found");
             return false;
         }
         
         public void OnPrimary()
         {
             TryInteractWithGameObject(i => i.Primary());
-            // var contextWind = UIManager.Instance.GetHUDCanvas<ContextWindow>();
-            // if (contextWind.IsEnabled) contextWind.Hide();
+            var contextWind = UIManager.Instance.GetHUDCanvas<ContextWindow>();
+            if (contextWind.IsEnabled) contextWind.Hide();
         }
 
         public void OnSecondary()

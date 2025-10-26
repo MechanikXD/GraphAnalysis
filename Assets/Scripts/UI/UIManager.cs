@@ -22,10 +22,13 @@ namespace UI
             _hudCanvases = new Dictionary<Type, CanvasView>();
             _uiCanvases = new Dictionary<Type, CanvasView>();
             _uiStack = new Stack<CanvasView>();
-            HasOpenedUI = false;
+            ExitPauseState();
+        }
+
+        private void Start()
+        {
             SortCanvases();
             DisableCanvases();
-            ExitPauseState();
         }
 
         public void ShowUI<T>() where T : CanvasView {
