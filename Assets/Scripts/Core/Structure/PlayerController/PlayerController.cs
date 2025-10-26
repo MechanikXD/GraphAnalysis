@@ -1,85 +1,72 @@
-﻿using System;
+﻿using Core.Behaviour.StateMachine;
 using Core.Graph;
-using UI;
+using Core.Structure.PlayerController.States;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Core.Structure.PlayerController
 {
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] private PlayerInput _input;
+        [SerializeField] private LayerMask _nodeOnlyMask;
+        [SerializeField] private float _linkRadius = 0.1f;
         [SerializeField] private Node _nodePrefab;
         [SerializeField] private Edge _edgePrefab;
         private Camera _camera;
-        
-        private ContextAction[] _emptyContextActions;
+
+        public LayerMask NodeOnlyMask => _nodeOnlyMask;
+        public float LinkRadius => _linkRadius;
+        public Node NodePrefab => _nodePrefab;
+        public Edge EdgePrefab => _edgePrefab;
+
+        private static StateMachine<PlayerController> _controller;
+        public ContextAction[] EmptyContextActions { get; private set; }
 
         private void Awake()
         {
             _camera = Camera.main;
-            _emptyContextActions = new[]
+            EmptyContextActions = new[]
             {
                 new ContextAction("New Node", CreateNode)
             };
+
+            _controller = new StateMachine<PlayerController>();
+            var defaultState = new Default(_controller, this);
+            var nodeLink = new NodeLink(_controller, this);
+            
+            _controller.Initialize(defaultState);
+            _controller.AddState(nodeLink);
         }
+
+        public static void StartNodeLink(Node source)
+        {
+            ((NodeLink)_controller.GetState<NodeLink>()).SetSource(source);
+            _controller.ChangeState<NodeLink>();
+        }
+
+        private void Update() => _controller.CurrentState.FrameUpdate();
+
+        private void FixedUpdate() => _controller.CurrentState.FixedFrameUpdate();
 
         private void CreateNode()
         {
-            Vector2 pos = Input.mousePosition;
-            var newNode = Instantiate(_nodePrefab);
-            var worldPos = _camera.ScreenToWorldPoint(pos);
+            CreateNodeFromScreenPos(Input.mousePosition);
+        }
+        
+        private void CreateNodeFromScreenPos(Vector2 screenPos)
+        {
+            var worldPos = _camera.ScreenToWorldPoint(screenPos);
             worldPos.z = 0;
-            newNode.transform.position = worldPos;
-        }
-
-        private bool TryGetObjectAt(Vector2 position, out GameObject objectHit)
-        {
-            var ray = _camera.ScreenPointToRay(position);
-            var hit = Physics2D.Raycast(ray.origin, ray.direction);
-            if (hit.collider != null)
-            {
-                objectHit = hit.collider.gameObject;
-                Debug.Log("hit " + gameObject.name);
-                return true;
-            }
-
-            Debug.Log("hit nothing");
-            objectHit = null;
-            return false;
-        }
-
-        private bool TryInteractWithGameObject(Action<IInteractable> interactionType)
-        {
-            Vector2 mousePos = Input.mousePosition;
-            if (TryGetObjectAt(mousePos, out var hit) &&
-                hit.TryGetComponent<IInteractable>(out var interactable))
-            {
-                Debug.Log("interacting with " + hit.name);
-                interactionType(interactable);
-                return true;
-            }
-            
-            Debug.Log("no interactions found");
-            return false;
+            Instantiate(_nodePrefab, worldPos, Quaternion.identity);
         }
         
         public void OnPrimary()
         {
-            TryInteractWithGameObject(i => i.Primary());
-            var contextWind = UIManager.Instance.GetHUDCanvas<ContextWindow>();
-            if (contextWind.IsEnabled) contextWind.Hide();
+            ((PlayerControlState)_controller.CurrentState).PrimaryAction();
         }
 
         public void OnSecondary()
         {
-            if (!TryInteractWithGameObject(i => i.Secondary()))
-            {
-                var contextWind = UIManager.Instance.GetHUDCanvas<ContextWindow>();
-                contextWind.LoadContext(_emptyContextActions);
-                contextWind.SetPosition(Input.mousePosition);
-                contextWind.Show();
-            }
+            ((PlayerControlState)_controller.CurrentState).SecondaryAction();
         }
     }
 }

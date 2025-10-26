@@ -35,16 +35,16 @@ namespace Core.Graph
             contextWind.Show();
         }
 
-        private void StartLink()
-        {
-            
-        }
+        private void StartLink() => PlayerController.StartNodeLink(this);
+
+        public void AddLink(Edge link) => _connections.Add(link);
+        public void RemoveLink(Edge link) => _connections.Remove(link);
 
         private void DeleteNode()
         {
             foreach (var edge in _connections)
             {
-                Destroy(edge.gameObject);
+                edge.DeleteEdge();
             }
             _connections.Clear();
             Destroy(gameObject);

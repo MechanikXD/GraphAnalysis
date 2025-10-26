@@ -7,6 +7,9 @@ namespace Core.Graph
 {
     public class Edge : MonoBehaviour, IInteractable
     {
+        [SerializeField] private BoxCollider2D _collider;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
+        
         private Node _first;
         private Node _second;
         
@@ -18,6 +21,12 @@ namespace Core.Graph
             {
                 new ContextAction("Delete", DeleteEdge)
             };
+        }
+
+        public void SetLenght(float value)
+        {
+            _collider.size = new Vector2(value, _collider.size.y);
+            _spriteRenderer.size = new Vector2(value, _spriteRenderer.size.y);
         }
 
         public void Primary()
@@ -33,6 +42,20 @@ namespace Core.Graph
             contextWind.Show();
         }
 
-        private void DeleteEdge() => Destroy(gameObject);
+        public void SetNodes(Node first, Node second)
+        {
+            _first = first;
+            _second = second;
+            
+            _first.AddLink(this);
+            _second.AddLink(this);
+        }
+
+        public void DeleteEdge()
+        {
+            if (_first != null) _first.RemoveLink(this);
+            if (_second != null) _second.RemoveLink(this);
+            Destroy(gameObject);
+        }
     }
 }

@@ -194,7 +194,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2d85f51248d48dfb4af4a30cd2afb5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _input: {fileID: 102855155}
+  _nodeOnlyMask:
+    serializedVersion: 2
+    m_Bits: 8
+  _linkRadius: 0.1
   _nodePrefab: {fileID: 4955563158666589890, guid: 788a24ed6e00bae4b8b4bcb51cd4101f, type: 3}
   _edgePrefab: {fileID: 2020248148297302854, guid: 8cf3b077f463f674694a96ff54c7ba18, type: 3}
 --- !u!1 &519420028

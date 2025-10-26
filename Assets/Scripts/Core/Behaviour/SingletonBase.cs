@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Core {
+namespace Core.Behaviour {
     public abstract class SingletonBase<T> : MonoBehaviour where T : MonoBehaviour {
         public static T Instance { get; private set; }
         protected virtual void Awake()
