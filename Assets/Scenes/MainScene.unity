@@ -353,7 +353,8 @@ MonoBehaviour:
   _spriteRenderer: {fileID: 374883663}
   _preserveBounds: 1
   _dragSpeed: 0.015
-  _scrollSpeed: 0.007
+  _scrollSpeed: 0.02
+  _scaleLerpSpeed: 10
   _scrollBounds: {x: 0.3, y: 2}
 --- !u!61 &374883665
 BoxCollider2D:
