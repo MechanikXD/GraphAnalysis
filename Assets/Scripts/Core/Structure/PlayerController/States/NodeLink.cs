@@ -1,20 +1,19 @@
 ﻿using Core.Behaviour.StateMachine;
 using Core.Graph;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Core.Structure.PlayerController.States
 {
-    public class NodeLink : PlayerControlState
+    public class NodeLink : PlayerState
     {
         private readonly Camera _camera;
         private Vector2 _sourcePosition;
         private Node _source;
         private Edge _edge;
 
-        public NodeLink(StateMachine<PlayerController> sm, PlayerController owner) : base(sm, owner)
+        public NodeLink(PlayerStateMachine sm, PlayerController owner) : base(sm, owner)
         {
-            _camera = Camera.main;
+            _camera = GameManager.Instance.MainCamera;
         }
 
         public void SetSource(Node source) => _source = source;
@@ -22,7 +21,7 @@ namespace Core.Structure.PlayerController.States
         public override void EnterState()
         {
             _sourcePosition = _source.transform.position;
-            _edge = Object.Instantiate(StateOwner.EdgePrefab, _sourcePosition, Quaternion.identity);
+            _edge = GameManager.Instance.CreateEdge(_sourcePosition);
         }
 
         public override void ExitState()
@@ -32,11 +31,12 @@ namespace Core.Structure.PlayerController.States
             _sourcePosition = Vector2.negativeInfinity;
         }
 
-        public override void FrameUpdate() => UpdateEdgePosition( _camera.ScreenToWorldPoint(Input.mousePosition));
+        public override void FrameUpdate() => 
+            UpdateEdgePosition( _camera.ScreenToWorldPoint(Input.mousePosition));
 
         public override void FixedFrameUpdate() { }
 
-        public override void PrimaryAction()
+        public override void OnLeftClick()
         {
             Vector2 inputPoint = Input.mousePosition;
             var inputPosition = _camera.ScreenToWorldPoint(inputPoint);
@@ -63,9 +63,8 @@ namespace Core.Structure.PlayerController.States
             _edge.transform.rotation = Quaternion.Euler(0, 0, angle);
         }
 
-        public override void SecondaryAction()
+        public override void OnRightClick()
         {
-            Debug.Log("Secondary Action");
             _edge.DeleteEdge();
             StateMachine.ChangeState<Default>();
         }

@@ -1,11 +1,13 @@
-﻿namespace Core.Behaviour.StateMachine
-{
-    public abstract class State<TOwner>
-    {
-        protected readonly TOwner StateOwner; 
-        protected readonly StateMachine<TOwner> StateMachine;
+﻿using Core.Structure.PlayerController;
 
-        protected State(StateMachine<TOwner> sm, TOwner owner)
+namespace Core.Behaviour.StateMachine
+{
+    public abstract class PlayerState
+    {
+        protected readonly PlayerController StateOwner; 
+        protected readonly PlayerStateMachine StateMachine;
+
+        protected PlayerState(PlayerStateMachine sm, PlayerController owner)
         {
             StateOwner = owner;
             StateMachine = sm;
@@ -16,5 +18,8 @@
         
         public abstract void FrameUpdate();
         public abstract void FixedFrameUpdate();
+        
+        public abstract void OnLeftClick();
+        public abstract void OnRightClick();
     }
 }

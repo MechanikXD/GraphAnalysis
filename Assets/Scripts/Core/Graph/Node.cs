@@ -22,12 +22,12 @@ namespace Core.Graph
             };
         }
 
-        public void Primary()
+        public void OnLeftClick()
         {
             // TODO : Display Stats
         }
 
-        public void Secondary()
+        public void OnRightClick()
         {
             var contextWind = UIManager.Instance.GetHUDCanvas<ContextWindow>();
             contextWind.LoadContext(_contextAction);
@@ -42,10 +42,8 @@ namespace Core.Graph
 
         private void DeleteNode()
         {
-            foreach (var edge in _connections)
-            {
-                edge.DeleteEdge();
-            }
+            foreach (var edge in _connections) edge.CascadeDestroy(this);
+            
             _connections.Clear();
             Destroy(gameObject);
         }

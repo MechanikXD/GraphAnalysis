@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace Core.Structure.PlayerController.States
 {
-    public class Default : PlayerControlState
+    public class Default : PlayerState
     {
         private readonly Camera _camera;
 
-        public Default(StateMachine<PlayerController> sm, PlayerController owner) : base(sm, owner)
+        public Default(PlayerStateMachine sm, PlayerController owner) : base(sm, owner)
         {
             _camera = Camera.main;
         }
@@ -20,44 +20,38 @@ namespace Core.Structure.PlayerController.States
         public override void FrameUpdate() { }
         public override void FixedFrameUpdate() { }
 
-        public override void PrimaryAction()
+        public override void OnLeftClick()
         {
-            TryInteractWithGameObject(i => i.Primary());
-        }
-
-        public override void SecondaryAction()
-        {
-            if (!TryInteractWithGameObject(i => i.Secondary()))
+            if (!InteractWithGameObject(i => i.OnLeftClick()))
             {
-                var contextWind = UIManager.Instance.GetHUDCanvas<ContextWindow>();
-                contextWind.LoadContext(StateOwner.EmptyContextActions);
-                contextWind.SetPosition(Input.mousePosition);
-                contextWind.Show();
+                var contextWindow = UIManager.Instance.GetHUDCanvas<ContextWindow>();
+                contextWindow.ClearContent();
+                contextWindow.Hide();
             }
         }
-        
-        private bool TryGetObjectAt(Vector2 position, out GameObject objectHit)
+
+        public override void OnRightClick()
         {
-            var ray = _camera.ScreenPointToRay(position);
+            if (!InteractWithGameObject(i => i.OnRightClick()))
+            {
+                var contextWindow = UIManager.Instance.GetHUDCanvas<ContextWindow>();
+                contextWindow.LoadContext(StateOwner.EmptyContextActions);
+                contextWindow.SetPosition(Input.mousePosition);
+                contextWindow.Show();
+            }
+        }
+
+        private bool InteractWithGameObject(Action<IInteractable> interaction)
+        {
+            var ray = _camera.ScreenPointToRay(Input.mousePosition);
             var hit = Physics2D.Raycast(ray.origin, ray.direction);
             if (hit.collider != null)
             {
-                objectHit = hit.collider.gameObject;
-                return true;
-            }
-
-            objectHit = null;
-            return false;
-        }
-
-        private bool TryInteractWithGameObject(Action<IInteractable> interactionType)
-        {
-            Vector2 mousePos = Input.mousePosition;
-            if (TryGetObjectAt(mousePos, out var hit) && 
-                hit.TryGetComponent<IInteractable>(out var interactable))
-            {
-                interactionType(interactable);
-                return true;
+                if (hit.collider.gameObject.TryGetComponent<IInteractable>(out var interactable))
+                {
+                    interaction(interactable);
+                    return true;
+                }
             }
             
             return false;

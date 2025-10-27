@@ -29,12 +29,12 @@ namespace Core.Graph
             _spriteRenderer.size = new Vector2(value, _spriteRenderer.size.y);
         }
 
-        public void Primary()
+        public void OnLeftClick()
         {
             // TODO : Display Stats
         }
 
-        public void Secondary()
+        public void OnRightClick()
         {
             var contextWind = UIManager.Instance.GetHUDCanvas<ContextWindow>();
             contextWind.LoadContext(_contextAction);
@@ -49,6 +49,14 @@ namespace Core.Graph
             
             _first.AddLink(this);
             _second.AddLink(this);
+        }
+
+        public void CascadeDestroy(Node fromNode)
+        {
+            if (fromNode != _first) _first.RemoveLink(this);
+            if (fromNode != _second) _second.RemoveLink(this);
+            
+            Destroy(gameObject);
         }
 
         public void DeleteEdge()
