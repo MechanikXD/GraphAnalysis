@@ -12,6 +12,7 @@ namespace Core.Structure.PlayerController.States
         public Default(PlayerStateMachine sm, PlayerController owner) : base(sm, owner)
         {
             _camera = Camera.main;
+            
         }
 
         public override void EnterState() { }
@@ -22,12 +23,7 @@ namespace Core.Structure.PlayerController.States
 
         public override void OnLeftClick()
         {
-            if (!InteractWithGameObject(i => i.OnLeftClick()))
-            {
-                var contextWindow = UIManager.Instance.GetHUDCanvas<ContextWindow>();
-                // contextWindow.ClearContent();
-                // contextWindow.Hide();
-            }
+            InteractWithGameObject(i => i.OnLeftClick());
         }
 
         public override void OnRightClick()
@@ -44,7 +40,7 @@ namespace Core.Structure.PlayerController.States
         private bool InteractWithGameObject(Action<IInteractable> interaction)
         {
             var ray = _camera.ScreenPointToRay(Input.mousePosition);
-            var hit = Physics2D.Raycast(ray.origin, ray.direction);
+            var hit = Physics2D.Raycast(ray.origin, ray.direction, float.MaxValue, StateOwner.RaycastMask);
             if (hit.collider != null)
             {
                 if (hit.collider.gameObject.TryGetComponent<IInteractable>(out var interactable))

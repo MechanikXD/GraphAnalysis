@@ -43,9 +43,10 @@ namespace Core.Graph
         {
             Nodes.RemoveAt(at);
             _matrix.RemoveAt(at);
-            foreach (var col in _matrix)
+            for (var i = 0; i < _matrix.Count; i++)
             {
-                col.RemoveAt(at);
+                _matrix[i].RemoveAt(at);
+                Nodes[i].NodeIndex = i;
             }
             Length--;
         }

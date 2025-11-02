@@ -12,9 +12,9 @@ namespace Core.Structure
         
         [SerializeField] private Node _nodePrefab;
         [SerializeField] private Edge _edgePrefab;
-        
+
+        private int _totalNodesCreated;
         public AdjacencyMatrix AdjacencyMatrix { get; private set; }
-        
         public Camera MainCamera { get; private set; }
 
         protected override void Initialize()
@@ -27,8 +27,11 @@ namespace Core.Structure
         {
             var worldPos = MainCamera.ScreenToWorldPoint(screenPos);
             worldPos.z = 0;
+            
             var newNode = Instantiate(_nodePrefab, worldPos, Quaternion.identity, _nodeRoot);
-            newNode.NodeName = "Node " + AdjacencyMatrix.Nodes.Count;
+            newNode.NodeName = "Node " + _totalNodesCreated;
+            _totalNodesCreated++;
+            
             AdjacencyMatrix.AddNode(newNode);
             Debug.Log("New Matrix:\n" + MatrixToString());
         }
