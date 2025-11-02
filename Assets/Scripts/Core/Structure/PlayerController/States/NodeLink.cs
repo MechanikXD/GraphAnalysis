@@ -38,24 +38,26 @@ namespace Core.Structure.PlayerController.States
 
         public override void OnLeftClick()
         {
-            Vector2 inputPoint = Input.mousePosition;
-            var inputPosition = _camera.ScreenToWorldPoint(inputPoint);
-            var hit = Physics2D.OverlapCircle(inputPosition, StateOwner.LinkRadius, StateOwner.NodeOnlyMask);
+            var ray = _camera.ScreenPointToRay(Input.mousePosition);
+            var hit = Physics2D.Raycast(ray.origin, ray.direction, float.PositiveInfinity,
+                StateOwner.RaycastMask);
 
-            if (hit != null && hit.gameObject.TryGetComponent<Node>(out var node))
+            if (hit.collider != null && hit.transform.gameObject.TryGetComponent<Node>(out var node) && node != _source)
             {
                 UpdateEdgePosition(node.transform.position);
-                _edge.SetNodes(_source, node);
+                _edge.SetNodes(_source, node, out var weight);
+                GameManager.Instance.AdjacencyMatrix[_source.NodeIndex, node.NodeIndex] = weight;
+                Debug.Log("New Matrix:\n" + GameManager.Instance.MatrixToString());
                 StateMachine.ChangeState<Default>();
             }
         }
 
-        private void UpdateEdgePosition(Vector2 position)
+        private void UpdateEdgePosition(Vector2 edgeEnd)
         {
-            var newPosition = (position + _sourcePosition) / 2;
+            var newPosition = (edgeEnd + _sourcePosition) / 2;
             _edge.transform.position = newPosition;
             
-            var lenght = Vector2.Distance(position, _sourcePosition);
+            var lenght = Vector2.Distance(edgeEnd, _sourcePosition);
             _edge.SetLenght(lenght);
             
             Vector3 dir = _sourcePosition - (Vector2)_edge.transform.position;

@@ -11,7 +11,9 @@ namespace Core.Graph
         private List<Edge> _connections;
 
         private ContextAction[] _contextAction;
-
+        public string NodeName { get; set; }
+        public int NodeIndex { get; set; }
+        
         private void Awake()
         {
             _connections = new List<Edge>();
@@ -44,6 +46,7 @@ namespace Core.Graph
         {
             foreach (var edge in _connections) edge.CascadeDestroy(this);
             
+            GameManager.Instance.AdjacencyMatrix.RemoveNode(NodeIndex);
             _connections.Clear();
             Destroy(gameObject);
         }

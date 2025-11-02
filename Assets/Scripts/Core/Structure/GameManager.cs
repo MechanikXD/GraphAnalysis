@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Text;
+using UnityEngine;
 using Core.Behaviour;
 using Core.Graph;
 
@@ -12,23 +13,44 @@ namespace Core.Structure
         [SerializeField] private Node _nodePrefab;
         [SerializeField] private Edge _edgePrefab;
         
+        public AdjacencyMatrix AdjacencyMatrix { get; private set; }
+        
         public Camera MainCamera { get; private set; }
 
         protected override void Initialize()
         {
             MainCamera = Camera.main;
+            AdjacencyMatrix = new AdjacencyMatrix();
         }
 
         public void CreateNodeFromScreenPos(Vector2 screenPos)
         {
             var worldPos = MainCamera.ScreenToWorldPoint(screenPos);
             worldPos.z = 0;
-            Instantiate(_nodePrefab, worldPos, Quaternion.identity, _nodeRoot);
+            var newNode = Instantiate(_nodePrefab, worldPos, Quaternion.identity, _nodeRoot);
+            newNode.NodeName = "Node " + AdjacencyMatrix.Nodes.Count;
+            AdjacencyMatrix.AddNode(newNode);
+            Debug.Log("New Matrix:\n" + MatrixToString());
         }
 
         public Edge CreateEdge(Vector2 worldPos)
         {
             return Instantiate(_edgePrefab, worldPos, Quaternion.identity, _edgeRoot);
+        }
+
+        public string MatrixToString()
+        {
+            var stringBuilder = new StringBuilder();
+            for (var i = 0; i < AdjacencyMatrix.Length; i++)
+            {
+                for (var j = 0; j < AdjacencyMatrix.Length; j++)
+                {
+                    stringBuilder.Append(AdjacencyMatrix[i, j]).Append(' ');
+                }
+                stringBuilder.AppendLine();
+            }
+            
+            return stringBuilder.ToString();
         }
     }
 }

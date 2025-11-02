@@ -2,17 +2,14 @@
 using Core.Graph;
 using Core.Structure.PlayerController.States;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Core.Structure.PlayerController
 {
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] private LayerMask _nodeOnlyMask;
-        [SerializeField] private float _linkRadius = 0.1f;
+        [SerializeField] private LayerMask _raycastMask;
 
-        public LayerMask NodeOnlyMask => _nodeOnlyMask;
-        public float LinkRadius => _linkRadius;
+        public LayerMask RaycastMask => _raycastMask;
         
         private static PlayerStateMachine _controller;
         public ContextAction[] EmptyContextActions { get; private set; }
@@ -34,7 +31,7 @@ namespace Core.Structure.PlayerController
             _controller.Initialize(defaultState);
             _controller.AddState(nodeLink);
         }
-
+        
         private void CreateNode()
         {
             GameManager.Instance.CreateNodeFromScreenPos(Input.mousePosition);
@@ -52,9 +49,6 @@ namespace Core.Structure.PlayerController
         
         public void OnLeftClick()
         {
-            // Pointer is over UI
-            if (EventSystem.current.IsPointerOverGameObject()) return;
-            
             _controller.CurrentState.OnLeftClick();
         }
 

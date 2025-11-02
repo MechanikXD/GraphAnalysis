@@ -25,8 +25,8 @@ namespace Core.Structure.PlayerController.States
             if (!InteractWithGameObject(i => i.OnLeftClick()))
             {
                 var contextWindow = UIManager.Instance.GetHUDCanvas<ContextWindow>();
-                contextWindow.ClearContent();
-                contextWindow.Hide();
+                // contextWindow.ClearContent();
+                // contextWindow.Hide();
             }
         }
 
