@@ -27,12 +27,12 @@ namespace UI.InfoStructures
             if (_currentEdge.IsOneSided)
             {
                 _fromNodePrefix.SetActive(true);
-                _toNodePrefix.SetActive(false);
+                _toNodePrefix.SetActive(true);
             }
             else
             {
                 _fromNodePrefix.SetActive(false);
-                _toNodePrefix.SetActive(true);
+                _toNodePrefix.SetActive(false);
             }
         }
 
