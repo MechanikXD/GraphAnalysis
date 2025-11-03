@@ -13,6 +13,7 @@ namespace Core.Structure.PlayerController
         
         private static PlayerStateMachine _controller;
         public ContextAction[] EmptyContextActions { get; private set; }
+        private Vector2 _lastContextActionPosition;
 
         private void Awake()
         {
@@ -34,7 +35,7 @@ namespace Core.Structure.PlayerController
         
         private void CreateNode()
         {
-            GameManager.Instance.CreateNodeFromScreenPos(Input.mousePosition);
+            GameManager.Instance.CreateNodeFromScreenPos(_lastContextActionPosition);
         }
 
         public static void StartNodeLink(Node source, bool oneSidedLink)
@@ -54,6 +55,7 @@ namespace Core.Structure.PlayerController
 
         public void OnRightClick()
         {
+            _lastContextActionPosition = Input.mousePosition;
             _controller.CurrentState.OnRightClick();
         }
     }
