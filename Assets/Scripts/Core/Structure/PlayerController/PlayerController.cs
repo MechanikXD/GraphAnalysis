@@ -37,9 +37,9 @@ namespace Core.Structure.PlayerController
             GameManager.Instance.CreateNodeFromScreenPos(Input.mousePosition);
         }
 
-        public static void StartNodeLink(Node source)
+        public static void StartNodeLink(Node source, bool oneSidedLink)
         {
-            ((NodeLink)_controller.GetState<NodeLink>()).SetSource(source);
+            ((NodeLink)_controller.GetState<NodeLink>()).SetSource(source, oneSidedLink);
             _controller.ChangeState<NodeLink>();
         }
 

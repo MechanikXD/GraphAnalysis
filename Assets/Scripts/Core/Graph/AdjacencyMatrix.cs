@@ -8,11 +8,10 @@ namespace Core.Graph
         public List<Node> Nodes { get; } = new List<Node>();
         private readonly List<List<float>> _matrix = new List<List<float>>();
         public int Length { get; private set; }
-        private bool _isOriented;
+        public bool IsOriented { get; private set; }
 
-        public void MakeOriented() => _isOriented = true;
-        public int Dim => _matrix.Count;
-
+        public void MakeOriented() => IsOriented = true;
+        
         public void AddNode(Node node)
         {
             node.NodeIndex = Nodes.Count;
@@ -57,7 +56,7 @@ namespace Core.Graph
             set
             {
                 _matrix[row][column] = value;
-                if (!_isOriented) _matrix[column][row] = value;
+                if (!IsOriented) _matrix[column][row] = value;
             }
         }
 

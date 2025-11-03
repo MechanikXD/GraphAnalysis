@@ -20,6 +20,7 @@ namespace Core.Graph
             _contextAction = new[] 
             {
                 new ContextAction("Link with", StartLink),
+                new ContextAction("Link to", StartOneSidedLink),
                 new ContextAction("Delete", DeleteNode)
             };
         }
@@ -37,7 +38,8 @@ namespace Core.Graph
             contextWind.Show();
         }
 
-        private void StartLink() => PlayerController.StartNodeLink(this);
+        private void StartLink() => PlayerController.StartNodeLink(this, false);
+        private void StartOneSidedLink() => PlayerController.StartNodeLink(this, true);
 
         public void AddLink(Edge link) => _connections.Add(link);
         public void RemoveLink(Edge link) => _connections.Remove(link);

@@ -1,5 +1,4 @@
-﻿using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 using Core.Behaviour;
 using Core.Graph;
 
@@ -33,27 +32,13 @@ namespace Core.Structure
             _totalNodesCreated++;
             
             AdjacencyMatrix.AddNode(newNode);
-            Debug.Log("New Matrix:\n" + MatrixToString());
         }
 
-        public Edge CreateEdge(Vector2 worldPos)
+        public Edge CreateEdge(Vector2 worldPos, bool oneSided)
         {
-            return Instantiate(_edgePrefab, worldPos, Quaternion.identity, _edgeRoot);
-        }
-
-        public string MatrixToString()
-        {
-            var stringBuilder = new StringBuilder();
-            for (var i = 0; i < AdjacencyMatrix.Length; i++)
-            {
-                for (var j = 0; j < AdjacencyMatrix.Length; j++)
-                {
-                    stringBuilder.Append(AdjacencyMatrix[i, j]).Append(' ');
-                }
-                stringBuilder.AppendLine();
-            }
-            
-            return stringBuilder.ToString();
+            var newEdge = Instantiate(_edgePrefab, worldPos, Quaternion.identity, _edgeRoot);
+            if (oneSided) newEdge.IsOneSided = true;
+            return newEdge;
         }
     }
 }

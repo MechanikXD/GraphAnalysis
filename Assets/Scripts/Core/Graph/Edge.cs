@@ -7,16 +7,37 @@ namespace Core.Graph
 {
     public class Edge : MonoBehaviour, IInteractable
     {
+        private const float CROP_WHEN_TWO_SIDED = 0.6f;
+        private const float CROP_WHEN_ONE_SIDED = 0.4f;
+        private const float OFFSET_WHEN_ONE_SIDED = 0.1f;
+        
         [SerializeField] private BoxCollider2D _collider;
         [SerializeField] private SpriteRenderer _spriteRenderer;
+        
+        [SerializeField] private GameObject _forwardArrow;
+        [SerializeField] private GameObject _backwardArrow;
+        [SerializeField] private float _arrowOffset;
 
+        private bool _isOneSided;
         private bool _wasPlaced;
         private Node _first;
         private Node _second;
-        private float _weight;
+        
+        public float Weight { get; private set; }
+        public float OffsetWhenOneSided => OFFSET_WHEN_ONE_SIDED;
         
         private ContextAction[] _contextAction;
 
+        public bool IsOneSided
+        {
+            get => _isOneSided;
+            set
+            {
+                _backwardArrow.SetActive(!value);
+                _isOneSided = value;
+            }
+        }
+        
         private void Awake()
         {
             _contextAction = new[] 
@@ -27,8 +48,16 @@ namespace Core.Graph
 
         public void SetLenght(float value)
         {
+            if (_isOneSided) value -= CROP_WHEN_ONE_SIDED;
+            else value -= CROP_WHEN_TWO_SIDED;
+            if (value < 0) value = 0;
+            
             _collider.size = new Vector2(value, _collider.size.y);
             _spriteRenderer.size = new Vector2(value, _spriteRenderer.size.y);
+
+            var halfValue = value / 2;
+            _forwardArrow.transform.localPosition = new Vector3(-halfValue + _arrowOffset, 0, 0);
+            _backwardArrow.transform.localPosition = new Vector3(halfValue - _arrowOffset, 0, 0);
         }
 
         public void OnLeftClick()
@@ -44,22 +73,50 @@ namespace Core.Graph
             contextWind.Show();
         }
 
-        public void SetNodes(Node first, Node second, out float weight)
+        /// Sets value in the Adjacency Matrix accounting orientation and graph type
+        private void SetValueInMatrix(float value)
+        {
+            var matrix = GameManager.Instance.AdjacencyMatrix;
+            if (IsOneSided)
+            {
+                matrix.MakeOriented();
+                matrix[_first.NodeIndex, _second.NodeIndex] = value;
+            }
+            else if (matrix.IsOriented)
+            {
+                matrix[_first.NodeIndex, _second.NodeIndex] = value;
+                matrix[_second.NodeIndex, _first.NodeIndex] = value;
+            }
+            else
+            {
+                matrix[_first.NodeIndex, _second.NodeIndex] = value;
+            }
+        }
+
+        /// Sets all necessary values like nodes, weight etc.
+        public void SetNodes(Node first, Node second, bool oneSided)
         {
             _first = first;
             _second = second;
+            IsOneSided = oneSided;
             _wasPlaced = true;
             
-            weight = Vector2.Distance(_first.transform.position, second.transform.position);
-            _weight = weight;
+            var weight = Vector2.Distance(_first.transform.position, second.transform.position);
+            Weight = weight;
+            
+            SetValueInMatrix(Weight);
             
             _first.AddLink(this);
             _second.AddLink(this);
         }
 
+        /// <summary>
+        /// Destroys itself but ignores given node, so node itself can delete all edges safely
+        /// </summary>
+        /// <param name="fromNode"> Node that deleted this edge </param>
         public void CascadeDestroy(Node fromNode)
         {
-            if (_wasPlaced) GameManager.Instance.AdjacencyMatrix[_first.NodeIndex, _second.NodeIndex] = 0;
+            if (_wasPlaced) SetValueInMatrix(0);
                 
             if (fromNode != _first) _first.RemoveLink(this);
             if (fromNode != _second) _second.RemoveLink(this);
@@ -67,9 +124,12 @@ namespace Core.Graph
             Destroy(gameObject);
         }
 
+        /// <summary>
+        /// Properly destroys itself, removing all links between edges
+        /// </summary>
         public void DeleteEdge()
         {
-            if (_wasPlaced) GameManager.Instance.AdjacencyMatrix[_first.NodeIndex, _second.NodeIndex] = 0;
+            if (_wasPlaced) SetValueInMatrix(0);
             
             if (_first != null) _first.RemoveLink(this);
             if (_second != null) _second.RemoveLink(this);
