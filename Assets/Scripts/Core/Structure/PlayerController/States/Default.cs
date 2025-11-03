@@ -1,6 +1,7 @@
 ﻿using System;
 using Core.Behaviour.StateMachine;
 using UI;
+using UI.View;
 using UnityEngine;
 
 namespace Core.Structure.PlayerController.States
@@ -23,7 +24,16 @@ namespace Core.Structure.PlayerController.States
 
         public override void OnLeftClick()
         {
-            InteractWithGameObject(i => i.OnLeftClick());
+            if (!UIManager.IsPointerOverUI(Input.mousePosition))
+            {
+                if (!InteractWithGameObject(i => i.OnLeftClick()))
+                {
+                    var contextWindow = UIManager.Instance.GetHUDCanvas<ContextWindow>();
+                    contextWindow.ClearContent();
+                    contextWindow.Hide();
+                    UIManager.Instance.HideHUD<InfoView>();
+                }
+            }
         }
 
         public override void OnRightClick()

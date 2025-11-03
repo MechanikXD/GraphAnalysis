@@ -2,6 +2,8 @@
 using Core.Structure;
 using Core.Structure.PlayerController;
 using UI;
+using UI.InfoStructures;
+using UI.View;
 using UnityEngine;
 
 namespace Core.Graph
@@ -27,7 +29,10 @@ namespace Core.Graph
 
         public void OnLeftClick()
         {
-            // TODO : Display Stats
+            var info = InfoView.GetInfo<NodeInfo>();
+            info.DisplayNode(this);
+            InfoView.ShowInfo<NodeInfo>();
+            UIManager.Instance.ShowHUD<InfoView>();
         }
 
         public void OnRightClick()

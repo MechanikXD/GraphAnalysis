@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core;
 using Core.Behaviour;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -31,6 +32,27 @@ namespace UI
             SortCanvases();
             DisableCanvases();
         }
+        
+        public static bool IsPointerOverUI(Vector2 screenPosition)
+        {
+            var eventSystem = EventSystem.current;
+            if (eventSystem == null)
+            {
+                Debug.LogError("EventSystem is null");
+                return false;
+            }
+            
+            var pointerEventData = new PointerEventData(eventSystem) { position = screenPosition };
+            var results = new List<RaycastResult>();
+            eventSystem.RaycastAll(pointerEventData, results);
+            
+            foreach (var result in results)
+            {
+                if (result.module is GraphicRaycaster) return true;
+            }
+
+            return false;
+        }
 
         public void ShowUI<T>() where T : CanvasView {
             if (!HasOpenedUI) EnterPauseState();
@@ -50,11 +72,12 @@ namespace UI
         }
         
         public void ShowHUD<T>() where T : CanvasView {
-            GetHUDCanvas<T>().Show();
+            var hud = GetHUDCanvas<T>();
+            if (!hud.IsEnabled) hud.Show();
         }
 
         public void HideHUD<T>() where T : CanvasView {
-            if (_hudCanvases.TryGetValue(typeof(T), out var hud)) hud.Hide();
+            if (_hudCanvases.TryGetValue(typeof(T), out var hud) && hud.IsEnabled) hud.Hide();
         }
         
         private void EnterPauseState() {

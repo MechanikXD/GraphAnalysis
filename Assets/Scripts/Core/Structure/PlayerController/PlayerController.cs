@@ -1,6 +1,7 @@
 ﻿using Core.Behaviour.StateMachine;
 using Core.Graph;
 using Core.Structure.PlayerController.States;
+using UI.View;
 using UnityEngine;
 
 namespace Core.Structure.PlayerController

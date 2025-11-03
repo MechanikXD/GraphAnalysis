@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UI;
 using UnityEngine;
 
-namespace Core.Structure
+namespace UI.View
 {
     public class ContextWindow : CanvasView
     {

@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using Other;
-using UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Core.Structure.PlayerController
 {
-    public class BackgroundController : MonoBehaviour, IDragHandler, IScrollHandler, IPointerDownHandler
+    public class BackgroundController : MonoBehaviour, IDragHandler, IScrollHandler
     {
         private const float SCALE_SNAP_DISTANCE = 0.01f;
         
@@ -98,13 +97,6 @@ namespace Core.Structure.PlayerController
             
             _camera.orthographicSize = _desiredOrthoSize;
             _coroutine = null;
-        }
-
-        public void OnPointerDown(PointerEventData eventData)
-        {
-            var contextWindow = UIManager.Instance.GetHUDCanvas<ContextWindow>();
-            contextWindow.ClearContent();
-            contextWindow.Hide();
         }
     }
 }

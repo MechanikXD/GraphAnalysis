@@ -1,6 +1,8 @@
 ﻿using Core.Structure;
 using Core.Structure.PlayerController;
 using UI;
+using UI.InfoStructures;
+using UI.View;
 using UnityEngine;
 
 namespace Core.Graph
@@ -18,12 +20,25 @@ namespace Core.Graph
         [SerializeField] private GameObject _backwardArrow;
         [SerializeField] private float _arrowOffset;
 
+        private float _weight;
         private bool _isOneSided;
         private bool _wasPlaced;
         private Node _first;
         private Node _second;
         
-        public float Weight { get; private set; }
+        public string FromNodeName => _first.NodeName;
+        public string ToNodeName => _second.NodeName;
+
+        public float Weight
+        {
+            get => _weight;
+            set
+            {
+                SetValueInMatrix(value);
+                _weight = value;
+            }
+        }
+
         public float OffsetWhenOneSided => OFFSET_WHEN_ONE_SIDED;
         
         private ContextAction[] _contextAction;
@@ -62,7 +77,10 @@ namespace Core.Graph
 
         public void OnLeftClick()
         {
-            // TODO : Display Stats
+            var info = InfoView.GetInfo<EdgeInfo>();
+            info.DisplayEdge(this);
+            InfoView.ShowInfo<EdgeInfo>();
+            UIManager.Instance.ShowHUD<InfoView>();
         }
 
         public void OnRightClick()
@@ -100,14 +118,18 @@ namespace Core.Graph
             _second = second;
             IsOneSided = oneSided;
             _wasPlaced = true;
-            
-            var weight = Vector2.Distance(_first.transform.position, second.transform.position);
-            Weight = weight;
-            
-            SetValueInMatrix(Weight);
+
+            SetFallBackWeight();
             
             _first.AddLink(this);
             _second.AddLink(this);
+        }
+
+        public void SetFallBackWeight()
+        {
+            var weight = Vector2.Distance(_first.transform.position, _second.transform.position);
+            Weight = weight;
+            SetValueInMatrix(Weight);
         }
 
         /// <summary>

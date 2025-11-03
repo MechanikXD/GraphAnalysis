@@ -7,7 +7,7 @@ namespace UI
         [SerializeField] private bool _hideOnStart;
         protected Canvas ThisCanvas;
         public bool HideOnStart => _hideOnStart;
-        public bool IsEnabled => ThisCanvas.enabled;
+        public bool IsEnabled { get; protected set; }
 
         private void Awake()
         {
@@ -16,7 +16,16 @@ namespace UI
         }
         protected virtual void Initialize() {}
         
-        public void Show() => ThisCanvas.enabled = true;
-        public void Hide() => ThisCanvas.enabled = false;
+        public virtual void Show()
+        {
+            ThisCanvas.enabled = true;
+            IsEnabled = true;
+        }
+
+        public virtual void Hide()
+        {
+            ThisCanvas.enabled = false;
+            IsEnabled = false;
+        }
     }
 }
