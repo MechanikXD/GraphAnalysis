@@ -37,7 +37,7 @@ namespace Core.Structure.PlayerController.States
         }
 
         public override void FrameUpdate() => 
-            UpdateEdgePosition( _camera.ScreenToWorldPoint(Input.mousePosition));
+            _edge.AdjustEdge(_sourcePosition, _camera.ScreenToWorldPoint(Input.mousePosition));
 
         public override void FixedFrameUpdate() { }
 
@@ -49,24 +49,10 @@ namespace Core.Structure.PlayerController.States
 
             if (hit.collider != null && hit.transform.gameObject.TryGetComponent<Node>(out var node) && node != _source)
             {
-                UpdateEdgePosition(node.transform.position);
+                _edge.AdjustEdge(_sourcePosition, node.transform.position);
                 _edge.SetNodes(_source, node, _isOneSidedLink);
                 StateMachine.ChangeState<Default>();
             }
-        }
-
-        private void UpdateEdgePosition(Vector2 edgeEnd)
-        {
-            Vector3 dir = _sourcePosition - (Vector2)_edge.transform.position;
-            var newPosition = (edgeEnd + _sourcePosition) / 2;
-            if (_isOneSidedLink) newPosition += (Vector2)dir.normalized * _edge.OffsetWhenOneSided;
-            _edge.transform.position = newPosition;
-            
-            var lenght = Vector2.Distance(edgeEnd, _sourcePosition);
-            _edge.SetLenght(lenght);
-            
-            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            _edge.transform.rotation = Quaternion.Euler(0, 0, angle);
         }
 
         public override void OnRightClick()

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Core.Structure;
 using Core.Structure.PlayerController;
+using JetBrains.Annotations;
 using UI;
 using UI.InfoStructures;
 using UI.View;
@@ -13,6 +14,7 @@ namespace Core.Graph
         private List<Edge> _connections;
 
         private ContextAction[] _contextAction;
+        public List<Edge> Connections => _connections;
         public string NodeName { get; set; }
         public int NodeIndex { get; set; }
         
@@ -23,6 +25,7 @@ namespace Core.Graph
             {
                 new ContextAction("Link with", StartLink),
                 new ContextAction("Link to", StartOneSidedLink),
+                new ContextAction("Move", StartMove),
                 new ContextAction("Delete", DeleteNode)
             };
         }
@@ -42,8 +45,9 @@ namespace Core.Graph
             contextWind.SetPosition(Input.mousePosition);
             contextWind.Show();
         }
-
+        
         private void StartLink() => PlayerController.StartNodeLink(this, false);
+        private void StartMove() => PlayerController.StartNodeMove(this);
         private void StartOneSidedLink() => PlayerController.StartNodeLink(this, true);
 
         public void AddLink(Edge link) => _connections.Add(link);

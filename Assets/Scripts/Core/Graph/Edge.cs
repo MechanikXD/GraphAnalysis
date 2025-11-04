@@ -1,5 +1,6 @@
 ﻿using Core.Structure;
 using Core.Structure.PlayerController;
+using JetBrains.Annotations;
 using UI;
 using UI.InfoStructures;
 using UI.View;
@@ -26,6 +27,7 @@ namespace Core.Graph
         private Node _first;
         private Node _second;
         
+        public bool IsCustomWeight { get; private set; }
         public string FromNodeName => _first.NodeName;
         public string ToNodeName => _second.NodeName;
 
@@ -34,6 +36,7 @@ namespace Core.Graph
             get => _weight;
             set
             {
+                IsCustomWeight = true;
                 SetValueInMatrix(value);
                 _weight = value;
             }
@@ -61,6 +64,13 @@ namespace Core.Graph
             };
         }
 
+        [CanBeNull] public Node GetOppositeNode(Node node)
+        {
+            if (node == _first) return _second;
+            else if (node == _second) return _first;
+            else return null;
+        }
+        
         public void SetLenght(float value)
         {
             if (_isOneSided) value -= CROP_WHEN_ONE_SIDED;
@@ -73,6 +83,20 @@ namespace Core.Graph
             var halfValue = value / 2;
             _forwardArrow.transform.localPosition = new Vector3(-halfValue + _arrowOffset, 0, 0);
             _backwardArrow.transform.localPosition = new Vector3(halfValue - _arrowOffset, 0, 0);
+        }
+        
+        public void AdjustEdge(Vector2 start, Vector2 end)
+        {
+            Vector3 dir = start - end;
+            var newPosition = (end + start) / 2;
+            if (_isOneSided) newPosition += (Vector2)dir.normalized * OFFSET_WHEN_ONE_SIDED;
+            transform.position = newPosition;
+            
+            var lenght = Vector2.Distance(end, start);
+            SetLenght(lenght);
+            
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 0, angle);
         }
 
         public void OnLeftClick()
@@ -127,9 +151,24 @@ namespace Core.Graph
 
         public void SetFallBackWeight()
         {
+            IsCustomWeight = false;
             var weight = Vector2.Distance(_first.transform.position, _second.transform.position);
-            Weight = weight;
-            SetValueInMatrix(Weight);
+            _weight = weight;
+            SetValueInMatrix(_weight);
+        }
+
+        public void Enable()
+        {
+            _collider.enabled = true;
+            var c = _spriteRenderer.color;
+            _spriteRenderer.color = new  Color(c.r, c.g, c.b, 1f);
+        }
+        
+        public void Disable()
+        {
+            _collider.enabled = false;
+            var c = _spriteRenderer.color;
+            _spriteRenderer.color = new  Color(c.r, c.g, c.b, .5f);
         }
 
         /// <summary>

@@ -29,9 +29,11 @@ namespace Core.Structure.PlayerController
             _controller = new PlayerStateMachine();
             var defaultState = new Default(_controller, this);
             var nodeLink = new NodeLink(_controller, this);
+            var nodeMove = new NodeMove(_controller, this);
             
             _controller.Initialize(defaultState);
             _controller.AddState(nodeLink);
+            _controller.AddState(nodeMove);
         }
         
         private void CreateNode()
@@ -43,6 +45,12 @@ namespace Core.Structure.PlayerController
         {
             ((NodeLink)_controller.GetState<NodeLink>()).SetSource(source, oneSidedLink);
             _controller.ChangeState<NodeLink>();
+        }
+
+        public static void StartNodeMove(Node node)
+        {
+            ((NodeMove)_controller.GetState<NodeMove>()).SetNode(node);
+            _controller.ChangeState<NodeMove>();
         }
 
         private void Update() => _controller.CurrentState.FrameUpdate();
