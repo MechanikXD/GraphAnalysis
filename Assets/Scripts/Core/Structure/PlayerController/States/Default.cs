@@ -17,7 +17,7 @@ namespace Core.Structure.PlayerController.States
         }
 
         public override void EnterState() { }
-        public override void ExitState() { }
+        public override void ExitState() => HideHUD();
 
         public override void FrameUpdate() { }
         public override void FixedFrameUpdate() { }
@@ -28,12 +28,17 @@ namespace Core.Structure.PlayerController.States
             {
                 if (!InteractWithGameObject(i => i.OnLeftClick()))
                 {
-                    var contextWindow = UIManager.Instance.GetHUDCanvas<ContextWindow>();
-                    contextWindow.ClearContent();
-                    contextWindow.Hide();
-                    UIManager.Instance.HideHUD<InfoView>();
+                    HideHUD();
                 }
             }
+        }
+
+        private void HideHUD()
+        {
+            var contextWindow = UIManager.Instance.GetHUDCanvas<ContextWindow>();
+            contextWindow.ClearContent();
+            contextWindow.Hide();
+            UIManager.Instance.HideHUD<InfoView>();
         }
 
         public override void OnRightClick()
