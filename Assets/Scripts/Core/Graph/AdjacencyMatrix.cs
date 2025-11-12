@@ -9,6 +9,7 @@ namespace Core.Graph
         private readonly List<List<float>> _matrix = new List<List<float>>();
         public int Length { get; private set; }
         public bool IsOriented { get; private set; }
+        public bool IsWeighted { get; set; }
 
         public void MakeOriented() => IsOriented = true;
         
@@ -71,7 +72,7 @@ namespace Core.Graph
             {
                 for (var j = 0; j < _matrix[i].Count; j++)
                 {
-                    snapshot[i, j] = _matrix[i][j];
+                    snapshot[i, j] = IsWeighted ? _matrix[i][j] : 1f;
                 }
             }
             
