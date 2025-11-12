@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Core.Graph
@@ -59,6 +60,97 @@ namespace Core.Graph
                 _matrix[row][column] = value;
                 if (!IsOriented) _matrix[column][row] = value;
             }
+        }
+
+        public float[,] AsArray()
+        {
+            var matrix = new float[Length, Length];
+            for (var i = 0; i < Length; i++)
+            {
+                for (var j = 0; j < Length; j++)
+                {
+                    matrix[i, j] = IsWeighted ? _matrix[i][j] : 1f;
+                }
+            }
+            
+            return matrix;
+        }
+        
+        public float[] Bfs(int start)
+        {
+            var dist = Enumerable.Repeat(float.PositiveInfinity, Length).ToArray();
+            var q = new Queue<int>();
+            dist[start] = 0;
+            q.Enqueue(start);
+
+            while (q.Count > 0)
+            {
+                var u = q.Dequeue();
+                for (var v = 0; v < Length; v++)
+                {
+                    if (_matrix[u][v] <= 0 || !float.IsPositiveInfinity(dist[v])) continue;
+
+                    dist[v] = dist[u] + 1;
+                    q.Enqueue(v);
+                }
+            }
+            return dist;
+        }
+
+        public float[] Dijkstra(int start)
+        {
+            var dist = Enumerable.Repeat(float.PositiveInfinity, Length).ToArray();
+            var visited = new bool[Length];
+            dist[start] = 0;
+
+            for (var i = 0; i < Length; i++)
+            {
+                var u = -1;
+                var minDist = float.PositiveInfinity;
+                for (var j = 0; j < Length; j++)
+                    if (!visited[j] && dist[j] < minDist) { u = j; minDist = dist[j]; }
+
+                if (u == -1) break;
+                visited[u] = true;
+
+                for (var v = 0; v < Length; v++)
+                {
+                    if (_matrix[u][v] <= 0) continue;
+
+                    var alt = dist[u] + _matrix[u][v];
+                    if (alt < dist[v]) dist[v] = alt;
+                }
+            }
+            return dist;
+        }
+        
+        public float LargestComponentSize()
+        {
+            var visited = new bool[Length];
+            var maxSize = 0;
+
+            for (var i = 0; i < Length; i++)
+            {
+                if (visited[i]) continue;
+                var q = new Queue<int>();
+                q.Enqueue(i);
+                visited[i] = true;
+                var size = 0;
+                while (q.Count > 0)
+                {
+                    var u = q.Dequeue();
+                    size++;
+                    for (var v = 0; v < Length; v++)
+                    {
+                        if (!(_matrix[u][v] > 0) || visited[v]) continue;
+
+                        visited[v] = true;
+                        q.Enqueue(v);
+                    }
+                }
+                maxSize = Mathf.Max(maxSize, size);
+            }
+            return maxSize;
         }
 
         public AdjacencyMatrix TakeSnapshot()

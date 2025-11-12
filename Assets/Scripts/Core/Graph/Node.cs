@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Core.Structure;
 using Core.Structure.PlayerController;
-using JetBrains.Annotations;
 using UI;
 using UI.InfoStructures;
 using UI.View;
@@ -30,6 +29,24 @@ namespace Core.Graph
             };
         }
 
+        public float Degree(AdjacencyMatrix matrix)
+        {
+            var degree = 0f;
+
+            if (!matrix.IsOriented)
+            {
+                for (var i = 0; i < matrix.Length; i++)
+                    degree += matrix[NodeIndex, i];
+            }
+            else
+            {
+                // For oriented graphs — in + out
+                for (var i = 0; i < matrix.Length; i++)
+                    degree += matrix[NodeIndex, i] + matrix[i, NodeIndex];
+            }
+            return degree;
+        }
+        
         public void OnLeftClick()
         {
             var info = InfoView.GetInfo<NodeInfo>();
