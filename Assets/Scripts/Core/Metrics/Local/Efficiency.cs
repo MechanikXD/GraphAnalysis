@@ -1,8 +1,11 @@
-﻿using Core.Graph;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Core.Graph;
+using UnityEngine;
 
 namespace Core.Metrics.Local
 {
-    public class Efficiency : Metric
+    public class Efficiency : Metric<float>
     {
         public override float Process(Node node, AdjacencyMatrix snapshot)
         {
@@ -20,14 +23,26 @@ namespace Core.Metrics.Local
             return eff / (n - 1);
         }
 
-        public override float ProcessAsync(Node node, AdjacencyMatrix snapshot)
+        public override float ProcessParallel(Node node, AdjacencyMatrix matrix, CancellationToken token)
         {
-            throw new System.NotImplementedException();
-        }
+            var dist = matrix.IsWeighted ? matrix.Dijkstra(node.NodeIndex) 
+                                                : matrix.Bfs(node.NodeIndex);
+            var sum = 0.0;
 
-        public override float ProcessSeparatedAsync(Node node, AdjacencyMatrix snapshot)
-        {
-            throw new System.NotImplementedException();
+            var locker = new object();
+            Parallel.For(0, matrix.Length, new ParallelOptions { CancellationToken = token }, () => 0.0,
+                (i, _, local) =>
+                {
+                    if (i == node.NodeIndex) return local;
+                    if (!float.IsInfinity(dist[i])) local += 1.0 / dist[i];
+                    return local;
+                },
+                local =>
+                {
+                    lock (locker) sum += local;
+                });
+
+            return (float)(sum / Mathf.Max(1, matrix.Length - 1));
         }
     }
 }

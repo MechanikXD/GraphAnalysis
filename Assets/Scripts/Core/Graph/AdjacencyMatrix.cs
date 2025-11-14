@@ -108,7 +108,12 @@ namespace Core.Graph
                 var u = -1;
                 var minDist = float.PositiveInfinity;
                 for (var j = 0; j < Length; j++)
-                    if (!visited[j] && dist[j] < minDist) { u = j; minDist = dist[j]; }
+                {
+                    if (!visited[j] && dist[j] < minDist)
+                    {
+                        u = j; minDist = dist[j];
+                    }    
+                }
 
                 if (u == -1) break;
                 visited[u] = true;

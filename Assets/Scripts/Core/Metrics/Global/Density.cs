@@ -1,8 +1,9 @@
-﻿using Core.Graph;
+﻿using System.Threading;
+using Core.Graph;
 
 namespace Core.Metrics.Global
 {
-    public class Density : Metric
+    public class Density : Metric<float>
     {
         public override float Process(Node node, AdjacencyMatrix snapshot)
         {
@@ -17,17 +18,7 @@ namespace Core.Metrics.Global
                 edgeCount /= 2;
 
             var maxEdges = snapshot.IsOriented ? n * (n - 1) : n * (n - 1) / 2f;
-            return edgeCount / maxEdges;
-        }
-
-        public override float ProcessAsync(Node node, AdjacencyMatrix snapshot)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override float ProcessSeparatedAsync(Node node, AdjacencyMatrix snapshot)
-        {
-            throw new System.NotImplementedException();
+            return maxEdges == 0f ? 0f : edgeCount / maxEdges;
         }
     }
 }

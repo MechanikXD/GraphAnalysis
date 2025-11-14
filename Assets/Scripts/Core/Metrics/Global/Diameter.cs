@@ -1,9 +1,10 @@
-﻿using Core.Graph;
+﻿using System.Threading;
+using Core.Graph;
 using UnityEngine;
 
 namespace Core.Metrics.Global
 {
-    public class Diameter : Metric
+    public class Diameter : Metric<float>
     {
         public override float Process(Node node, AdjacencyMatrix snapshot)
         {
@@ -20,16 +21,6 @@ namespace Core.Metrics.Global
                         maxDist = Mathf.Max(maxDist, d);
             }
             return maxDist;
-        }
-
-        public override float ProcessAsync(Node node, AdjacencyMatrix snapshot)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override float ProcessSeparatedAsync(Node node, AdjacencyMatrix snapshot)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using Core.Graph;
 
 namespace Core.Metrics.Global
 {
-    public class RemovalTolerance : Metric
+    public class RemovalTolerance : Metric<float>
     {
         public int Removals { get; set; }
         
@@ -21,16 +22,6 @@ namespace Core.Metrics.Global
                 if (size > largest) largest = size;
             }
             return (float)largest / (snapshot.Length - 1);
-        }
-
-        public override float ProcessAsync(Node node, AdjacencyMatrix snapshot)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override float ProcessSeparatedAsync(Node node, AdjacencyMatrix snapshot)
-        {
-            throw new System.NotImplementedException();
         }
         
         private static int BfsComponentSize(int start, AdjacencyMatrix matrix, bool[] removed, bool[] visited)

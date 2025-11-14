@@ -5,8 +5,8 @@ namespace Core.Metrics
 {
     public class MetricProvider
     {
-        private List<Metric> _globalMetrics = new List<Metric>{};
-        private List<Metric> _localMetrics = new List<Metric>{};
+        private List<Metric<float>> _globalMetrics = new List<Metric<float>>{};
+        private List<Metric<float>> _localMetrics = new List<Metric<float>>{};
 
         public Dictionary<string, float> GetGlobalMetrics() { return null; }
         public Dictionary<string, float> GetLocalMetrics(Node node, AdjacencyMatrix snapshot){ return null; }

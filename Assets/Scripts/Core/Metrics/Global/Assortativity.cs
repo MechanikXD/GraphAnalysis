@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Core.Metrics.Global
 {
-    public class Assortativity : Metric
+    public class Assortativity : Metric<float>
     {
         public override float Process(Node node, AdjacencyMatrix snapshot)
         {
@@ -31,16 +31,6 @@ namespace Core.Metrics.Global
                                  pairs.Sum(p => Mathf.Pow(p.Item2 - meanL, 2)));
 
             return den == 0 ? 0 : num / den;
-        }
-
-        public override float ProcessAsync(Node node, AdjacencyMatrix snapshot)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override float ProcessSeparatedAsync(Node node, AdjacencyMatrix snapshot)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
