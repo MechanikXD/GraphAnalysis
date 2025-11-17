@@ -1,48 +1,34 @@
-﻿using System.Threading;
+﻿using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
-using Core.Graph;
+using Core.Metrics.Metrics;
 using UnityEngine;
 
 namespace Core.Metrics.Local
 {
-    public class Efficiency : Metric<float>
+    public class Efficiency : LocalMetric
     {
-        public override float Process(Node node, AdjacencyMatrix snapshot)
-        {
-            var n = snapshot.Length;
-            var distances = snapshot.IsWeighted
-                ? snapshot.Dijkstra(node.NodeIndex)
-                : snapshot.Bfs(node.NodeIndex);
+        public override float[] Process(GraphCache cache) => ProcessParallel(cache, CancellationToken.None);
 
-            var eff = 0f;
-            for (var i = 0; i < n; i++)
+        protected override float[] ProcessParallel(GraphCache cache, CancellationToken token)
+        {
+            var result = new float[cache.Matrix.Length];
+            var part = Partitioner.Create(0, cache.Matrix.Length);
+            Parallel.ForEach(part, new ParallelOptions { CancellationToken = token }, range =>
             {
-                if (i == node.NodeIndex || float.IsInfinity(distances[i])) continue;
-                eff += 1f / distances[i];
-            }
-            return eff / (n - 1);
-        }
-
-        public override float ProcessParallel(Node node, AdjacencyMatrix matrix, CancellationToken token)
-        {
-            var dist = matrix.IsWeighted ? matrix.Dijkstra(node.NodeIndex) 
-                                                : matrix.Bfs(node.NodeIndex);
-            var sum = 0.0;
-
-            var locker = new object();
-            Parallel.For(0, matrix.Length, new ParallelOptions { CancellationToken = token }, () => 0.0,
-                (i, _, local) =>
+                for (var i = range.Item1; i < range.Item2; i++)
                 {
-                    if (i == node.NodeIndex) return local;
-                    if (!float.IsInfinity(dist[i])) local += 1.0 / dist[i];
-                    return local;
-                },
-                local =>
-                {
-                    lock (locker) sum += local;
-                });
-
-            return (float)(sum / Mathf.Max(1, matrix.Length - 1));
+                    var sum = 0f;
+                    for (var j = 0; j < cache.Matrix.Length; j++)
+                    {
+                        if (i == j) continue;
+                        var d = cache.AspsDistances![i, j];
+                        if (!float.IsInfinity(d)) sum += 1f / d;
+                    }
+                    result[i] = sum / Mathf.Max(1, cache.Matrix.Length - 1);
+                }
+            });
+            return result;
         }
     }
 }

@@ -1,26 +1,37 @@
-﻿using System.Threading;
-using Core.Graph;
-using UnityEngine;
+﻿using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
+using Core.Metrics.Metrics;
 
 namespace Core.Metrics.Global
 {
-    public class Diameter : Metric<float>
+    public class Diameter : GlobalMetric
     {
-        public override float Process(Node node, AdjacencyMatrix snapshot)
+        public override float Process(GraphCache cache)
         {
-            var n = snapshot.Length;
-            float maxDist = 0;
-            
-            for (var i = 0; i < n; i++)
+            var dist = cache.AspsDistances;
+            var maxDistance = 0f;
+            for (var i = 0; i < cache.Matrix.Length; i++)
+                for (var j = 0; j < cache.Matrix.Length; j++)
+                    if (!float.IsInfinity(dist![i, j]) && dist[i, j] > maxDistance) maxDistance = dist[i, j];
+            return maxDistance;
+        }
+
+        protected override float ProcessParallel(GraphCache cache, CancellationToken token)
+        {
+            var dist = cache.AspsDistances;
+            var globalMax = 0f;
+            var part = Partitioner.Create(0, cache.Matrix.Length);
+            var locker = new object();
+            Parallel.ForEach(part, new ParallelOptions { CancellationToken = token }, range =>
             {
-                var distances = snapshot.IsWeighted
-                    ? snapshot.Dijkstra(i)
-                    : snapshot.Bfs(i);
-                foreach (var d in distances)
-                    if (d < Mathf.Infinity)
-                        maxDist = Mathf.Max(maxDist, d);
-            }
-            return maxDist;
+                var localMax = 0f;
+                for (var i = range.Item1; i < range.Item2; i++)
+                    for (var j = 0; j < cache.Matrix.Length; j++)
+                        if (!float.IsInfinity(dist![i, j]) && dist[i, j] > localMax) localMax = dist[i, j];
+                lock (locker) if (localMax > globalMax) globalMax = localMax;
+            });
+            return globalMax;
         }
     }
 }

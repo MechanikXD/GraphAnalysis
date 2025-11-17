@@ -1,65 +1,80 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Graph;
+using Core.Metrics.Metrics;
+using UnityEngine;
 
 namespace Core.Metrics.Local
 {
-    public class ClusteringCoefficient : Metric<float>
+    public class ClusteringCoefficient : LocalMetric
     {
-        public override float Process(Node node, AdjacencyMatrix snapshot)
+        public override float[] Process(GraphCache cache) => ProcessParallel(cache, CancellationToken.None);
+
+        protected override float[] ProcessParallel(GraphCache cache, CancellationToken token)
         {
-            var neighbors = new List<int>();
-
-            for (var j = 0; j < snapshot.Length; j++)
-            {
-                if (snapshot[node.NodeIndex, j] > 0 || snapshot[j, node.NodeIndex] > 0)
-                    neighbors.Add(j);
-            }
-
-            var k = neighbors.Count;
-            if (k < 2) return 0f;
-
-            var links = 0;
-            for (var a = 0; a < k; a++)
-            {
-                for (var b = a + 1; b < k; b++)
+            var result = new float[cache.Matrix.Length];
+            var part = Partitioner.Create(0, cache.Matrix.Length);
+            Parallel.ForEach(part, new ParallelOptions { CancellationToken = token }, () => 0f,
+                (range, _, _) =>
                 {
-                    if (snapshot[neighbors[a], neighbors[b]] > 0 || snapshot[neighbors[b], neighbors[a]] > 0)
-                        links++;
-                }
-            }
-
-            return (2f * links) / (k * (k - 1));
-        }
-
-        public override float ProcessParallel(Node node, AdjacencyMatrix matrix, CancellationToken token)
-        {
-            var neighbors = new List<int>();
-            for (var j = 0; j < matrix.Length; j++)
-                if (matrix[node.NodeIndex, j] > 0 || matrix[j, node.NodeIndex] > 0)
-                    neighbors.Add(j);
-
-            var k = neighbors.Count;
-            if (k < 2) return 0f;
-
-            long links = 0;
-
-            Parallel.For(0, k, new ParallelOptions { CancellationToken = token }, () => 0L,
-                (a, _, local) =>
-                {
-                    var localLinks = local;
-                    for (var b = a + 1; b < k; b++)
+                    for (var i = range.Item1; i < range.Item2; i++)
                     {
-                        int na = neighbors[a], nb = neighbors[b];
-                        if (matrix[na, nb] > 0 || matrix[nb, na] > 0) localLinks++;
-                    }
-                    return localLinks;
-                },
-                local => Interlocked.Add(ref links, local)
-            );
+                        var neighbors = cache.OutNeighbors[i];
+                        var k = neighbors.Length;
+                        if (k < 2)
+                        {
+                            result[i] = 0f;
+                            continue;
+                        }
 
-            return 2f * links / (k * (k - 1));
+                        long links = 0;
+                        for (var a = 0; a < k; a++)
+                        {
+                            var na = neighbors[a];
+
+                            // to check membership quickly, convert neighbor list to HashSet? To keep memory low we do linear scan.
+                            for (var b = a + 1; b < k; b++)
+                            {
+                                var nb = neighbors[b];
+
+                                // check if na connects to nb or nb connects to na
+                                var connected = false;
+
+                                // choose smaller list to scan
+                                if (cache.OutNeighbors[na].Length < cache.OutNeighbors[nb].Length)
+                                {
+                                    for (int t = 0; t < cache.OutNeighbors[na].Length; t++)
+                                    {
+                                        if (cache.OutNeighbors[na][t] == nb)
+                                        {
+                                            connected = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    for (var t = 0; t < cache.OutNeighbors[nb].Length; t++)
+                                    {
+                                        if (cache.OutNeighbors[nb][t] == na)
+                                        {
+                                            connected = true;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (connected) links++;
+                            }
+                        }
+
+                        result[i] = (2f * links) / (k * Mathf.Max(1, k - 1));
+                    }
+
+                    return 0f;
+                },
+                _ => { });
+            return result;
         }
     }
 }

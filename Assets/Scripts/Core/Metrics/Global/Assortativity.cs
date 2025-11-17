@@ -1,36 +1,73 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Linq;
-using Core.Graph;
-using UnityEngine;
+using System.Threading;
+using System.Threading.Tasks;
+using Core.Metrics.Metrics;
 
 namespace Core.Metrics.Global
 {
-    public class Assortativity : Metric<float>
+    public class Assortativity : GlobalMetric
     {
-        public override float Process(Node node, AdjacencyMatrix snapshot)
+        public override float Process(GraphCache cache)
         {
-            var n = snapshot.Length;
-            var degrees = new float[n];
-            for (var i = 0; i < n; i++)
+            var deg = cache.Matrix.Nodes.Select(x => (double)x.Degree).ToArray();
+            double m1 = 0, m2 = 0, m3 = 0; // for Pearson formula
+            double edgeCount = 0;
+            for (var i = 0; i < cache.Matrix.Length; i++)
             {
-                float sum = 0;
-                for (var j = 0; j < n; j++) sum += snapshot[i, j];
-                degrees[i] = sum;
+                var neighbors = cache.OutNeighbors[i];
+                foreach (var j in neighbors)
+                {
+                    var ki = deg[i];
+                    var kj = deg[j];
+                    m1 += ki * kj;
+                    m2 += (ki + kj) / 2.0;
+                    m3 += (ki * ki + kj * kj) / 2.0;
+                    edgeCount += 1.0;
+                }
             }
+            if (edgeCount == 0) return 0f;
+            var num = m1 / edgeCount - (m2 / edgeCount) * (m2 / edgeCount);
+            var den = m3 / edgeCount - (m2 / edgeCount) * (m2 / edgeCount);
+            return den == 0 ? 0f : (float)(num / den);
+        }
 
-            var pairs = new List<(float, float)>();
-            for (var i = 0; i < n; i++)
-                for (var j = 0; j < n; j++)
-                    if (snapshot[i, j] > 0)
-                        pairs.Add((degrees[i], degrees[j]));
+        protected override float ProcessParallel(GraphCache cache, CancellationToken token)
+        {
+            // accumulate using partitions
+            double m1 = 0, m2 = 0, m3 = 0;
+            var locker = new object();
+            var part = Partitioner.Create(0, cache.Matrix.Length);
+            Parallel.ForEach(part, new ParallelOptions { CancellationToken = token }, () => (m1: 0.0, m2: 0.0, m3: 0.0),
+                (range, _, local) =>
+                {
+                    double lm1 = 0, lm2 = 0, lm3 = 0;
+                    for (var i = range.Item1; i < range.Item2; i++)
+                    {
+                        var neighbors = cache.OutNeighbors[i];
+                        foreach (var j in neighbors)
+                        {
+                            double ki = cache.Matrix.Nodes[i].Degree;
+                            double kj = cache.Matrix.Nodes[j].Degree;
+                            lm1 += ki * kj;
+                            lm2 += (ki + kj) / 2.0;
+                            lm3 += (ki * ki + kj * kj) / 2.0;
+                        }
+                    }
+                    local.m1 += lm1; local.m2 += lm2; local.m3 += lm3;
+                    return local;
+                },
+                local =>
+                {
+                    lock (locker) { m1 += local.m1; m2 += local.m2; m3 += local.m3; }
+                });
 
-            var meanK = pairs.Average(p => p.Item1);
-            var meanL = pairs.Average(p => p.Item2);
-            var num = pairs.Sum(p => (p.Item1 - meanK) * (p.Item2 - meanL));
-            var den = Mathf.Sqrt(pairs.Sum(p => Mathf.Pow(p.Item1 - meanK, 2)) *
-                                 pairs.Sum(p => Mathf.Pow(p.Item2 - meanL, 2)));
-
-            return den == 0 ? 0 : num / den;
+            double edgeCount = 0;
+            for (var i = 0; i < cache.Matrix.Length; i++) edgeCount += cache.OutNeighbors[i].Length;
+            if (edgeCount == 0) return 0f;
+            var num = m1 / edgeCount - (m2 / edgeCount) * (m2 / edgeCount);
+            var den = m3 / edgeCount - (m2 / edgeCount) * (m2 / edgeCount);
+            return den == 0 ? 0f : (float)(num / den);
         }
     }
 }

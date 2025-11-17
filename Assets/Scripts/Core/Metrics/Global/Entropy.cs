@@ -1,23 +1,45 @@
-﻿using System.Linq;
+﻿using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
-using Core.Graph;
+using System.Threading.Tasks;
+using Core.Metrics.Metrics;
 using UnityEngine;
 
 namespace Core.Metrics.Global
 {
-    public class Entropy : Metric<float>
+    public class Entropy : GlobalMetric
     {
-        public override float Process(Node node, AdjacencyMatrix snapshot)
+        public override float Process(GraphCache cache)
         {
-            var degrees = new float[snapshot.Length];
-            for (var i = 0; i < snapshot.Length; i++)
-                degrees[i] = snapshot.Nodes[i].Degree;
+            var totalDeg = cache.Matrix.Nodes.Sum(node => node.Degree);
+            if (totalDeg <= 0) return 0f;
+            var h = 0f;
+            for (var i = 0; i < cache.Matrix.Length; i++)
+            {
+                var p = cache.Matrix.Nodes[i].Degree / totalDeg;
+                if (p > 0) h -= p * Mathf.Log(p, 2f);
+            }
+            return h;
+        }
 
-            var total = degrees.Sum();
-            if (total == 0) return 0f;
-
-            var p = degrees[node.NodeIndex] / total;
-            return -p * Mathf.Log(p + 1e-9f);
+        protected override float ProcessParallel(GraphCache cache, CancellationToken token)
+        {
+            var totalDeg = cache.Matrix.Nodes.Sum(node => node.Degree);
+            if (totalDeg <= 0) return 0f;
+            var sum = 0f;
+            var locker = new object();
+            var part = Partitioner.Create(0, cache.Matrix.Length);
+            Parallel.ForEach(part, new ParallelOptions { CancellationToken = token }, range =>
+            {
+                var local = 0f;
+                for (var i = range.Item1; i < range.Item2; i++)
+                {
+                    var p = cache.Matrix.Nodes[i].Degree / totalDeg;
+                    if (p > 0) local -= p * Mathf.Log(p, 2f);
+                }
+                lock (locker) sum += local;
+            });
+            return sum;
         }
     }
 }

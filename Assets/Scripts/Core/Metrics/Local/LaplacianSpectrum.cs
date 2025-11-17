@@ -1,81 +1,104 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Core.Graph;
+using Core.Metrics.Metrics;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace Core.Metrics.Local
 {
-    public class LaplacianSpectrum : Metric<float>
+    public class LaplacianSpectrum : LocalMetric
     {
-        public override float Process(Node node, AdjacencyMatrix snapshot)
+        public override float[] Process(GraphCache cache)
         {
-            return ProcessParallel(node, snapshot, CancellationToken.None);
+            // compute Laplacian and eigenvalues once
+            var l = BuildLaplacianMatrix(cache);
+            var fullEvd = l.Evd(Symmetricity.Symmetric);
+            var fullEigen = fullEvd.EigenValues.Select(c => c.Real).ToArray();
+            var fullEnergy = fullEigen.Sum(x => x * x);
+
+            var result = new float[cache.Matrix.Length];
+            for (var v = 0; v < cache.Matrix.Length; v++)
+            {
+                var lm = BuildLaplacianWithoutNode(cache.Matrix, v);
+                var evd = lm.Evd(Symmetricity.Symmetric);
+                var eigen = evd.EigenValues.Select(c => c.Real).ToArray();
+                var energy = eigen.Sum(x => x * x);
+                result[v] = (float)(fullEnergy - energy);
+            }
+
+            return result;
         }
 
-        public override float ProcessParallel(Node node, AdjacencyMatrix matrix, CancellationToken token)
+        protected override float[] ProcessParallel(GraphCache cache, CancellationToken token)
         {
-            var l = BuildLaplacian(matrix);
-            var fullEnergy = LaplacianEnergy(l);
+            // compute Laplacian and eigenvalues once
+            var l = BuildLaplacianMatrix(cache);
+            var fullEvd = l.Evd(Symmetricity.Symmetric);
+            var fullEigen = fullEvd.EigenValues.Select(c => c.Real).ToArray();
+            var fullEnergy = fullEigen.Sum(x => x * x);
 
-            var lMinus = BuildLaplacianWithNodeRemoved(matrix, node.NodeIndex);
-            double energyMinus = LaplacianEnergy(lMinus);
+            var result = new float[cache.Matrix.Length];
+            Parallel.For(0, cache.Matrix.Length, new ParallelOptions { CancellationToken = token },
+                v =>
+                {
+                    var lm = BuildLaplacianWithoutNode(cache.Matrix, v);
+                    var evd = lm.Evd(Symmetricity.Symmetric);
+                    var eigen = evd.EigenValues.Select(c => c.Real).ToArray();
+                    var energy = eigen.Sum(x => x * x);
+                    result[v] = (float)(fullEnergy - energy);
+                });
 
-            var lc = fullEnergy - energyMinus;
-            return (float)lc;   
+            return result;
         }
         
-        public static Matrix<double> BuildLaplacian(AdjacencyMatrix matrix)
+        // build Laplacian DenseMatrix (double)
+        public Matrix<double> BuildLaplacianMatrix(GraphCache cache)
         {
-            var l = DenseMatrix.Create(matrix.Length, matrix.Length, 0f);
-            for (var i = 0; i < matrix.Length; i++)
+            var l = DenseMatrix.Create(cache.Matrix.Length, cache.Matrix.Length, 0.0);
+            for (var i = 0; i < cache.Matrix.Length; i++)
             {
-                var deg = 0f;
-                for (var j = 0; j < matrix.Length; j++)
-                    deg += matrix[i, j];
+                double deg = cache.Matrix.Nodes[i].Degree;
                 l[i, i] = deg;
-                for (var j = 0; j < matrix.Length; j++)
-                    if (i != j)
-                        l[i, j] = -matrix[i, j];
+                var neighbors = cache.OutNeighbors[i];
+                var wts = cache.OutWeights[i];
+                for (var k = 0; k < neighbors.Length; k++)
+                {
+                    var j = neighbors[k];
+                    if (i != j) l[i, j] = -wts[k];
+                }
             }
-            
+
             return l;
         }
 
-        public static Matrix<double> BuildLaplacianWithNodeRemoved(AdjacencyMatrix matrix, int removedIndex)
+        // helper: produces dense (n-1)x(n-1) laplacian with node removed
+        private Matrix<double> BuildLaplacianWithoutNode(AdjacencyMatrix matrix, int removed)
         {
-            var l = DenseMatrix.Create(matrix.Length - 1, matrix.Length - 1, 0f);
+            var l = DenseMatrix.Create(matrix.Length - 1, matrix.Length - 1, 0.0);
             var ri = 0;
             for (var i = 0; i < matrix.Length; i++)
             {
-                if (i == removedIndex) continue;
+                if (i == removed) continue;
                 var rj = 0;
-                var deg = 0.0;
-                for (var k = 0; k < matrix.Length; k++)
-                    deg += matrix[i, k];
+                double deg = matrix.Nodes[i].Degree;
                 l[ri, ri] = deg;
-                for (var j = 0; j < matrix.Length; j++)
+                for (int j = 0; j < matrix.Length; j++)
                 {
-                    if (j == removedIndex) continue;
-                    if (i != j) l[ri, rj] = -matrix[i, j];
+                    if (j == removed) continue;
+                    if (i != j)
+                    {
+                        l[ri, rj] = -matrix[i, j];
+                    }
+
                     rj++;
                 }
+
                 ri++;
             }
-            
-            return l;
-        }
 
-        public static float LaplacianEnergy(Matrix<double> lap)
-        {
-            var evd = lap.Evd(Symmetricity.Symmetric);
-            var eigs = evd.EigenValues;
-            var sum = 0f;
-            foreach (var eig in eigs)
-            {
-                var real = (float)eig.Real;
-                sum += real * real;
-            }
-            return sum;
+            return l;
         }
     }
 }
