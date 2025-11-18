@@ -22,8 +22,7 @@ namespace UI.InfoStructures
             _currentNode = node;
             _nameInput.SetTextWithoutNotify(_currentNode.NodeName);
             _positionField.SetText(FormatPosition(_currentNode.transform.position));
-            // TODO: Calculate Stats and display here;
-            _statField.SetText("");
+            _statField.SetText(FormalStats(_currentNode.Stats));
         }
 
         private void RenameNode(string newName) => _currentNode.NodeName = newName;

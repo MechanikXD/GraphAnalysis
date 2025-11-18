@@ -45,6 +45,8 @@ namespace Core.Metrics
 
         public async static UniTask<(Dictionary<string, float> global, Dictionary<string, float[]> local)> ProcessMatrixAsync(AdjacencyMatrix matrix)
         {
+            _cts.Cancel();
+            
             await UniTask.SwitchToTaskPool();
             var cache = new GraphCache(matrix);
 
@@ -68,6 +70,8 @@ namespace Core.Metrics
 
         public async static UniTask<(Dictionary<string, float> global, Dictionary<string, float[]> local)> ProcessMatrixParallel(AdjacencyMatrix matrix)
         {
+            _cts.Cancel();
+            
             await UniTask.SwitchToTaskPool();
             var cache = new GraphCache(matrix);
 

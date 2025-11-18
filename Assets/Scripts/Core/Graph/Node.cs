@@ -10,6 +10,7 @@ namespace Core.Graph
 {
     public class Node : MonoBehaviour, IInteractable
     {
+        public Dictionary<string, float> Stats { get; private set; }
         private ContextAction[] _contextAction;
         public List<Edge> Connections { get; private set; }
         public float Degree => Connections.Count;
@@ -42,6 +43,15 @@ namespace Core.Graph
             contextWind.LoadContext(_contextAction);
             contextWind.SetPosition(Input.mousePosition);
             contextWind.Show();
+        }
+
+        public void LoadStats(Dictionary<string, float[]> localStats)
+        {
+            Stats ??= new Dictionary<string, float>();
+            foreach (var kvp in localStats)
+            {
+                Stats[kvp.Key] = kvp.Value[NodeIndex];
+            }
         }
         
         private void StartLink() => PlayerController.StartNodeLink(this, false);
