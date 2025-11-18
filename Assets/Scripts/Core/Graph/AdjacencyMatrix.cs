@@ -4,7 +4,6 @@ using Core.Metrics;
 using Cysharp.Threading.Tasks;
 using UI;
 using UI.View;
-using UnityEngine;
 
 namespace Core.Graph
 {
@@ -91,7 +90,10 @@ namespace Core.Graph
             {
                 for (var j = 0; j < _matrix[i].Count; j++)
                 {
-                    clone.SetValue(IsWeighted ? _matrix[i][j] : 1f, i, j, false);
+                    var value = 0f;
+                    if (!IsWeighted) value = _matrix[i][j];
+                    else if (!IsWeighted && _matrix[i][j] != 0f) value = 1f;
+                    clone.SetValue(value, i, j, false);
                 }
             }
             
