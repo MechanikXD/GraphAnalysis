@@ -122,16 +122,16 @@ namespace Core.Graph
             if (IsOneSided)
             {
                 matrix.MakeOriented();
-                matrix[_first.NodeIndex, _second.NodeIndex] = value;
+                matrix.SetValue(value, _first.NodeIndex, _second.NodeIndex, true);
             }
             else if (matrix.IsOriented)
             {
-                matrix[_first.NodeIndex, _second.NodeIndex] = value;
-                matrix[_second.NodeIndex, _first.NodeIndex] = value;
+                matrix.SetValue(value, _first.NodeIndex, _second.NodeIndex, false);
+                matrix.SetValue(value, _second.NodeIndex, _first.NodeIndex, true);
             }
             else
             {
-                matrix[_first.NodeIndex, _second.NodeIndex] = value;
+                matrix.SetValue(value, _first.NodeIndex, _second.NodeIndex, true);
             }
         }
 

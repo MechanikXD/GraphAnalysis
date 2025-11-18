@@ -13,7 +13,6 @@ namespace Core.Structure.PlayerController.States
         public Default(PlayerStateMachine sm, PlayerController owner) : base(sm, owner)
         {
             _camera = Camera.main;
-            
         }
 
         public override void EnterState() { }

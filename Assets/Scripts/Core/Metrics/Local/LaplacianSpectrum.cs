@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Graph;
@@ -12,6 +13,9 @@ namespace Core.Metrics.Local
     {
         public override float[] Process(GraphCache cache)
         {
+            if (cache.Matrix.Length == 0) return Array.Empty<float>();
+            if (cache.Matrix.Length == 1) return new[] { 0f };
+            
             // compute Laplacian and eigenvalues once
             var l = BuildLaplacianMatrix(cache);
             var fullEvd = l.Evd(Symmetricity.Symmetric);
@@ -22,6 +26,13 @@ namespace Core.Metrics.Local
             for (var v = 0; v < cache.Matrix.Length; v++)
             {
                 var lm = BuildLaplacianWithoutNode(cache.Matrix, v);
+                
+                if (lm.RowCount is 0 or 1)
+                {
+                    result[v] = 0;
+                    continue;
+                }
+                
                 var evd = lm.Evd(Symmetricity.Symmetric);
                 var eigen = evd.EigenValues.Select(c => c.Real).ToArray();
                 var energy = eigen.Sum(x => x * x);
@@ -54,7 +65,7 @@ namespace Core.Metrics.Local
         }
         
         // build Laplacian DenseMatrix (double)
-        public Matrix<double> BuildLaplacianMatrix(GraphCache cache)
+        private static Matrix<double> BuildLaplacianMatrix(GraphCache cache)
         {
             var l = DenseMatrix.Create(cache.Matrix.Length, cache.Matrix.Length, 0.0);
             for (var i = 0; i < cache.Matrix.Length; i++)
@@ -74,30 +85,32 @@ namespace Core.Metrics.Local
         }
 
         // helper: produces dense (n-1)x(n-1) laplacian with node removed
-        private Matrix<double> BuildLaplacianWithoutNode(AdjacencyMatrix matrix, int removed)
+        private static Matrix<double> BuildLaplacianWithoutNode(AdjacencyMatrix matrix, int removed)
         {
-            var l = DenseMatrix.Create(matrix.Length - 1, matrix.Length - 1, 0.0);
+            var n = matrix.Length - 1;
+            var l = DenseMatrix.Create(n, n, 0.0);
+
             var ri = 0;
             for (var i = 0; i < matrix.Length; i++)
             {
                 if (i == removed) continue;
+
                 var rj = 0;
                 double deg = matrix.Nodes[i].Degree;
                 l[ri, ri] = deg;
-                for (int j = 0; j < matrix.Length; j++)
+
+                for (var j = 0; j < matrix.Length; j++)
                 {
                     if (j == removed) continue;
+
                     if (i != j)
                     {
                         l[ri, rj] = -matrix[i, j];
                     }
-
                     rj++;
                 }
-
                 ri++;
             }
-
             return l;
         }
     }

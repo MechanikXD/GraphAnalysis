@@ -2,22 +2,25 @@
 using System.Threading;
 using Core.Metrics;
 using Cysharp.Threading.Tasks;
+using UI;
+using UI.View;
+using UnityEngine;
 
 namespace Core.Graph
 {
     public class AdjacencyMatrix
     {
-        private static CancellationTokenSource _cts;
+        private readonly static CancellationTokenSource Cts = new CancellationTokenSource();
         public List<Node> Nodes { get; } = new List<Node>();
         private readonly List<List<float>> _matrix = new List<List<float>>();
-        public Dictionary<string, float> GlobalStats { get; private set; }
+        private Dictionary<string, float> _globalStats;
         public int Length { get; private set; }
         public bool IsOriented { get; private set; }
         public bool IsWeighted { get; set; }
 
         public void MakeOriented() => IsOriented = true;
         
-        public void AddNode(Node node)
+        public void AddNode(Node node, bool updateStats=true)
         {
             node.NodeIndex = Nodes.Count;
             Nodes.Add(node);
@@ -26,9 +29,10 @@ namespace Core.Graph
             foreach (var col in _matrix) col.Add(0);
             var emptyList = new List<float>( new float[Length] );
             _matrix.Add(emptyList);
+            if (updateStats) ProcessStats().Forget();
         }
 
-        public void RemoveNode(int at)
+        public void RemoveNode(int at, bool updateStats=true)
         {
             Nodes.RemoveAt(at);
             _matrix.RemoveAt(at);
@@ -38,51 +42,60 @@ namespace Core.Graph
                 Nodes[i].NodeIndex = i;
             }
             Length--;
+            if (updateStats) ProcessStats().Forget();
         }
 
-        public float this[int row, int column]
+        public void SetValue(float value, int row, int column, bool updateStats)
         {
-            get => _matrix[row][column];
-            set
-            {
-                _matrix[row][column] = value;
-                if (!IsOriented) _matrix[column][row] = value;
-            }
+            _matrix[row][column] = value;
+            if (!IsOriented) _matrix[column][row] = value;
+            if (updateStats) ProcessStats().Forget();
         }
+
+        public float this[int row, int column] => _matrix[row][column];
 
         private async UniTask ProcessStats()
         {
-            _cts.Cancel();
-            var snapshot = TakeSnapshot();
-            await UniTask.SwitchToThreadPool();
+            if (Length <= 0)
+            {
+                UIManager.Instance.GetHUDCanvas<GlobalStatDisplayView>().Hide();
+                _globalStats?.Clear();
+                return;
+            }
+            
+            Cts.Cancel();
+            var clone = Clone();
             
             // TODO: Switch between types of computing based on difficulty
-            var stats = MetricProvider.ProcessMetrics(snapshot);
-            GlobalStats = stats.global;
+            var stats = MetricProvider.ProcessMetrics(clone);
+            _globalStats = stats.global;
 
-            await UniTask.SwitchToMainThread();
             foreach (var node in Nodes)
             {
                 node.LoadStats(stats.local);
             }
+            
+            var hud = UIManager.Instance.GetHUDCanvas<GlobalStatDisplayView>();
+            hud.LoadText(_globalStats);
+            if (!hud.IsEnabled) UIManager.Instance.ShowHUD<GlobalStatDisplayView>();
         }
 
-        private AdjacencyMatrix TakeSnapshot()
+        private AdjacencyMatrix Clone()
         {
-            var snapshot = new AdjacencyMatrix();
+            var clone = new AdjacencyMatrix();
             foreach (var node in Nodes)
             {
-                snapshot.AddNode(node);
+                clone.AddNode(node, false);
             }
             for (var i = 0; i < _matrix.Count; i++)
             {
                 for (var j = 0; j < _matrix[i].Count; j++)
                 {
-                    snapshot[i, j] = IsWeighted ? _matrix[i][j] : 1f;
+                    clone.SetValue(IsWeighted ? _matrix[i][j] : 1f, i, j, false);
                 }
             }
             
-            return snapshot;
+            return clone;
         }
     }
 }

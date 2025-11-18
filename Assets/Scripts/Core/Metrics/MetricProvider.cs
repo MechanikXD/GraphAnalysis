@@ -11,7 +11,7 @@ namespace Core.Metrics
 {
     public static class MetricProvider
     {
-        private static CancellationTokenSource _cts;
+        private readonly static CancellationTokenSource Cts = new CancellationTokenSource();
         
         private readonly static Dictionary<string, GlobalMetric> GlobalMetrics = new Dictionary<string, GlobalMetric>
         {
@@ -45,7 +45,7 @@ namespace Core.Metrics
 
         public async static UniTask<(Dictionary<string, float> global, Dictionary<string, float[]> local)> ProcessMatrixAsync(AdjacencyMatrix matrix)
         {
-            _cts.Cancel();
+            Cts.Cancel();
             
             await UniTask.SwitchToTaskPool();
             var cache = new GraphCache(matrix);
@@ -63,14 +63,14 @@ namespace Core.Metrics
         }
         
         private async static UniTask<KeyValuePair<string, float>> RunGlobalAsync(KeyValuePair<string, GlobalMetric> kvp, GraphCache cache) =>
-            new KeyValuePair<string, float>(kvp.Key, await kvp.Value.ProcessAsync(cache, _cts.Token));
+            new KeyValuePair<string, float>(kvp.Key, await kvp.Value.ProcessAsync(cache, Cts.Token));
 
         private async static UniTask<KeyValuePair<string, float[]>> RunLocalAsync(KeyValuePair<string, LocalMetric> kvp, GraphCache cache) =>
-            new KeyValuePair<string, float[]>(kvp.Key, await kvp.Value.ProcessAsync(cache, _cts.Token));
+            new KeyValuePair<string, float[]>(kvp.Key, await kvp.Value.ProcessAsync(cache, Cts.Token));
 
         public async static UniTask<(Dictionary<string, float> global, Dictionary<string, float[]> local)> ProcessMatrixParallel(AdjacencyMatrix matrix)
         {
-            _cts.Cancel();
+            Cts.Cancel();
             
             await UniTask.SwitchToTaskPool();
             var cache = new GraphCache(matrix);
@@ -88,9 +88,9 @@ namespace Core.Metrics
         }
 
         private async static UniTask<KeyValuePair<string, float>> ComputeParallelGlobalAsync(KeyValuePair<string, GlobalMetric> kvp, GraphCache cache)
-            => new KeyValuePair<string, float>(kvp.Key, await kvp.Value.ProcessParallelAsync(cache, _cts.Token));
+            => new KeyValuePair<string, float>(kvp.Key, await kvp.Value.ProcessParallelAsync(cache, Cts.Token));
 
         private async static UniTask<KeyValuePair<string, float[]>> ComputeParallelLocalAsync(KeyValuePair<string, LocalMetric> kvp, GraphCache cache)
-            => new KeyValuePair<string, float[]>(kvp.Key, await kvp.Value.ProcessParallelAsync(cache, _cts.Token));
+            => new KeyValuePair<string, float[]>(kvp.Key, await kvp.Value.ProcessParallelAsync(cache, Cts.Token));
     }
 }
