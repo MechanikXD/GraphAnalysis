@@ -1,17 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using Analysis;
+using Core.LoadSystem;
+using Core.LoadSystem.Serializable;
+using Core.Structure;
 using Cysharp.Threading.Tasks;
 using UI;
 using UI.View;
+using UnityEngine;
 
 namespace Core.Graph
 {
-    public class AdjacencyMatrix
+    public class AdjacencyMatrix : ISerializable<SerializableAdjacencyMatrix>
     {
         private readonly static CancellationTokenSource Cts = new CancellationTokenSource();
         public List<Node> Nodes { get; } = new List<Node>();
-        private readonly List<List<float>> _matrix = new List<List<float>>();
+        private List<List<float>> _matrix = new List<List<float>>();
         private Dictionary<string, float> _globalStats;
         public int Length { get; private set; }
         public bool IsOriented { get; private set; }
@@ -103,6 +107,54 @@ namespace Core.Graph
             }
             
             return clone;
+        }
+
+        public SerializableAdjacencyMatrix SerializeSelf()
+        {
+            var nodes = new SerializableNode[Nodes.Count];
+            for (var i = 0; i < Nodes.Count; i++)
+            {
+                nodes[i] = Nodes[i].SerializeSelf();
+            }
+
+            var allEdges = GameManager.Instance.GetAllEdges();
+            var serializableEdges = new SerializableEdge[allEdges.Length];
+            for (var i = 0; i < allEdges.Length; i++)
+            {
+                serializableEdges[i] = allEdges[i].SerializeSelf();
+            }
+            
+            return new SerializableAdjacencyMatrix(_globalStats, nodes, serializableEdges, Length, IsOriented, IsWeighted);
+        }
+
+        public void DeserializeSelf(SerializableAdjacencyMatrix serialized)
+        {
+            _globalStats = serialized.GlobalStats;
+            IsOriented = serialized._isOriented;
+            IsWeighted = serialized._isWeighted;
+            Length = serialized._length;
+            var gm = GameManager.Instance;
+
+            _matrix = new List<List<float>>();
+            for (var i = 0; i < Length; i++)
+            {
+                var emptyList = new List<float>(new float[Length]);
+                _matrix.Add(emptyList);
+            }
+            
+            foreach (var node in serialized._nodes)
+            {
+                var newNode = gm.CreateNode(node._position, false);
+                newNode.DeserializeSelf(node);
+                Nodes.Add(newNode);
+            }
+
+            foreach (var edge in serialized._edges)
+            {
+                var newEdge = gm.CreateEdge(Vector2.zero, edge._isOneSided);
+                newEdge.SetNodes(Nodes[edge._firstNodeIndex], Nodes[edge._secondNodeIndex], edge._weight, edge._isOneSided);
+                newEdge.DeserializeSelf(edge);
+            }
         }
     }
 }

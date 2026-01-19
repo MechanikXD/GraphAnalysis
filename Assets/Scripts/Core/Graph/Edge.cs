@@ -1,4 +1,6 @@
-﻿using Core.Structure;
+﻿using Core.LoadSystem;
+using Core.LoadSystem.Serializable;
+using Core.Structure;
 using Core.Structure.PlayerController;
 using JetBrains.Annotations;
 using UI;
@@ -8,7 +10,7 @@ using UnityEngine;
 
 namespace Core.Graph
 {
-    public class Edge : MonoBehaviour, IInteractable
+    public class Edge : MonoBehaviour, IInteractable, ISerializable<SerializableEdge>
     {
         private const float CROP_WHEN_TWO_SIDED = 0.6f;
         private const float CROP_WHEN_ONE_SIDED = 0.4f;
@@ -136,6 +138,21 @@ namespace Core.Graph
         }
 
         /// Sets all necessary values like nodes, weight etc.
+        public void SetNodes(Node first, Node second, float weight, bool oneSided)
+        {
+            _first = first;
+            _second = second;
+            IsOneSided = oneSided;
+            _wasPlaced = true;
+
+            IsCustomWeight = true;
+            _weight = weight;
+            SetValueInMatrix(_weight);
+            
+            _first.AddLink(this);
+            _second.AddLink(this);
+        }
+        
         public void SetNodes(Node first, Node second, bool oneSided)
         {
             _first = first;
@@ -196,6 +213,16 @@ namespace Core.Graph
             if (_second != null) _second.RemoveLink(this);
             
             Destroy(gameObject);
+        }
+
+        public SerializableEdge SerializeSelf() => new SerializableEdge(_weight, IsOneSided, 
+            _first.NodeIndex, _second.NodeIndex, IsCustomWeight);
+        
+        public void DeserializeSelf(SerializableEdge serialized)
+        {
+            _weight = serialized._weight;
+            _isOneSided = serialized._isOneSided;
+            IsCustomWeight = serialized._isCustomWeight;
         }
     }
 }

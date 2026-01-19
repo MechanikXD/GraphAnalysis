@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Core.LoadSystem;
+using Core.LoadSystem.Serializable;
 using Core.Structure;
 using Core.Structure.PlayerController;
 using UI;
@@ -8,7 +10,7 @@ using UnityEngine;
 
 namespace Core.Graph
 {
-    public class Node : MonoBehaviour, IInteractable
+    public class Node : MonoBehaviour, IInteractable, ISerializable<SerializableNode>
     {
         public Dictionary<string, float> Stats { get; private set; }
         private ContextAction[] _contextAction;
@@ -68,6 +70,15 @@ namespace Core.Graph
             GameManager.Instance.AdjacencyMatrix.RemoveNode(NodeIndex);
             Connections.Clear();
             Destroy(gameObject);
+        }
+
+        public SerializableNode SerializeSelf() => new SerializableNode(Stats, NodeName, NodeIndex, new Vector2(transform.position.x, transform.position.y));
+
+        public void DeserializeSelf(SerializableNode serialized)
+        {
+            Stats = serialized.Stats;
+            NodeName = serialized._nodeName;
+            NodeIndex = serialized._nodeIndex;
         }
     }
 }
