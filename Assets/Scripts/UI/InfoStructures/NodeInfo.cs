@@ -22,8 +22,7 @@ namespace UI.InfoStructures
             _currentNode = node;
             _nameInput.SetTextWithoutNotify(_currentNode.NodeName);
             _positionField.SetText(FormatPosition(_currentNode.transform.position));
-            // TODO: Calculate Stats and display here;
-            _statField.SetText("");
+            _statField.SetText(FormatStats(_currentNode.Stats));
         }
 
         private void RenameNode(string newName) => _currentNode.NodeName = newName;
@@ -33,12 +32,12 @@ namespace UI.InfoStructures
             return $"({position.x:F}; {position.y:F})";
         }
 
-        private static string FormalStats(Dictionary<string, float> stats)
+        private static string FormatStats(Dictionary<string, float> stats)
         {
             var sb = new StringBuilder();
             foreach (var stat in stats)
             {
-                sb.Append(stat.Key).Append(": ").Append(stat.Value).AppendLine();
+                sb.Append(stat.Key).Append(": ").Append(stat.Value.ToString("F3")).AppendLine();
             }
             
             // Remove last \n

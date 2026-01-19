@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using Cysharp.Threading.Tasks;
 using Other;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -21,7 +21,6 @@ namespace Core.Structure.PlayerController
         private Vector2 _xBounds;
         private Vector2 _yBounds;
         private float _desiredOrthoSize;
-        private Coroutine _coroutine;
 
         private void Awake()
         {
@@ -53,7 +52,7 @@ namespace Core.Structure.PlayerController
         {
             newScale = _scrollBounds.Clamp(newScale);
             _desiredOrthoSize = newScale;
-            _coroutine ??= StartCoroutine(ZoomCameraToDesired());
+            ZoomCameraToDesired().Forget();
         }
 
         private void UpdateBounds()
@@ -80,7 +79,7 @@ namespace Core.Structure.PlayerController
         }
 
         // TODO: Switch to UniTasks
-        private IEnumerator ZoomCameraToDesired()
+        private async UniTask ZoomCameraToDesired()
         {
             while (Mathf.Abs(_desiredOrthoSize - _camera.orthographicSize) > SCALE_SNAP_DISTANCE)
             {
@@ -92,11 +91,10 @@ namespace Core.Structure.PlayerController
 
                 UpdateBounds();
                 MoveCamera(_camera.transform.position);
-                yield return null;
+                await UniTask.NextFrame(destroyCancellationToken);
             }
             
             _camera.orthographicSize = _desiredOrthoSize;
-            _coroutine = null;
         }
     }
 }

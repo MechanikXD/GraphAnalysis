@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Core.Structure;
 using Core.Structure.PlayerController;
-using JetBrains.Annotations;
 using UI;
 using UI.InfoStructures;
 using UI.View;
@@ -11,16 +10,16 @@ namespace Core.Graph
 {
     public class Node : MonoBehaviour, IInteractable
     {
-        private List<Edge> _connections;
-
+        public Dictionary<string, float> Stats { get; private set; }
         private ContextAction[] _contextAction;
-        public List<Edge> Connections => _connections;
+        public List<Edge> Connections { get; private set; }
+        public float Degree => Connections.Count;
         public string NodeName { get; set; }
         public int NodeIndex { get; set; }
         
         private void Awake()
         {
-            _connections = new List<Edge>();
+            Connections = new List<Edge>();
             _contextAction = new[] 
             {
                 new ContextAction("Link with", StartLink),
@@ -29,7 +28,7 @@ namespace Core.Graph
                 new ContextAction("Delete", DeleteNode)
             };
         }
-
+        
         public void OnLeftClick()
         {
             var info = InfoView.GetInfo<NodeInfo>();
@@ -45,20 +44,29 @@ namespace Core.Graph
             contextWind.SetPosition(Input.mousePosition);
             contextWind.Show();
         }
+
+        public void LoadStats(Dictionary<string, float[]> localStats)
+        {
+            Stats ??= new Dictionary<string, float>();
+            foreach (var kvp in localStats)
+            {
+                Stats[kvp.Key] = kvp.Value[NodeIndex];
+            }
+        }
         
         private void StartLink() => PlayerController.StartNodeLink(this, false);
         private void StartMove() => PlayerController.StartNodeMove(this);
         private void StartOneSidedLink() => PlayerController.StartNodeLink(this, true);
 
-        public void AddLink(Edge link) => _connections.Add(link);
-        public void RemoveLink(Edge link) => _connections.Remove(link);
+        public void AddLink(Edge link) => Connections.Add(link);
+        public void RemoveLink(Edge link) => Connections.Remove(link);
 
         private void DeleteNode()
         {
-            foreach (var edge in _connections) edge.CascadeDestroy(this);
+            foreach (var edge in Connections) edge.CascadeDestroy(this);
             
             GameManager.Instance.AdjacencyMatrix.RemoveNode(NodeIndex);
-            _connections.Clear();
+            Connections.Clear();
             Destroy(gameObject);
         }
     }
