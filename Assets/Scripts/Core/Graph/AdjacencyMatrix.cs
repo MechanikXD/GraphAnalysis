@@ -64,9 +64,14 @@ namespace Core.Graph
             
             Cts.Cancel();
             var clone = Clone();
+
+            var stats = Length switch
+                {
+                    <= 80 => MetricProvider.ProcessMetrics(clone),
+                    <= 250 => await MetricProvider.ProcessMatrixAsync(clone),
+                    _ => await MetricProvider.ProcessMatrixParallel(clone)
+                };
             
-            // TODO: Switch between types of computing based on difficulty
-            var stats = MetricProvider.ProcessMetrics(clone);
             _globalStats = stats.global;
 
             foreach (var node in Nodes)
