@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace Core.Metrics.Metrics
+namespace Analysis.Metrics
 {
     public abstract class Metric<T>
     {

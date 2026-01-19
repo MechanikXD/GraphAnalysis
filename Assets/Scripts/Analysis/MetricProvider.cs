@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
+using Analysis.Global;
+using Analysis.Local;
+using Analysis.Metrics;
 using Core.Graph;
-using Core.Metrics.Global;
-using Core.Metrics.Local;
-using Core.Metrics.Metrics;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
-namespace Core.Metrics
+namespace Analysis
 {
     public static class MetricProvider
     {

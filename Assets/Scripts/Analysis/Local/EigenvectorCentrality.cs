@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
-using Core.Metrics.Metrics;
+using Analysis.Metrics;
 using UnityEngine;
 
-namespace Core.Metrics.Local
+namespace Analysis.Local
 {
     public class EigenvectorCentrality : LocalMetric
     {

@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Metrics.Metrics;
+using Analysis.Metrics;
 using UnityEngine;
 
-namespace Core.Metrics.Global
+namespace Analysis.Global
 {
     public class Entropy : GlobalMetric
     {

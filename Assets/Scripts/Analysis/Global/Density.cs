@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Core.Metrics.Metrics;
+using Analysis.Metrics;
 
-namespace Core.Metrics.Global
+namespace Analysis.Global
 {
     public class Density : GlobalMetric
     {

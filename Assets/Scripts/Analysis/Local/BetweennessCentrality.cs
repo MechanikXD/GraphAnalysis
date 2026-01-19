@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Metrics.Metrics;
+using Analysis.Metrics;
 
-namespace Core.Metrics.Local
+namespace Analysis.Local
 {
     public class BetweennessCentrality : LocalMetric
     {

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Metrics.Metrics;
+using Analysis.Metrics;
 using UnityEngine;
 
-namespace Core.Metrics.Local
+namespace Analysis.Local
 {
     public class ClusteringCoefficient : LocalMetric
     {

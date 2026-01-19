@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.Graph;
 
-namespace Core.Metrics
+namespace Analysis
 {
     public class GraphCache
     {

@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Analysis.Metrics;
 using Core.Graph;
-using Core.Metrics.Metrics;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace Core.Metrics.Local
+namespace Analysis.Local
 {
     public class LaplacianSpectrum : LocalMetric
     {
