@@ -17,6 +17,9 @@ namespace Core.Structure
         [SerializeField] private string _sessionKey;
         [SerializeField] private bool _deserializeData;
         [SerializeField] private bool _serializeData;
+        [SerializeField] private bool _loadGraphData;
+        [SerializeField] private string[] _nodeNames;
+        [SerializeField] private Vector2[] _nodePos;
 
         [SerializeField] private Transform _tempRoot;
         private readonly List<Node> _tempNodes = new List<Node>();
@@ -33,6 +36,7 @@ namespace Core.Structure
             // To prevent OnApplicationFocus early calls
             await UniTask.Yield(PlayerLoopTiming.PostLateUpdate, destroyCancellationToken);
             _initialized = true;
+            if (_loadGraphData) PlayerController.PlayerController.StartGraphAdjust();
         }
         
         private readonly LinkedList<Edge> _createdEdges = new LinkedList<Edge>();
@@ -97,6 +101,8 @@ namespace Core.Structure
             _createdEdges.AddLast(newEdge);
             return newEdge;
         }
+
+        public void GenerateTempNodes() => GenerateTempNodes(_nodePos, _nodeNames);
 
         public void GenerateTempNodes(Vector2[] pos, [CanBeNull] string[] names)
         {

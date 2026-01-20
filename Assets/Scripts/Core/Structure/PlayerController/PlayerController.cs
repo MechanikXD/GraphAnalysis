@@ -30,10 +30,12 @@ namespace Core.Structure.PlayerController
             var defaultState = new Default(_controller, this);
             var nodeLink = new NodeLink(_controller, this);
             var nodeMove = new NodeMove(_controller, this);
+            var graphAdjust = new GraphAdjust(_controller, this);
             
             _controller.Initialize(defaultState);
             _controller.AddState(nodeLink);
             _controller.AddState(nodeMove);
+            _controller.AddState(graphAdjust);
         }
         
         private void CreateNode()
@@ -52,6 +54,8 @@ namespace Core.Structure.PlayerController
             ((NodeMove)_controller.GetState<NodeMove>()).SetNode(node);
             _controller.ChangeState<NodeMove>();
         }
+        
+        public static void StartGraphAdjust() => _controller.ChangeState<GraphAdjust>();
 
         private void Update() => _controller.CurrentState.FrameUpdate();
 
