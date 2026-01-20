@@ -38,7 +38,7 @@ namespace Core.Structure.PlayerController
         
         private void CreateNode()
         {
-            GameManager.Instance.CreateNodeFromScreenPos(_lastContextActionPosition);
+            GameManager.Instance.CreateNodeFromScreenPos(_lastContextActionPosition, null);
         }
 
         public static void StartNodeLink(Node source, bool oneSidedLink)

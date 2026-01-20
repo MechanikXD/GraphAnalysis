@@ -39,7 +39,7 @@ namespace Core.Graph
             set
             {
                 IsCustomWeight = true;
-                SetValueInMatrix(value);
+                SetValueInMatrix(value, true);
                 _weight = value;
             }
         }
@@ -118,27 +118,27 @@ namespace Core.Graph
         }
 
         /// Sets value in the Adjacency Matrix accounting orientation and graph type
-        private void SetValueInMatrix(float value)
+        private void SetValueInMatrix(float value, bool updateStats)
         {
             var matrix = GameManager.Instance.AdjacencyMatrix;
             if (IsOneSided)
             {
                 matrix.MakeOriented();
-                matrix.SetValue(value, _first.NodeIndex, _second.NodeIndex, true);
+                matrix.SetValue(value, _first.NodeIndex, _second.NodeIndex, updateStats);
             }
             else if (matrix.IsOriented)
             {
                 matrix.SetValue(value, _first.NodeIndex, _second.NodeIndex, false);
-                matrix.SetValue(value, _second.NodeIndex, _first.NodeIndex, true);
+                matrix.SetValue(value, _second.NodeIndex, _first.NodeIndex, updateStats);
             }
             else
             {
-                matrix.SetValue(value, _first.NodeIndex, _second.NodeIndex, true);
+                matrix.SetValue(value, _first.NodeIndex, _second.NodeIndex, updateStats);
             }
         }
 
         /// Sets all necessary values like nodes, weight etc.
-        public void SetNodes(Node first, Node second, float weight, bool oneSided)
+        public void SetNodes(Node first, Node second, float weight, bool oneSided, bool updateStats=true)
         {
             _first = first;
             _second = second;
@@ -147,31 +147,31 @@ namespace Core.Graph
 
             IsCustomWeight = true;
             _weight = weight;
-            SetValueInMatrix(_weight);
+            SetValueInMatrix(_weight, updateStats);
             
             _first.AddLink(this);
             _second.AddLink(this);
         }
         
-        public void SetNodes(Node first, Node second, bool oneSided)
+        public void SetNodes(Node first, Node second, bool oneSided, bool updateStats=true)
         {
             _first = first;
             _second = second;
             IsOneSided = oneSided;
             _wasPlaced = true;
 
-            SetFallBackWeight();
+            SetFallBackWeight(updateStats);
             
             _first.AddLink(this);
             _second.AddLink(this);
         }
 
-        public void SetFallBackWeight()
+        public void SetFallBackWeight(bool updateStats=true)
         {
             IsCustomWeight = false;
             var weight = Vector2.Distance(_first.transform.position, _second.transform.position);
             _weight = weight;
-            SetValueInMatrix(_weight);
+            SetValueInMatrix(_weight, updateStats);
         }
 
         public void Enable()
@@ -194,11 +194,12 @@ namespace Core.Graph
         /// <param name="fromNode"> Node that deleted this edge </param>
         public void CascadeDestroy(Node fromNode)
         {
-            if (_wasPlaced) SetValueInMatrix(0);
+            if (_wasPlaced) SetValueInMatrix(0, true);
                 
             if (fromNode != _first) _first.RemoveLink(this);
             if (fromNode != _second) _second.RemoveLink(this);
             
+            GameManager.Instance.RemoveEdge(this);
             Destroy(gameObject);
         }
 
@@ -207,11 +208,12 @@ namespace Core.Graph
         /// </summary>
         public void DeleteEdge()
         {
-            if (_wasPlaced) SetValueInMatrix(0);
+            if (_wasPlaced) SetValueInMatrix(0, true);
             
             if (_first != null) _first.RemoveLink(this);
             if (_second != null) _second.RemoveLink(this);
             
+            GameManager.Instance.RemoveEdge(this);
             Destroy(gameObject);
         }
 

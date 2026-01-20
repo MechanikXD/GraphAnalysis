@@ -10,14 +10,16 @@ namespace Core.LoadSystem.Serializable
         public Dictionary<string, float> Stats;
         public string _nodeName;
         public int _nodeIndex;
-        public Vector2 _position;
+        public float _positionX;
+        public float _positionY;
 
         public SerializableNode(Dictionary<string, float> stats, string nodeName, int nodeIndex, Vector2 position)
         {
             Stats = stats;
             _nodeName = nodeName;
             _nodeIndex = nodeIndex;
-            _position = position;
+            _positionX = position.x;
+            _positionY = position.y;
         }
     }
 }
