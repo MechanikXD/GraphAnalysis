@@ -163,15 +163,15 @@ namespace Core.Graph
             }
         }
 
-        public void GenerateFromNodes(Vector2[] nodePos, float lengthCutOff, bool preserveConnectivity)
+        public void GenerateFromNodes(float lengthCutOff, bool preserveConnectivity)
         {
             // Expected to have an empty matrix by now
-            for (var i = 0; i < _matrix.Count; i++)
+            for (var i = 0; i < Nodes.Count; i++)
             {
-                for (var j = 0; j < _matrix[0].Count; j++)
+                for (var j = 0; j < Nodes.Count; j++)
                 {
                     if (i == j) _matrix[i][j] = 0;
-                    else _matrix[i][j] = Vector2.Distance(nodePos[i], nodePos[j]);
+                    else _matrix[i][j] = Vector2.Distance(Nodes[i].transform.position, Nodes[j].transform.position);
                 }
             }
             // Get all edges that the graph will contain

@@ -56,9 +56,9 @@ namespace Core.Graph
             }
         }
         
-        private void StartLink() => PlayerController.StartNodeLink(this, false);
-        private void StartMove() => PlayerController.StartNodeMove(this);
-        private void StartOneSidedLink() => PlayerController.StartNodeLink(this, true);
+        private void StartLink() => PlayerController.EnterNodeLink(this, false);
+        private void StartMove() => PlayerController.EnterNodeMove(this);
+        private void StartOneSidedLink() => PlayerController.EnterNodeLink(this, true);
 
         public void AddLink(Edge link) => Connections.Add(link);
         public void RemoveLink(Edge link) => Connections.Remove(link);

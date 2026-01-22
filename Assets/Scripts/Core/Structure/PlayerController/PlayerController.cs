@@ -43,19 +43,20 @@ namespace Core.Structure.PlayerController
             GameManager.Instance.CreateNodeFromScreenPos(_lastContextActionPosition, null);
         }
 
-        public static void StartNodeLink(Node source, bool oneSidedLink)
+        public static void EnterNodeLink(Node source, bool oneSidedLink)
         {
             ((NodeLink)_controller.GetState<NodeLink>()).SetSource(source, oneSidedLink);
             _controller.ChangeState<NodeLink>();
         }
 
-        public static void StartNodeMove(Node node)
+        public static void EnterNodeMove(Node node)
         {
             ((NodeMove)_controller.GetState<NodeMove>()).SetNode(node);
             _controller.ChangeState<NodeMove>();
         }
         
-        public static void StartGraphAdjust() => _controller.ChangeState<GraphAdjust>();
+        public static void EnterGraphAdjust() => _controller.ChangeState<GraphAdjust>();
+        public static void EnterDefault() => _controller.ChangeState<Default>();
 
         private void Update() => _controller.CurrentState.FrameUpdate();
 

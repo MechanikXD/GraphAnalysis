@@ -20,7 +20,7 @@ namespace UI.InfoStructures
         public void DisplayEdge(Edge edge)
         {
             _currentEdge = edge;
-            _weightInput.SetTextWithoutNotify(_currentEdge.Weight.ToString("F"));
+            _weightInput.SetTextWithoutNotify(_currentEdge.Weight.ToString("F3"));
             _fromNode.SetText(_currentEdge.FromNodeName);
             _toNode.SetText(_currentEdge.ToNodeName);
             

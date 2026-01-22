@@ -23,6 +23,7 @@ namespace Core.Structure
 
         [SerializeField] private Transform _tempRoot;
         private readonly List<Node> _tempNodes = new List<Node>();
+        public Transform TempRoot => _tempRoot;
         
         [SerializeField] private Transform _nodeRoot;
         [SerializeField] private Transform _edgeRoot;
@@ -36,7 +37,7 @@ namespace Core.Structure
             // To prevent OnApplicationFocus early calls
             await UniTask.Yield(PlayerLoopTiming.PostLateUpdate, destroyCancellationToken);
             _initialized = true;
-            if (_loadGraphData) PlayerController.PlayerController.StartGraphAdjust();
+            if (_loadGraphData) PlayerController.PlayerController.EnterGraphAdjust();
         }
         
         private readonly LinkedList<Edge> _createdEdges = new LinkedList<Edge>();

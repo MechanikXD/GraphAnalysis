@@ -8,6 +8,7 @@ namespace Core.Structure.PlayerController
     public class BackgroundController : MonoBehaviour, IDragHandler, IScrollHandler
     {
         private const float SCALE_SNAP_DISTANCE = 0.01f;
+        private static bool _enabled;
         
         [SerializeField] private bool _preserveBounds = true;
         [SerializeField] private float _dragSpeed;
@@ -36,6 +37,9 @@ namespace Core.Structure.PlayerController
             _spriteRenderer = GetComponent<SpriteRenderer>();
             UpdateBounds();
         }
+
+        public static void Enable() => _enabled = true;
+        public static void Disable() => _enabled = false;
 
         private void MoveCamera(Vector2 newPos)
         {
@@ -69,16 +73,17 @@ namespace Core.Structure.PlayerController
         
         public void OnDrag(PointerEventData eventData)
         {
+            if (!_enabled) return; 
             Vector3 delta = -eventData.delta * _dragSpeed * Time.deltaTime;
             MoveCamera(_camera.transform.position + new Vector3(delta.x, delta.y, 0f));
         }
 
         public void OnScroll(PointerEventData eventData)
         {
+            if (!_enabled) return;
             ZoomCamera(_camera.orthographicSize - eventData.scrollDelta.y * _scrollSpeed);
         }
 
-        // TODO: Switch to UniTasks
         private async UniTask ZoomCameraToDesired()
         {
             while (Mathf.Abs(_desiredOrthoSize - _camera.orthographicSize) > SCALE_SNAP_DISTANCE)

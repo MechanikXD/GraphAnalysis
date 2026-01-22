@@ -96,7 +96,12 @@ namespace Analysis.Local
                 if (i == removed) continue;
 
                 var rj = 0;
-                double deg = matrix.Nodes[i].Degree;
+                var deg = 0.0;
+                for (var j = 0; j < matrix.Length; j++)
+                {
+                    if (j == removed) continue;
+                    deg += matrix[i, j];
+                }
                 l[ri, ri] = deg;
 
                 for (var j = 0; j < matrix.Length; j++)
