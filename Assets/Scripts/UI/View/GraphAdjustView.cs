@@ -15,9 +15,9 @@ namespace UI.View
         private float _lastEdgeLenght;
         [SerializeField] private float _defaultEdgeLenght = 10f;
 
-        public override void Show()
+        public override void Show(bool isInitial = false)
         {
-            base.Show();
+            base.Show(isInitial);
             UIManager.Instance.HideHUD<GlobalStatDisplayView>();
             _keepConnectedToggle.isOn = true;
             _lastEdgeLenght = _defaultEdgeLenght;
@@ -28,10 +28,10 @@ namespace UI.View
             _edgeLenghtField.onEndEdit.AddListener(UpdateEdgeLength);
         }
 
-        public override void Hide()
+        public override void Hide(bool isInitial = false)
         {
-            base.Hide();
-            UIManager.Instance.ShowHUD<GlobalStatDisplayView>();
+            base.Hide(isInitial);
+            if (!isInitial) UIManager.Instance.ShowHUD<GlobalStatDisplayView>();
             _confirmButton.onClick.RemoveListener(OnConfirm);
             _cancelButton.onClick.RemoveListener(OnCancel);
             _edgeLenghtField.onEndEdit.RemoveListener(UpdateEdgeLength);

@@ -111,7 +111,7 @@ namespace UI
                 if (!uiCanvas.gameObject.activeInHierarchy) {
                     uiCanvas.gameObject.SetActive(true);
                 }
-                if (uiCanvas.HideOnStart) uiCanvas.Hide();
+                if (uiCanvas.HideOnStart) uiCanvas.Hide(true);
             }
             
             foreach (var hudCanvas in _hudCanvases.Values) {
@@ -119,7 +119,7 @@ namespace UI
                 if (!hudCanvas.gameObject.activeInHierarchy) {
                     hudCanvas.gameObject.SetActive(true);
                 }
-                if (hudCanvas.HideOnStart) hudCanvas.Hide();
+                if (hudCanvas.HideOnStart) hudCanvas.Hide(true);
             }
         }
     }

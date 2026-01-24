@@ -16,13 +16,13 @@ namespace UI
         }
         protected virtual void Initialize() {}
         
-        public virtual void Show()
+        public virtual void Show(bool isInitialHide=false)
         {
             ThisCanvas.enabled = true;
             IsEnabled = true;
         }
 
-        public virtual void Hide()
+        public virtual void Hide(bool isInitialHide=false)
         {
             ThisCanvas.enabled = false;
             IsEnabled = false;

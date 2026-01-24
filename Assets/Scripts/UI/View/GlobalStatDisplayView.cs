@@ -9,6 +9,11 @@ namespace UI.View
     {
         [SerializeField] private TMP_Text _textFiled;
 
+        private void Start()
+        {
+            _textFiled.SetText(string.Empty);
+        }
+
         public void LoadText(Dictionary<string, float> stats)
         {
             _textFiled.SetText(FormalStats(stats));
