@@ -14,6 +14,7 @@ namespace Core.Graph
     public class AdjacencyMatrix : ISerializable<SerializableAdjacencyMatrix>
     {
         private readonly static CancellationTokenSource Cts = new CancellationTokenSource();
+        public static string BgFilePath { get; set; }
         public List<Node> Nodes { get; } = new List<Node>();
         private List<List<float>> _matrix = new List<List<float>>();
         private Dictionary<string, float> _globalStats;
@@ -124,14 +125,15 @@ namespace Core.Graph
                 serializableEdges[i] = allEdges[i].SerializeSelf();
             }
             
-            return new SerializableAdjacencyMatrix(_globalStats, nodes, serializableEdges, Length, IsOriented, IsWeighted);
+            return new SerializableAdjacencyMatrix(_globalStats, nodes, serializableEdges, BgFilePath, Length, IsOriented, IsWeighted);
         }
 
         public void DeserializeSelf(SerializableAdjacencyMatrix serialized)
         {
             // Graph was empty prior, no need to deserialize
             if (serialized.GlobalStats == null) return;
-            
+
+            BgFilePath = serialized._bgFilePath;
             _globalStats = serialized.GlobalStats;
             IsOriented = serialized._isOriented;
             IsWeighted = serialized._isWeighted;

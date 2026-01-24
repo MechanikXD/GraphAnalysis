@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Core.Graph;
 using Core.Structure.PlayerController;
 using SimpleFileBrowser;
 using UnityEngine;
@@ -32,15 +33,26 @@ namespace UI.InfoStructures
             FileBrowser.ShowLoadDialog(OnImageSelected, null, FileBrowser.PickMode.Files);
         }
 
+        public void SetBackground(string filepath) => OnImageSelected(new[]{filepath});
+
         private void OnImageSelected(IList<string> paths)
         {
-            var imageBytes = File.ReadAllBytes(paths[0]);
+            if (string.IsNullOrWhiteSpace(paths[0])) return;
+            if (!File.Exists(paths[0]))
+            {
+                Debug.LogWarning("Image file not found: " + paths[0]);
+                AdjacencyMatrix.BgFilePath = string.Empty;
+                return;
+            }
+
+            var imageBytes= File.ReadAllBytes(paths[0]);
             var texture = new Texture2D(2, 2); // Size doesn't matter, will auto-resize
             var loaded = texture.LoadImage(imageBytes);
 
             if (!loaded)
             {
-                Debug.LogError("Failed to load image data!");
+                Debug.LogWarning("File is not a valid PNG/JPG image: " + paths[0]);
+                Destroy(texture);
             }
             else
             {
@@ -48,6 +60,7 @@ namespace UI.InfoStructures
                     new Rect(0, 0, texture.width, texture.height),
                     new Vector2(0.5f, 0.5f)
                 );
+                AdjacencyMatrix.BgFilePath = paths[0];
                 _bgController.ChangeBackground(sprite);
             }
         }

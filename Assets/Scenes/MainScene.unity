@@ -164,8 +164,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sessionKey: Skong
-  _deserializeData: 0
-  _serializeData: 0
+  _deserializeData: 1
+  _serializeData: 1
   _loadGraphData: 0
   _nodeNames:
   - Node 1

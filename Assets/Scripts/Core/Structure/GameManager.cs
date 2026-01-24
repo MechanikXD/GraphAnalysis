@@ -8,6 +8,8 @@ using Core.LoadSystem.Serializable;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using UI.InfoStructures;
+using UI.View;
 
 namespace Core.Structure
 {
@@ -34,6 +36,7 @@ namespace Core.Structure
 
         private async void Start()
         {
+            InfoView.GetInfo<Menu>().SetBackground(AdjacencyMatrix.BgFilePath);
             // To prevent OnApplicationFocus early calls
             await UniTask.Yield(PlayerLoopTiming.PostLateUpdate, destroyCancellationToken);
             _initialized = true;
