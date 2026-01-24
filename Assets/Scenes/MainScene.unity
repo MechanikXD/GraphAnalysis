@@ -3159,7 +3159,7 @@ MonoBehaviour:
   - {fileID: 1588540569}
   - {fileID: 638515211}
   _content: {fileID: 1386057861}
-  _hiddenPosition: {x: 890, y: 0}
+  _hiddenPosition: {x: 1490, y: 0}
   _lerpSpeed: 5
 --- !u!224 &960415880
 RectTransform:
