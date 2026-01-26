@@ -84,6 +84,11 @@ namespace Core.Graph
                 node.LoadStats(stats.local);
             }
             
+            UpdateGlobalStatView();
+        }
+
+        public void UpdateGlobalStatView()
+        {
             var hud = UIManager.Instance.GetHUDCanvas<GlobalStatDisplayView>();
             hud.LoadText(_globalStats);
             if (!hud.IsEnabled) UIManager.Instance.ShowHUD<GlobalStatDisplayView>();
@@ -118,9 +123,9 @@ namespace Core.Graph
                 nodes[i] = Nodes[i].SerializeSelf();
             }
 
-            var allEdges = GameManager.Instance.GetAllEdges();
-            var serializableEdges = new SerializableEdge[allEdges.Length];
-            for (var i = 0; i < allEdges.Length; i++)
+            var allEdges = GameManager.Instance.CreatedEdges;
+            var serializableEdges = new SerializableEdge[allEdges.Count];
+            for (var i = 0; i < allEdges.Count; i++)
             {
                 serializableEdges[i] = allEdges[i].SerializeSelf();
             }
@@ -153,7 +158,7 @@ namespace Core.Graph
                 newNode.DeserializeSelf(node);
                 Nodes.Add(newNode);
             }
-
+            
             foreach (var edge in serialized._edges)
             {
                 var newEdge = gm.CreateEdge(Vector2.zero, edge._isOneSided);
@@ -180,15 +185,37 @@ namespace Core.Graph
             var edges = preserveConnectivity
                 ? BuildMstWithThreshold(lengthCutOff)
                 : FilteredEdges(lengthCutOff);
-            // Instantiate edges
+            // Place edges
+            var existingEdges = GameManager.Instance.CreatedEdges;
+            var existingEdgesCount = existingEdges.Count;
+            var existingEdgesIndex = 0;
             foreach (var edge in edges)
             {
-                var newEdge = GameManager.Instance.CreateEdge(Vector2.zero, false);
+                Edge newEdge;
+                // Reuse existing ones
+                if (existingEdgesIndex < existingEdgesCount)
+                {
+                    newEdge = existingEdges[existingEdgesIndex];
+                    existingEdgesIndex++;
+                }
+                // if not enough -> generate new
+                else newEdge = GameManager.Instance.CreateEdge(Vector2.zero, false);
+                // Set data
                 var firstNode = Nodes[edge.from];
                 var secondNode = Nodes[edge.to];
                 newEdge.SetNodes(firstNode, secondNode, edge.weight, false, false);
                 newEdge.AdjustEdge(firstNode.transform.position, secondNode.transform.position);
             }
+            
+            if (existingEdgesIndex < existingEdgesCount)
+            {
+                for (var i = existingEdgesIndex; i < existingEdgesCount; i++)
+                {
+                    Object.Destroy(existingEdges[i].gameObject);
+                }
+                GameManager.Instance.RemoveEdgesAfter(existingEdgesIndex);
+            }
+            
             // Update entire graph at once
             ProcessStats().Forget();
         }

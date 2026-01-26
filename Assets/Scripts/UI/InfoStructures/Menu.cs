@@ -3,6 +3,8 @@ using System.IO;
 using Core.Graph;
 using Core.Structure.PlayerController;
 using SimpleFileBrowser;
+using UI.Prompts;
+using UI.View;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +13,7 @@ namespace UI.InfoStructures
     public class Menu : Info
     {
         [SerializeField] private Button _createNodesButton;
+        [SerializeField] private Button _generateEdgesButton;
         [SerializeField] private Button _changeBgButton;
         [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _exitButton;
@@ -20,11 +23,13 @@ namespace UI.InfoStructures
         private void OnEnable()
         {
             _changeBgButton.onClick.AddListener(ChangeBackground);
+            _generateEdgesButton.onClick.AddListener(ShowGenerateEdgesPrompt);
         }
 
         private void OnDisable()
         {
             _changeBgButton.onClick.RemoveListener(ChangeBackground);
+            _generateEdgesButton.onClick.RemoveListener(ShowGenerateEdgesPrompt);
         }
 
         private void ChangeBackground()
@@ -32,6 +37,9 @@ namespace UI.InfoStructures
             FileBrowser.SetFilters( true, new FileBrowser.Filter( "Images", ".jpg", ".png" ));
             FileBrowser.ShowLoadDialog(OnImageSelected, null, FileBrowser.PickMode.Files);
         }
+
+        private void ShowGenerateEdgesPrompt() => UIManager.Instance.GetHUDCanvas<GlobalHUD>()
+            .GetPrompt<GenerateEdgesPrompt>().ShowPrompt();
 
         public void SetBackground(string filepath) => OnImageSelected(new[]{filepath});
 

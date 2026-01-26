@@ -44,7 +44,7 @@ namespace UI.View
                 _lastEdgeLenght = number;
             }
             
-            _edgeLenghtField.SetTextWithoutNotify(_lastEdgeLenght.ToString("F3"));
+            _edgeLenghtField.SetTextWithoutNotify(_lastEdgeLenght.ToString("0.###"));
         }
 
         private void OnConfirm()

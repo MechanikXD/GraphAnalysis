@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Core.Behaviour;
 using Core.Graph;
@@ -33,6 +32,11 @@ namespace Core.Structure
         [SerializeField] private Node _nodePrefab;
         [SerializeField] private Edge _edgePrefab;
         private bool _initialized;
+        
+        public List<Edge> CreatedEdges { get; } = new List<Edge>();
+        private int _totalNodesCreated;
+        public AdjacencyMatrix AdjacencyMatrix { get; private set; }
+        public Camera MainCamera { get; private set; }
 
         private async void Start()
         {
@@ -41,13 +45,9 @@ namespace Core.Structure
             await UniTask.Yield(PlayerLoopTiming.PostLateUpdate, destroyCancellationToken);
             _initialized = true;
             if (_loadGraphData) PlayerController.PlayerController.EnterGraphAdjust();
+            if (AdjacencyMatrix.Length > 0) AdjacencyMatrix.UpdateGlobalStatView();
         }
         
-        private readonly LinkedList<Edge> _createdEdges = new LinkedList<Edge>();
-        private int _totalNodesCreated;
-        public AdjacencyMatrix AdjacencyMatrix { get; private set; }
-        public Camera MainCamera { get; private set; }
-
         protected override void Initialize()
         {
             MainCamera = Camera.main;
@@ -102,7 +102,7 @@ namespace Core.Structure
         {
             var newEdge = Instantiate(_edgePrefab, worldPos, Quaternion.identity, _edgeRoot);
             if (oneSided) newEdge.IsOneSided = true;
-            _createdEdges.AddLast(newEdge);
+            CreatedEdges.Add(newEdge);
             return newEdge;
         }
 
@@ -145,8 +145,9 @@ namespace Core.Structure
             _tempRoot.position = Vector3.zero;
         }
 
-        public void RemoveEdge(Edge removed) => _createdEdges.Remove(removed);
+        public void RemoveEdge(Edge removed) => CreatedEdges.Remove(removed);
 
-        public Edge[] GetAllEdges() => _createdEdges.ToArray();
+        public void RemoveEdgesAfter(int index) => 
+            CreatedEdges.RemoveRange(index, CreatedEdges.Count - index);
     }
 }
