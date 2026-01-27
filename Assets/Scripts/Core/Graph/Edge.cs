@@ -15,9 +15,11 @@ namespace Core.Graph
         private const float CROP_WHEN_TWO_SIDED = 0.6f;
         private const float CROP_WHEN_ONE_SIDED = 0.4f;
         private const float OFFSET_WHEN_ONE_SIDED = 0.1f;
+        private const float ARROW_WIDTH = 0.05f;
         
         [SerializeField] private BoxCollider2D _collider;
         [SerializeField] private SpriteRenderer _spriteRenderer;
+        [SerializeField] private SpriteRenderer _gradientRenderer;
         
         [SerializeField] private GameObject _forwardArrow;
         [SerializeField] private GameObject _backwardArrow;
@@ -80,7 +82,8 @@ namespace Core.Graph
             if (value < 0) value = 0;
             
             _collider.size = new Vector2(value, _collider.size.y);
-            _spriteRenderer.size = new Vector2(value, _spriteRenderer.size.y);
+            _spriteRenderer.size = new Vector2(value, ARROW_WIDTH);
+            _gradientRenderer.transform.localScale = new Vector3(ARROW_WIDTH, value, 1);
 
             var halfValue = value / 2;
             _forwardArrow.transform.localPosition = new Vector3(-halfValue + _arrowOffset, 0, 0);
