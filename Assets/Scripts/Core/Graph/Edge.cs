@@ -192,9 +192,10 @@ namespace Core.Graph
         /// Destroys itself but ignores given node, so node itself can delete all edges safely
         /// </summary>
         /// <param name="fromNode"> Node that deleted this edge </param>
-        public void CascadeDestroy(Node fromNode)
+        /// <param name="isSilent"> Will change value in Adjacency matrix if set true </param>
+        public void CascadeDestroy(Node fromNode, bool isSilent=false)
         {
-            if (_wasPlaced) SetValueInMatrix(0, true);
+            if (_wasPlaced && !isSilent) SetValueInMatrix(0, true);
                 
             if (fromNode != _first) _first.RemoveLink(this);
             if (fromNode != _second) _second.RemoveLink(this);

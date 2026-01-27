@@ -18,6 +18,7 @@ namespace Core.Graph
         public float Degree => Connections.Count;
         public string NodeName { get; set; }
         public int NodeIndex { get; set; }
+        public Vector2 Position => transform.position;
         
         private void Awake()
         {
@@ -63,11 +64,18 @@ namespace Core.Graph
         public void AddLink(Edge link) => Connections.Add(link);
         public void RemoveLink(Edge link) => Connections.Remove(link);
 
-        private void DeleteNode()
+        public void DeleteNode()
         {
             foreach (var edge in Connections) edge.CascadeDestroy(this);
             
             GameManager.Instance.AdjacencyMatrix.RemoveNode(NodeIndex);
+            Connections.Clear();
+            Destroy(gameObject);
+        }
+
+        public void SilentDestroy()
+        {
+            foreach (var edge in Connections) edge.CascadeDestroy(this, true);
             Connections.Clear();
             Destroy(gameObject);
         }

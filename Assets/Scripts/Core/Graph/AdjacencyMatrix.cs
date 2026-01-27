@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Analysis;
 using Core.LoadSystem;
@@ -46,6 +47,23 @@ namespace Core.Graph
                 Nodes[i].NodeIndex = i;
             }
             Length--;
+            if (updateStats) ProcessStats().Forget();
+        }
+
+        public void RemoveRange(IList<int> at, bool updateStats = true)
+        {
+            foreach (var nodeIndex in at.Reverse()) // Consider indexes sorted
+            {
+                Nodes.RemoveAt(nodeIndex);
+                _matrix.RemoveAt(nodeIndex);
+                foreach (var col in _matrix)
+                {
+                    col.RemoveAt(nodeIndex);
+                }
+            }
+
+            for (var i = 0; i < Nodes.Count; i++) Nodes[i].NodeIndex = i;
+            Length -= at.Count;
             if (updateStats) ProcessStats().Forget();
         }
 

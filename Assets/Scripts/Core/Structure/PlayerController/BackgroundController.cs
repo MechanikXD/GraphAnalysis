@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Other;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -119,6 +120,28 @@ namespace Core.Structure.PlayerController
             _collider2D.size = newSize;
             UpdateBounds();
             MoveCamera(_camera.transform.position);
+            
+            // Delete nodes outside new boundaries
+            var adjMatrix = GameManager.Instance.AdjacencyMatrix;
+            var nodesToRemove = new List<int>();
+            foreach (var node in adjMatrix.Nodes)
+            {
+                if (!WithinBounds(node.Position))
+                {
+                    nodesToRemove.Add(node.NodeIndex);
+                    node.SilentDestroy(); // Will be marked for destroy but not destroyed yet
+                }
+            }
+            adjMatrix.RemoveRange(nodesToRemove);
+        }
+
+        private bool WithinBounds(Vector2 pos)
+        {
+            var size = _spriteRenderer.size;
+            var halfWidth = size.x / 2f;
+            var halfHeight = size.y / 2f;
+            return pos.x >= -halfWidth && pos.x <= halfWidth && pos.y >= -halfHeight &&
+                   pos.y <= halfHeight;
         }
     }
 }

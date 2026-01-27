@@ -350,7 +350,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sessionKey: Skong
   _deserializeData: 1
-  _serializeData: 1
+  _serializeData: 0
   _loadGraphData: 0
   _nodeNames:
   - Node 1
@@ -1765,7 +1765,7 @@ MonoBehaviour:
   _dragSpeed: 7
   _scrollSpeed: 0.2
   _scaleLerpSpeed: 10
-  _scrollBounds: {x: 3, y: 10}
+  _scrollBounds: {x: 1, y: 10}
 --- !u!61 &374883665
 BoxCollider2D:
   m_ObjectHideFlags: 0
