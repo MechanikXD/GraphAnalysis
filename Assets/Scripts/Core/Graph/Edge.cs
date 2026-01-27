@@ -2,7 +2,9 @@
 using Core.LoadSystem.Serializable;
 using Core.Structure;
 using Core.Structure.PlayerController;
+using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
+using Other;
 using UI;
 using UI.InfoStructures;
 using UI.View;
@@ -12,24 +14,33 @@ namespace Core.Graph
 {
     public class Edge : MonoBehaviour, IInteractable, ISerializable<SerializableEdge>
     {
+        private const float COLOR_SNAP_DISTANCE = 0.1f;
         private const float CROP_WHEN_TWO_SIDED = 0.6f;
         private const float CROP_WHEN_ONE_SIDED = 0.4f;
         private const float OFFSET_WHEN_ONE_SIDED = 0.1f;
         private const float ARROW_WIDTH = 0.05f;
-        
+        /*
+         * Reminder:
+         *  Second Node                        First Node
+         *  Base Color    <------------->      Gradient
+         * Forward Arrow                    Backward arrow
+         */
         [SerializeField] private BoxCollider2D _collider;
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private SpriteRenderer _gradientRenderer;
         
-        [SerializeField] private GameObject _forwardArrow;
-        [SerializeField] private GameObject _backwardArrow;
+        [SerializeField] private SpriteRenderer _forwardArrow;
+        [SerializeField] private SpriteRenderer _backwardArrow;
         [SerializeField] private float _arrowOffset;
+        [SerializeField] private float _colorChangeSpeed;
 
         private float _weight;
         private bool _isOneSided;
         private bool _wasPlaced;
         private Node _first;
         private Node _second;
+
+        private bool _isChangingColor;
         
         public bool IsCustomWeight { get; private set; }
         public string FromNodeName => _first.NodeName;
@@ -55,7 +66,7 @@ namespace Core.Graph
             get => _isOneSided;
             set
             {
-                _backwardArrow.SetActive(!value);
+                _backwardArrow.gameObject.SetActive(!value);
                 _isOneSided = value;
             }
         }
@@ -102,6 +113,11 @@ namespace Core.Graph
             
             var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, angle);
+        }
+
+        public void UpdateColor()
+        {
+            if (!_isChangingColor) ChangeColor().Forget();
         }
 
         public void OnLeftClick()
@@ -229,6 +245,40 @@ namespace Core.Graph
             _weight = serialized._weight;
             _isOneSided = serialized._isOneSided;
             IsCustomWeight = serialized._isCustomWeight;
+        }
+
+        private async UniTask ChangeColor()
+        {
+            _isChangingColor = true;
+            while (true)
+            {
+                var firstNodeColor = _first.NodeColor;
+                var secondNodeColor = _second.NodeColor;
+                var thisFrameChangeSpeed = _colorChangeSpeed * Time.deltaTime;
+                var forwardColorStatus = _spriteRenderer.color.Distance(secondNodeColor) < COLOR_SNAP_DISTANCE;
+                var backwardColorStatus = _gradientRenderer.color.Distance(firstNodeColor) < COLOR_SNAP_DISTANCE;
+
+                if (!forwardColorStatus)
+                {
+                    _spriteRenderer.color = Color.Lerp(_spriteRenderer.color, secondNodeColor, thisFrameChangeSpeed);
+                    _forwardArrow.color = Color.Lerp(_forwardArrow.color, secondNodeColor, thisFrameChangeSpeed);
+                }
+                
+                if (!backwardColorStatus)
+                {
+                    _gradientRenderer.color = Color.Lerp(_gradientRenderer.color, firstNodeColor, thisFrameChangeSpeed);
+                    _backwardArrow.color = Color.Lerp(_backwardArrow.color, firstNodeColor, thisFrameChangeSpeed);
+                }
+                
+                if (forwardColorStatus && backwardColorStatus) break;
+                await UniTask.NextFrame(destroyCancellationToken);
+            }
+
+            _spriteRenderer.color = _second.NodeColor;
+            _forwardArrow.color = _second.NodeColor;
+            _gradientRenderer.color = _first.NodeColor;
+            _backwardArrow.color = _first.NodeColor;
+            _isChangingColor = false;
         }
     }
 }

@@ -107,9 +107,10 @@ MonoBehaviour:
   _collider: {fileID: 2549963169293704937}
   _spriteRenderer: {fileID: 6917744377483082562}
   _gradientRenderer: {fileID: 8608796838083268039}
-  _forwardArrow: {fileID: 3317914940968590042}
-  _backwardArrow: {fileID: 5931479883723327660}
+  _forwardArrow: {fileID: 8000905002352068996}
+  _backwardArrow: {fileID: 6067126204509716513}
   _arrowOffset: 0
+  _colorChangeSpeed: 5
 --- !u!61 &2549963169293704937
 BoxCollider2D:
   m_ObjectHideFlags: 0

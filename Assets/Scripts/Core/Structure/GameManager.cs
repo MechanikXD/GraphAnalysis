@@ -22,7 +22,14 @@ namespace Core.Structure
         [SerializeField] private string[] _nodeNames;
         [SerializeField] private Vector2[] _nodePos;
 
-        [SerializeField] private Transform _tempRoot;
+        [SerializeField] private string _tagetMetric = "Eigenvector Centrality";
+        [SerializeField] private Color _lowColor = Color.red;
+        [SerializeField] private Color _highColor = Color.green;
+        public string TargetMetric => _tagetMetric;
+        public Color LowColor => _lowColor;
+        public Color HighColor => _highColor;
+
+        private Transform _tempRoot;
         private readonly List<Node> _tempNodes = new List<Node>();
         public Transform TempRoot => _tempRoot;
         
@@ -49,7 +56,12 @@ namespace Core.Structure
                 GenerateTempNodes(_nodePos, _nodeNames);
                 PlayerController.PlayerController.EnterGraphAdjust();
             }
-            if (AdjacencyMatrix.Length > 0) AdjacencyMatrix.UpdateGlobalStatView();
+
+            if (AdjacencyMatrix.Length > 0)
+            {
+                AdjacencyMatrix.UpdateGlobalStatView();
+                AdjacencyMatrix.UpdateNodeColors();
+            }
         }
         
         protected override void Initialize()
@@ -108,6 +120,11 @@ namespace Core.Structure
             if (oneSided) newEdge.IsOneSided = true;
             CreatedEdges.Add(newEdge);
             return newEdge;
+        }
+
+        public void UpdateEdgeColors()
+        {
+            foreach (var edge in CreatedEdges) edge.UpdateColor();
         }
 
         public void GenerateTempNodes(Vector2[] pos, [CanBeNull] string[] names)

@@ -3,6 +3,8 @@ using Core.LoadSystem;
 using Core.LoadSystem.Serializable;
 using Core.Structure;
 using Core.Structure.PlayerController;
+using Cysharp.Threading.Tasks;
+using Other;
 using UI;
 using UI.InfoStructures;
 using UI.View;
@@ -12,6 +14,12 @@ namespace Core.Graph
 {
     public class Node : MonoBehaviour, IInteractable, ISerializable<SerializableNode>
     {
+        private const float COLOR_SNAP_DISTANCE = 0.1f;
+        [SerializeField] private float _colorChangeSpeed;
+        [SerializeField] private SpriteRenderer _renderer;
+        private Color _targetColor;
+        private bool _isChangingColor;
+        public Color NodeColor => _targetColor;
         public Dictionary<string, float> Stats { get; private set; }
         private ContextAction[] _contextAction;
         public List<Edge> Connections { get; private set; }
@@ -56,6 +64,15 @@ namespace Core.Graph
                 Stats[kvp.Key] = kvp.Value[NodeIndex];
             }
         }
+
+        public void AssignColor(string targetMetric, float min, float max)
+        {
+            var metricValue = Stats[targetMetric];
+            metricValue -= min;
+            metricValue /= max - min;
+            _targetColor = Color.Lerp(GameManager.Instance.LowColor, GameManager.Instance.HighColor, metricValue);
+            if (!_isChangingColor) ChangeColor().Forget();
+        }
         
         private void StartLink() => PlayerController.EnterNodeLink(this, false);
         private void StartMove() => PlayerController.EnterNodeMove(this);
@@ -87,6 +104,19 @@ namespace Core.Graph
             Stats = serialized.Stats;
             NodeName = serialized._nodeName;
             NodeIndex = serialized._nodeIndex;
+        }
+
+        private async UniTask ChangeColor()
+        {
+            _isChangingColor = true;
+            while (_renderer.color.Distance(_targetColor) > COLOR_SNAP_DISTANCE)
+            {
+                _renderer.color = Color.Lerp(_renderer.color, _targetColor, _colorChangeSpeed * Time.deltaTime);
+                await UniTask.NextFrame(destroyCancellationToken);
+            }
+
+            _renderer.color = _targetColor;
+            _isChangingColor = false;
         }
     }
 }

@@ -350,7 +350,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sessionKey: Skong
   _deserializeData: 1
-  _serializeData: 0
+  _serializeData: 1
   _loadGraphData: 0
   _nodeNames:
   - Node 1
@@ -360,7 +360,9 @@ MonoBehaviour:
   - {x: 0, y: 0}
   - {x: -5, y: 5}
   - {x: 3, y: -5}
-  _tempRoot: {fileID: 1833299400}
+  _tagetMetric: Eigenvector Centrality
+  _lowColor: {r: 1, g: 0, b: 0, a: 1}
+  _highColor: {r: 0, g: 1, b: 0, a: 1}
   _nodeRoot: {fileID: 1814975237}
   _edgeRoot: {fileID: 1747209088}
   _nodePrefab: {fileID: 4955563158666589890, guid: 788a24ed6e00bae4b8b4bcb51cd4101f, type: 3}

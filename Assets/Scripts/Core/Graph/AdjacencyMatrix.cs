@@ -14,7 +14,7 @@ namespace Core.Graph
 {
     public class AdjacencyMatrix : ISerializable<SerializableAdjacencyMatrix>
     {
-        private readonly static CancellationTokenSource Cts = new CancellationTokenSource();
+        private static CancellationTokenSource _cts = new CancellationTokenSource();
         public static string BgFilePath { get; set; }
         public List<Node> Nodes { get; } = new List<Node>();
         private List<List<float>> _matrix = new List<List<float>>();
@@ -85,7 +85,8 @@ namespace Core.Graph
                 return;
             }
             
-            Cts.Cancel();
+            _cts.Cancel();
+            _cts = new CancellationTokenSource();
             var clone = Clone();
 
             var stats = Length switch
@@ -97,12 +98,42 @@ namespace Core.Graph
 
             _globalStats = stats.global;
 
+            var targetMetricLow = float.PositiveInfinity;
+            var targetMetricHigh = float.NegativeInfinity;
             foreach (var node in Nodes)
             {
                 node.LoadStats(stats.local);
+                
+                var targetMetric = node.Stats[GameManager.Instance.TargetMetric];
+                if (targetMetricLow > targetMetric) targetMetricLow = targetMetric;
+                if (targetMetricHigh < targetMetric) targetMetricHigh = targetMetric;
+            }
+
+            foreach (var node in Nodes)
+            {
+                node.AssignColor(GameManager.Instance.TargetMetric, targetMetricLow, targetMetricHigh);
             }
             
+            GameManager.Instance.UpdateEdgeColors();
             UpdateGlobalStatView();
+        }
+
+        public void UpdateNodeColors()
+        {
+            var targetMetricLow = float.PositiveInfinity;
+            var targetMetricHigh = float.NegativeInfinity;
+            foreach (var node in Nodes)
+            {
+                var targetMetric = node.Stats[GameManager.Instance.TargetMetric];
+                if (targetMetricLow > targetMetric) targetMetricLow = targetMetric;
+                if (targetMetricHigh < targetMetric) targetMetricHigh = targetMetric;
+            }
+
+            foreach (var node in Nodes)
+            {
+                node.AssignColor(GameManager.Instance.TargetMetric, targetMetricLow, targetMetricHigh);
+            }
+            GameManager.Instance.UpdateEdgeColors();
         }
 
         public void UpdateGlobalStatView()
