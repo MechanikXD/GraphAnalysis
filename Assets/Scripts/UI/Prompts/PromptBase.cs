@@ -5,8 +5,8 @@ namespace UI.Prompts
 {
     public abstract class PromptBase : MonoBehaviour
     {
-        [SerializeField] private Button _confirmButton;
-        [SerializeField] private Button _cancelButton;
+        [SerializeField] protected Button _confirmButton;
+        [SerializeField] protected Button _cancelButton;
 
         protected virtual void OnEnable()
         {

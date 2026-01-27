@@ -24,12 +24,14 @@ namespace UI.InfoStructures
         {
             _changeBgButton.onClick.AddListener(ChangeBackground);
             _generateEdgesButton.onClick.AddListener(ShowGenerateEdgesPrompt);
+            _createNodesButton.onClick.AddListener(ShowGenerateNodesPrompt);
         }
 
         private void OnDisable()
         {
             _changeBgButton.onClick.RemoveListener(ChangeBackground);
             _generateEdgesButton.onClick.RemoveListener(ShowGenerateEdgesPrompt);
+            _createNodesButton.onClick.RemoveListener(ShowGenerateNodesPrompt);
         }
 
         private void ChangeBackground()
@@ -38,8 +40,11 @@ namespace UI.InfoStructures
             FileBrowser.ShowLoadDialog(OnImageSelected, null, FileBrowser.PickMode.Files);
         }
 
-        private void ShowGenerateEdgesPrompt() => UIManager.Instance.GetHUDCanvas<GlobalHUD>()
+        private static void ShowGenerateEdgesPrompt() => UIManager.Instance.GetHUDCanvas<GlobalHUD>()
             .GetPrompt<GenerateEdgesPrompt>().ShowPrompt();
+        
+        private static void ShowGenerateNodesPrompt() => UIManager.Instance.GetHUDCanvas<GlobalHUD>()
+            .GetPrompt<GenerateNodesPrompt>().ShowPrompt();
 
         public void SetBackground(string filepath) => OnImageSelected(new[]{filepath});
 

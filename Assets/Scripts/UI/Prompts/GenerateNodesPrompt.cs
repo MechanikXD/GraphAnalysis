@@ -20,6 +20,7 @@ namespace UI.Prompts
             base.OnEnable();
             _addButton.onClick.AddListener(AddNewPair);
             _deleteButton.onClick.AddListener(DeleteLastPair);
+            _confirmButton.interactable = false;
         }
 
         protected override void OnDisable()
@@ -35,13 +36,18 @@ namespace UI.Prompts
             newPair.Clear();
             _pairs.Add(newPair);
             if (!_deleteButton.interactable) _deleteButton.interactable = true;
+            if (!_confirmButton.interactable) _confirmButton.interactable = true;
         }
         
         private void DeleteLastPair()
         {
-            Destroy(_pairs[^1]);
+            Destroy(_pairs[^1].gameObject);
             _pairs.RemoveAt(_pairs.Count - 1);
-            if (_pairs.Count == 0) _deleteButton.interactable = false;
+            if (_pairs.Count == 0)
+            {
+                _deleteButton.interactable = false;
+                _confirmButton.interactable = false;
+            }
         }
         
         public override void OnConfirm()

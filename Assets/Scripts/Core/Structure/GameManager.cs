@@ -44,7 +44,11 @@ namespace Core.Structure
             // To prevent OnApplicationFocus early calls
             await UniTask.Yield(PlayerLoopTiming.PostLateUpdate, destroyCancellationToken);
             _initialized = true;
-            if (_loadGraphData) PlayerController.PlayerController.EnterGraphAdjust();
+            if (_loadGraphData)
+            {
+                GenerateTempNodes(_nodePos, _nodeNames);
+                PlayerController.PlayerController.EnterGraphAdjust();
+            }
             if (AdjacencyMatrix.Length > 0) AdjacencyMatrix.UpdateGlobalStatView();
         }
         
@@ -105,8 +109,6 @@ namespace Core.Structure
             CreatedEdges.Add(newEdge);
             return newEdge;
         }
-
-        public void GenerateTempNodes() => GenerateTempNodes(_nodePos, _nodeNames);
 
         public void GenerateTempNodes(Vector2[] pos, [CanBeNull] string[] names)
         {

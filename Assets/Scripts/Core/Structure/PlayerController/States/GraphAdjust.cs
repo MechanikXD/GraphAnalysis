@@ -20,7 +20,6 @@ namespace Core.Structure.PlayerController.States
 
         public override void EnterState()
         {
-            GameManager.Instance.GenerateTempNodes();
             FocusCamera().Forget();
             TempNodesController.Enable();
             UIManager.Instance.ShowHUD<GraphAdjustView>();
