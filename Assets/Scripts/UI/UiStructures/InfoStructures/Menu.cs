@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Core.Graph;
+using Core.Structure;
 using Core.Structure.PlayerController;
 using SimpleFileBrowser;
-using UI.Prompts;
-using UI.View;
+using UI.UiStructures.Prompts;
+using UI.View.GraphScene;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace UI.InfoStructures
+namespace UI.UiStructures.InfoStructures
 {
     public class Menu : Info
     {
@@ -25,6 +27,7 @@ namespace UI.InfoStructures
             _changeBgButton.onClick.AddListener(ChangeBackground);
             _generateEdgesButton.onClick.AddListener(ShowGenerateEdgesPrompt);
             _createNodesButton.onClick.AddListener(ShowGenerateNodesPrompt);
+            _exitButton.onClick.AddListener(SaveAndExit);
         }
 
         private void OnDisable()
@@ -32,8 +35,15 @@ namespace UI.InfoStructures
             _changeBgButton.onClick.RemoveListener(ChangeBackground);
             _generateEdgesButton.onClick.RemoveListener(ShowGenerateEdgesPrompt);
             _createNodesButton.onClick.RemoveListener(ShowGenerateNodesPrompt);
+            _exitButton.onClick.RemoveListener(SaveAndExit);
         }
 
+        private void SaveAndExit()
+        {
+            GameManager.Instance.ForceSave();
+            SceneManager.LoadScene("MainMenu");
+        }
+        
         private void ChangeBackground()
         {
             FileBrowser.SetFilters( true, new FileBrowser.Filter( "Images", ".jpg", ".png" ));

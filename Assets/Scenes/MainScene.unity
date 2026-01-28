@@ -348,21 +348,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91dc83fdcbc44bf8a3e3ff9b86cdb59b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sessionKey: Skong
-  _deserializeData: 1
-  _serializeData: 1
-  _loadGraphData: 0
-  _nodeNames:
-  - Node 1
-  - Other Node
-  - Last Node
-  _nodePos:
-  - {x: 0, y: 0}
-  - {x: -5, y: 5}
-  - {x: 3, y: -5}
+  _sessionKey: 
   _tagetMetric: Eigenvector Centrality
   _lowColor: {r: 1, g: 0, b: 0, a: 1}
   _highColor: {r: 0, g: 1, b: 0, a: 1}
+  _tempRoot: {fileID: 1833299400}
   _nodeRoot: {fileID: 1814975237}
   _edgeRoot: {fileID: 1747209088}
   _nodePrefab: {fileID: 4955563158666589890, guid: 788a24ed6e00bae4b8b4bcb51cd4101f, type: 3}
@@ -1764,7 +1754,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _preserveBounds: 1
-  _dragSpeed: 7
+  _dragSpeed: {x: 3, y: 12}
   _scrollSpeed: 0.2
   _scaleLerpSpeed: 10
   _scrollBounds: {x: 1, y: 10}
@@ -5935,7 +5925,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 1087913168}
   m_OnClick:
     m_PersistentCalls:

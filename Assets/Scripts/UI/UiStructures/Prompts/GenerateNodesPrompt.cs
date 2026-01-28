@@ -5,7 +5,7 @@ using Other;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Prompts
+namespace UI.UiStructures.Prompts
 {
     public class GenerateNodesPrompt : PromptBase
     {

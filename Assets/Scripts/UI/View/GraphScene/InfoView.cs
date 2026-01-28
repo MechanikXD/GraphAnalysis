@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UI.InfoStructures;
+using UI.UiStructures.InfoStructures;
 using UnityEngine;
 
-namespace UI.View
+namespace UI.View.GraphScene
 {
     public class InfoView : CanvasView
     {

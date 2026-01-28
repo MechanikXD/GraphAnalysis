@@ -7,21 +7,14 @@ using Core.LoadSystem.Serializable;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using UI.InfoStructures;
-using UI.View;
+using UI.UiStructures.InfoStructures;
+using UI.View.GraphScene;
 
 namespace Core.Structure
 {
     public class  GameManager : SingletonBase<GameManager>
     {
-        // For manual testing:
         [SerializeField] private string _sessionKey;
-        [SerializeField] private bool _deserializeData;
-        [SerializeField] private bool _serializeData;
-        [SerializeField] private bool _loadGraphData;
-        [SerializeField] private string[] _nodeNames;
-        [SerializeField] private Vector2[] _nodePos;
-
         [SerializeField] private string _tagetMetric = "Eigenvector Centrality";
         [SerializeField] private Color _lowColor = Color.red;
         [SerializeField] private Color _highColor = Color.green;
@@ -29,7 +22,7 @@ namespace Core.Structure
         public Color LowColor => _lowColor;
         public Color HighColor => _highColor;
 
-        private Transform _tempRoot;
+        [SerializeField] private Transform _tempRoot;
         private readonly List<Node> _tempNodes = new List<Node>();
         public Transform TempRoot => _tempRoot;
         
@@ -47,15 +40,17 @@ namespace Core.Structure
 
         private async void Start()
         {
+            if (SaveManager.HaveSession(_sessionKey))
+            {
+                var json = SaveManager.GetSession(_sessionKey);
+                var serialized = JsonConvert.DeserializeObject<SerializableAdjacencyMatrix>(json);
+                AdjacencyMatrix.DeserializeSelf(serialized);
+            }
+            
             InfoView.GetInfo<Menu>().SetBackground(AdjacencyMatrix.BgFilePath);
             // To prevent OnApplicationFocus early calls
             await UniTask.Yield(PlayerLoopTiming.PostLateUpdate, destroyCancellationToken);
             _initialized = true;
-            if (_loadGraphData)
-            {
-                GenerateTempNodes(_nodePos, _nodeNames);
-                PlayerController.PlayerController.EnterGraphAdjust();
-            }
 
             if (AdjacencyMatrix.Length > 0)
             {
@@ -63,29 +58,28 @@ namespace Core.Structure
                 AdjacencyMatrix.UpdateNodeColors();
             }
         }
-        
+
+        public void ConfigureLoadOptions(string key) => _sessionKey = key;
+
         protected override void Initialize()
         {
+            SaveManager.DeserializeSessionKeys();
             MainCamera = Camera.main;
             AdjacencyMatrix = new AdjacencyMatrix();
-            
-            if (_deserializeData && SaveManager.HaveSession(_sessionKey))
-            {
-                var json = SaveManager.GetSession(_sessionKey);
-                var serialized = JsonConvert.DeserializeObject<SerializableAdjacencyMatrix>(json);
-                AdjacencyMatrix.DeserializeSelf(serialized);
-            }
         }
+
+        public void ForceSave() => OnApplicationFocus(false);
         
         private void OnApplicationFocus(bool isFocus)
         {
             if (!_initialized) return;
             
-            if (_serializeData && !isFocus)
+            if (!isFocus)
             {
                 var serializable = AdjacencyMatrix.SerializeSelf();
                 var json = JsonConvert.SerializeObject(serializable);
                 SaveManager.StoreSession(_sessionKey, json);
+                SaveManager.SerializeSessionKeys();
             }
         }
 

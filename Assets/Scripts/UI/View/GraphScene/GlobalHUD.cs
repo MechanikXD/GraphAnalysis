@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using UI.InfoStructures;
-using UI.Prompts;
+using UI.UiStructures.InfoStructures;
+using UI.UiStructures.Prompts;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.View
+namespace UI.View.GraphScene
 {
     public class GlobalHUD : CanvasView
     {

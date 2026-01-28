@@ -4,7 +4,7 @@ using Core.Graph;
 using TMPro;
 using UnityEngine;
 
-namespace UI.InfoStructures
+namespace UI.UiStructures.InfoStructures
 {
     public class NodeInfo : Info
     {

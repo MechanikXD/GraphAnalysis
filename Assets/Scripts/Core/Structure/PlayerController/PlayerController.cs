@@ -2,6 +2,7 @@
 using Core.Graph;
 using Core.Structure.PlayerController.States;
 using UI.View;
+using UI.View.GraphScene;
 using UnityEngine;
 
 namespace Core.Structure.PlayerController

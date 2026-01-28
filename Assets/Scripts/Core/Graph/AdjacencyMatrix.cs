@@ -7,7 +7,7 @@ using Core.LoadSystem.Serializable;
 using Core.Structure;
 using Cysharp.Threading.Tasks;
 using UI;
-using UI.View;
+using UI.View.GraphScene;
 using UnityEngine;
 
 namespace Core.Graph
@@ -109,9 +109,12 @@ namespace Core.Graph
                 if (targetMetricHigh < targetMetric) targetMetricHigh = targetMetric;
             }
 
-            foreach (var node in Nodes)
+            if (Length > 1)
             {
-                node.AssignColor(GameManager.Instance.TargetMetric, targetMetricLow, targetMetricHigh);
+                foreach (var node in Nodes)
+                {
+                    node.AssignColor(GameManager.Instance.TargetMetric, targetMetricLow, targetMetricHigh);
+                }
             }
             
             GameManager.Instance.UpdateEdgeColors();
@@ -129,10 +132,15 @@ namespace Core.Graph
                 if (targetMetricHigh < targetMetric) targetMetricHigh = targetMetric;
             }
 
-            foreach (var node in Nodes)
+            if (Length > 1)
             {
-                node.AssignColor(GameManager.Instance.TargetMetric, targetMetricLow, targetMetricHigh);
+                foreach (var node in Nodes)
+                {
+                    node.AssignColor(GameManager.Instance.TargetMetric, targetMetricLow,
+                        targetMetricHigh);
+                }
             }
+
             GameManager.Instance.UpdateEdgeColors();
         }
 

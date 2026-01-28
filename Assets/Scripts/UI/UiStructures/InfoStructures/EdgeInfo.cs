@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace UI.InfoStructures
+namespace UI.UiStructures.InfoStructures
 {
     public class EdgeInfo : Info
     {

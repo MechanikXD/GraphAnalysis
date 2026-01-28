@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Prompts
+namespace UI.UiStructures.Prompts
 {
     public abstract class PromptBase : MonoBehaviour
     {

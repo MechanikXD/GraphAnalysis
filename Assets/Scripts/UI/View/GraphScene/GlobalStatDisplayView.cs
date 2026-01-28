@@ -3,7 +3,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 
-namespace UI.View
+namespace UI.View.GraphScene
 {
     public class GlobalStatDisplayView: CanvasView
     {

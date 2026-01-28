@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UI.View
+namespace UI.View.GraphScene
 {
     public class ContextWindow : CanvasView
     {

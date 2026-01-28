@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UI.InfoStructures
+namespace UI.UiStructures.InfoStructures
 {
     public abstract class Info : MonoBehaviour
     {

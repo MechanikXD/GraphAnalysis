@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Prompts
+namespace UI.UiStructures.Prompts
 {
     public class GenerateEdgesPrompt : PromptBase
     {

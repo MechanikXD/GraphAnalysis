@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks;
 using UI;
 using UI.View;
+using UI.View.GraphScene;
 using UnityEngine;
 
 namespace Core.Structure.PlayerController.States
