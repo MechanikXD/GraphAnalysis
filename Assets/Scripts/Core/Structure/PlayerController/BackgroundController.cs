@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Other;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,7 +8,9 @@ namespace Core.Structure.PlayerController
 {
     public class BackgroundController : MonoBehaviour, IDragHandler, IScrollHandler
     {
+        private const float PIXEL_TO_UNIT_RATIO = 100f;
         private const float SCALE_SNAP_DISTANCE = 0.01f;
+        private static bool _enabled = true;
         
         [SerializeField] private bool _preserveBounds = true;
         [SerializeField] private float _dragSpeed;
@@ -17,6 +20,7 @@ namespace Core.Structure.PlayerController
         [SerializeField] private Vector2 _scrollBounds;
         
         private SpriteRenderer _spriteRenderer;
+        private BoxCollider2D _collider2D;
         private Camera _camera;
         private Vector2 _xBounds;
         private Vector2 _yBounds;
@@ -34,9 +38,14 @@ namespace Core.Structure.PlayerController
             
             _desiredOrthoSize = _camera.orthographicSize;
             _spriteRenderer = GetComponent<SpriteRenderer>();
+            _collider2D = GetComponent<BoxCollider2D>();
+            _collider2D.size = _spriteRenderer.size;
             UpdateBounds();
         }
 
+        public static void Enable() => _enabled = true;
+        public static void Disable() => _enabled = false;
+        
         private void MoveCamera(Vector2 newPos)
         {
             if (_preserveBounds)
@@ -69,16 +78,17 @@ namespace Core.Structure.PlayerController
         
         public void OnDrag(PointerEventData eventData)
         {
+            if (!_enabled) return; 
             Vector3 delta = -eventData.delta * _dragSpeed * Time.deltaTime;
             MoveCamera(_camera.transform.position + new Vector3(delta.x, delta.y, 0f));
         }
 
         public void OnScroll(PointerEventData eventData)
         {
+            if (!_enabled) return;
             ZoomCamera(_camera.orthographicSize - eventData.scrollDelta.y * _scrollSpeed);
         }
 
-        // TODO: Switch to UniTasks
         private async UniTask ZoomCameraToDesired()
         {
             while (Mathf.Abs(_desiredOrthoSize - _camera.orthographicSize) > SCALE_SNAP_DISTANCE)
@@ -95,6 +105,43 @@ namespace Core.Structure.PlayerController
             }
             
             _camera.orthographicSize = _desiredOrthoSize;
+        }
+
+        public void ChangeBackground(Sprite newSprite)
+        {
+            var newSize = new Vector2
+            {
+                x = newSprite.texture.width / PIXEL_TO_UNIT_RATIO,
+                y = newSprite.texture.height / PIXEL_TO_UNIT_RATIO
+            };
+
+            _spriteRenderer.sprite = newSprite;
+            _spriteRenderer.size = newSize;
+            _collider2D.size = newSize;
+            UpdateBounds();
+            MoveCamera(_camera.transform.position);
+            
+            // Delete nodes outside new boundaries
+            var adjMatrix = GameManager.Instance.AdjacencyMatrix;
+            var nodesToRemove = new List<int>();
+            foreach (var node in adjMatrix.Nodes)
+            {
+                if (!WithinBounds(node.Position))
+                {
+                    nodesToRemove.Add(node.NodeIndex);
+                    node.SilentDestroy(); // Will be marked for destroy but not destroyed yet
+                }
+            }
+            adjMatrix.RemoveRange(nodesToRemove);
+        }
+
+        private bool WithinBounds(Vector2 pos)
+        {
+            var size = _spriteRenderer.size;
+            var halfWidth = size.x / 2f;
+            var halfHeight = size.y / 2f;
+            return pos.x >= -halfWidth && pos.x <= halfWidth && pos.y >= -halfHeight &&
+                   pos.y <= halfHeight;
         }
     }
 }

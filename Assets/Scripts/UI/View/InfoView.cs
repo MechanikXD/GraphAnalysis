@@ -13,7 +13,7 @@ namespace UI.View
         [SerializeField] private Transform _content;
         [SerializeField] private Vector2 _hiddenPosition;
         [SerializeField] private float _lerpSpeed;
-        private readonly Vector2 _shownPosition = new  Vector2(540f, 0f);
+        private readonly Vector2 _shownPosition = new  Vector2(990f, 0f);
         private Coroutine _coroutine;
         private static Info _currentInfo;
 
@@ -58,15 +58,17 @@ namespace UI.View
             if (hideAfter) ThisCanvas.enabled = false;
         }
 
-        public override void Show()
+        public override void Show(bool isInitial = false)
         {
             IsEnabled = true;
+            UIManager.Instance.GetHUDCanvas<GlobalHUD>().ActivateMenuButton(false);
             _coroutine = StartCoroutine(MoveView(_shownPosition, false));
         }
 
-        public override void Hide()
+        public override void Hide(bool isInitial = false)
         {
             IsEnabled = false;
+            UIManager.Instance.GetHUDCanvas<GlobalHUD>().ActivateMenuButton(true);
             _coroutine = StartCoroutine(MoveView(_hiddenPosition, true));
         }
     }
