@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3336bea4d165c4faf91ad7e4e91f45, type: 3}
+  m_Name: Settings Config
+  m_EditorClassIdentifier: 
+  _settingGroups:
+  - _groupTitle: Test Group
+    _settings:
+    - rid: 5405681413466882131
+  - _groupTitle: Test Group
+    _settings:
+    - rid: 5405681413466882132
+    - rid: 5405681413466882133
+  references:
+    version: 2
+    RefIds:
+    - rid: 5405681413466882131
+      type: {class: BooleanSettingsData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 8141075785303709259, guid: f0131790dce5c0943a0693afc70a9ca8, type: 3}
+        _settingName: Boolka
+        _isOnByDefault: 1
+    - rid: 5405681413466882132
+      type: {class: SliderSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 804583089059945844, guid: a5949df587267ce4d8ac227ddf85b838, type: 3}
+        _settingName: Cool slider ->
+        _defaultValue: 0.5
+        _bounds: {x: 0, y: 1}
+        _wholeNumbers: 0
+    - rid: 5405681413466882133
+      type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 1861295958409776114, guid: 5d2a00018fc5dc04aa8640e2f29ea419, type: 3}
+        _settingName: somehitng
+        _values:
+        - 1
+        - 2
+        - 3

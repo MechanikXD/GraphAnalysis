@@ -27,7 +27,7 @@ namespace UI.View.MainMenuScene
         private void LoadOptions()
         {
             CrateOption("Projects", _projectsIcon, ShowPage<ProjectList>);
-            // CrateOption("Settings", _settingsIcon, null);
+            CrateOption("Settings", _settingsIcon, ShowPage<SettingsPage>);
             CrateOption("Exit", _exitIcon, Application.Quit);
         }
 
@@ -53,6 +53,16 @@ namespace UI.View.MainMenuScene
             {
                 _pagesDict.Add(page.GetType(), page);
                 if (!page.DisplayOnStart) page.Hide();
+                else
+                {
+                    if (_currentPage != null)
+                    {
+                        Debug.LogWarning("Several Pages are displayed on start!");
+                        _currentPage.Hide();
+                    }
+
+                    _currentPage = page;
+                }
             }
         }
     }

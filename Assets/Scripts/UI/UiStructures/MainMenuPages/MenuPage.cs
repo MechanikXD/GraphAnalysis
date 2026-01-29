@@ -6,20 +6,14 @@ namespace UI.UiStructures.MainMenuPages
     {
         [SerializeField] private bool _displayOnStart;
         public bool DisplayOnStart => _displayOnStart;
-        [SerializeField] private bool _initializeOnAwake;
-        private bool _wasInitialized;
         
         protected void Awake()
         {
-            if (_initializeOnAwake) Initialize();
+            Initialize();
         }
-        protected virtual void Initialize() => _wasInitialized = true;
+        protected virtual void Initialize() {}
 
         public virtual void Hide() => gameObject.SetActive(false);
-        public virtual void Show()
-        {
-            if (!_wasInitialized) Initialize();
-            gameObject.SetActive(true);
-        }
+        public virtual void Show() => gameObject.SetActive(true);
     }
 }

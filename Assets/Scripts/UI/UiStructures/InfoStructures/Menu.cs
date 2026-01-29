@@ -27,6 +27,7 @@ namespace UI.UiStructures.InfoStructures
             _changeBgButton.onClick.AddListener(ChangeBackground);
             _generateEdgesButton.onClick.AddListener(ShowGenerateEdgesPrompt);
             _createNodesButton.onClick.AddListener(ShowGenerateNodesPrompt);
+            _settingsButton.onClick.AddListener(OpenSettings);
             _exitButton.onClick.AddListener(SaveAndExit);
         }
 
@@ -35,8 +36,11 @@ namespace UI.UiStructures.InfoStructures
             _changeBgButton.onClick.RemoveListener(ChangeBackground);
             _generateEdgesButton.onClick.RemoveListener(ShowGenerateEdgesPrompt);
             _createNodesButton.onClick.RemoveListener(ShowGenerateNodesPrompt);
+            _settingsButton.onClick.RemoveListener(OpenSettings);
             _exitButton.onClick.RemoveListener(SaveAndExit);
         }
+
+        private void OpenSettings() => UIManager.Instance.ShowUI<SettingsView>();
 
         private void SaveAndExit()
         {
