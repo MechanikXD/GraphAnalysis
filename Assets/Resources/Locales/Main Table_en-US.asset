@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Main Table_en-US
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en-US
+  m_SharedData: {fileID: 11400000, guid: c5fab75043d9b884aa7b5432aef5332d, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 35678999805952
+    m_Localized: New Project
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21708674957312
+    m_Localized: Position
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22161894670336
+    m_Localized: Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23134700568576
+    m_Localized: Enter name...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27035168407552
+    m_Localized: Open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27344578019328
+    m_Localized: Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37064294531072
+    m_Localized: Connections
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37210189201408
+    m_Localized: From
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37325280903168
+    m_Localized: To
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37506810380288
+    m_Localized: Create Nodes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37699379265536
+    m_Localized: Create Edges
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37850743308288
+    m_Localized: Change Background
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37971476348928
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38099515867136
+    m_Localized: Save and Exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38891467571200
+    m_Localized: Keep Connected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39227515207680
+    m_Localized: Min. Edge Length
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39781935087616
+    m_Localized: Confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40026815332352
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40812895010816
+    m_Localized: Automaticaly Generate Edges?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41008882253824
+    m_Localized: This will replace existing ones
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41658030489600
+    m_Localized: Generate Nodes
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

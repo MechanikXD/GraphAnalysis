@@ -14,10 +14,9 @@ namespace UI.UiStructures.MainMenuPages
         private int _projectCounter;
         private bool _initialized;
         
-        protected override void Initialize()
+        public override void Initialize()
         {
             LoadSessions();
-            base.Initialize();
         }
 
         private async void Start()

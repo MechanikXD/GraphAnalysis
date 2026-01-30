@@ -29,10 +29,11 @@ namespace UI.Settings.Types
             _inputField.onEndEdit.RemoveListener(UpdateSliderValue);
         }
 
-        public void Load(string settingName, float value, Vector2 bounds, bool wholeNumbers)
+        public void Load(string entryKey, float value, Vector2 bounds, bool wholeNumbers)
         {
-            _titleField.SetText(settingName);
-            Title = settingName;
+            _lse.SetEntry(entryKey);
+            _lse.RefreshString();
+            Title = entryKey;
             _bounds = bounds;
             _defaultValue = Mathf.Clamp(value, _bounds.x, _bounds.y);
             _wholeNumbers = wholeNumbers;
@@ -64,6 +65,6 @@ namespace UI.Settings.Types
             SettingsChanged();
         }
 
-        public override void WriteChangesInStorage() => SaveManager.SetSetting(_titleField.text, CurrentValue);
+        public override void WriteChangesInStorage() => SaveManager.SetSetting(Title, CurrentValue);
     }
 }

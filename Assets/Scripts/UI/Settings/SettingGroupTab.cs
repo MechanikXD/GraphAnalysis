@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Core.Structure;
-using TMPro;
 using UI.Settings.Scriptable;
 using UnityEngine;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 namespace UI.Settings
@@ -10,7 +10,7 @@ namespace UI.Settings
     public class SettingGroupTab : MonoBehaviour
     {
         [SerializeField] private Button _groupButton;
-        [SerializeField] private TMP_Text _title;
+        [SerializeField] private LocalizeStringEvent _lse;
         private Transform _content;
         private readonly List<SettingPrefab> _loadedSettings = new List<SettingPrefab>();
         public int GroupIndex { get; private set; }
@@ -35,7 +35,8 @@ namespace UI.Settings
 
         public Dictionary<string, SettingPrefab> LoadSettings(SettingGroup settingGroup)
         {
-            _title.SetText(settingGroup.GroupTitle);
+            _lse.SetEntry(settingGroup.GroupTitle);
+            _lse.RefreshString();
             var settings = settingGroup.GetSettings();
             foreach (var setting in settings)
             {

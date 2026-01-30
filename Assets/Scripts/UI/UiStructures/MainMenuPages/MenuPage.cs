@@ -7,11 +7,7 @@ namespace UI.UiStructures.MainMenuPages
         [SerializeField] private bool _displayOnStart;
         public bool DisplayOnStart => _displayOnStart;
         
-        protected void Awake()
-        {
-            Initialize();
-        }
-        protected virtual void Initialize() {}
+        public virtual void Initialize() {}
 
         public virtual void Hide() => gameObject.SetActive(false);
         public virtual void Show() => gameObject.SetActive(true);

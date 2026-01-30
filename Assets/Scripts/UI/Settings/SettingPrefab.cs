@@ -1,12 +1,12 @@
 ﻿using System;
-using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Components;
 
 namespace UI.Settings
 {
     public abstract class SettingPrefab : MonoBehaviour
     {
-        [SerializeField] protected TMP_Text _titleField;
+        [SerializeField] protected LocalizeStringEvent _lse;
         protected string Title;
         public bool WasChanged { get; private set; }
         public void ClearChanged() => WasChanged = false;

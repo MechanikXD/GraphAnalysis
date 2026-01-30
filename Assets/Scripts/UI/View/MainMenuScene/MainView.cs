@@ -52,6 +52,7 @@ namespace UI.View.MainMenuScene
             foreach (var page in _pages)
             {
                 _pagesDict.Add(page.GetType(), page);
+                page.Initialize();
                 if (!page.DisplayOnStart) page.Hide();
                 else
                 {

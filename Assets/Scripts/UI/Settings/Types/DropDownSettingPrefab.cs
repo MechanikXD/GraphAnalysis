@@ -6,9 +6,9 @@ namespace UI.Settings.Types
 {
     public class DropDownSettingPrefab : SettingPrefab
     {
-        [SerializeField] TMP_Dropdown _dropdown;
-        private string[] _options;
-        public string CurrentOption { get; private set; }
+        [SerializeField] private TMP_Dropdown _dropdown;
+        public string[] Options { get; private set; }
+        public int CurrentOption { get; private set; }
 
         private void OnEnable()
         {
@@ -20,17 +20,24 @@ namespace UI.Settings.Types
             _dropdown.onValueChanged.RemoveListener(OnSwitch);
         }
 
+        public void SilentSwitch(int option)
+        {
+            _dropdown.SetValueWithoutNotify(option);
+            CurrentOption = option;
+        }
+
         private void OnSwitch(int option)
         {
-            CurrentOption = _options[option];
+            CurrentOption = option;
             SettingsChanged();
         }
 
-        public void Load(string settingName, string[] values)
+        public void Load(string entryKey, string[] values)
         {
-            _options = values;
-            Title = settingName;
-            _titleField.SetText(Title);
+            Options = values;
+            Title = entryKey;
+            _lse.SetEntry(entryKey);
+            _lse.RefreshString();
 
             foreach (var value in values)
             {
@@ -40,10 +47,10 @@ namespace UI.Settings.Types
             var optionIndex = 0;
             if (SaveManager.HasSetting(Title))
             {
-                var option = SaveManager.GetSetting<string>(Title);
-                for (var i = 0; i < _options.Length; i++)
+                var option = SaveManager.GetSetting<int>(Title);
+                for (var i = 0; i < Options.Length; i++)
                 {
-                    if (option != _options[i]) continue;
+                    if (option != i) continue;
 
                     optionIndex = i;
                     break;
@@ -51,7 +58,7 @@ namespace UI.Settings.Types
             }
             
             _dropdown.value = optionIndex;
-            CurrentOption = _options[optionIndex];
+            CurrentOption = optionIndex;
         }
         
         public override void WriteChangesInStorage() => SaveManager.SetSetting(Title, CurrentOption);

@@ -8,9 +8,8 @@ namespace UI.UiStructures.MainMenuPages
         [SerializeField] private Transform _contentRoot;
         [SerializeField] private Transform _groupTabRoot;
 
-        protected override void Initialize()
+        public override void Initialize()
         {
-            base.Initialize();
             SettingsManager.Instance.CreateGroups(_contentRoot, _groupTabRoot);
         }
 

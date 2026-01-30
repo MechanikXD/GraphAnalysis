@@ -22,17 +22,19 @@ namespace Core.Structure
             ToSingleton(true);
             Initialize();
         }
-        
-        public static void AddEventOnSetting(string settingName, Action<SettingPrefab> action)
+
+        public static T GetSetting<T>(string settingName) where T : SettingPrefab => (T)Settings[settingName];
+
+        public static void AddEventOnSetting<T>(string settingName, Action<T> action) where T : SettingPrefab
         {
             if (Settings.TryGetValue(settingName, out var setting))
             {
-                setting.OnSettingChanged += action;
+                setting.OnSettingChanged += prefab =>
+                {
+                    if (prefab is T typed) action(typed);
+                };
             }
-            else
-            {
-                Debug.LogError($"{settingName} does not exist in setting");
-            }
+            else Debug.LogError($"{settingName} does not exist in setting");
         }
 
         public void SwitchGroup(int index)
@@ -74,8 +76,12 @@ namespace Core.Structure
                 var createdSettings = newGroup.LoadSettings(_settingConfig.SettingGroups[i]);
                 // Load settings into dictionary if it's empty
                 if (loadSettings)
+                {
                     foreach (var setting in createdSettings)
+                    {
                         Settings.Add(setting.Key, setting.Value);
+                    }
+                }
                 
                 // Enable only first tab
                 if (!firstDisplayed)

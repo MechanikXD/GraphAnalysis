@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Main Table Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Main Table
+  m_TableCollectionNameGuidString: c5fab75043d9b884aa7b5432aef5332d
+  m_Entries:
+  - m_Id: 27344578019328
+    m_Key: Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23134700568576
+    m_Key: Enter name...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22161894670336
+    m_Key: Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27035168407552
+    m_Key: Open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21708674957312
+    m_Key: Position
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35678999805952
+    m_Key: New Entry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37064294531072
+    m_Key: Connections
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37210189201408
+    m_Key: From
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37325280903168
+    m_Key: To
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37506810380288
+    m_Key: Create Nodes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37699379265536
+    m_Key: Create Edges
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37850743308288
+    m_Key: Change Background
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37971476348928
+    m_Key: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38099515867136
+    m_Key: Save and Exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38891467571200
+    m_Key: Keep Connected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39227515207680
+    m_Key: Min Edge Length
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39781935087616
+    m_Key: Confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40026815332352
+    m_Key: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40812895010816
+    m_Key: EDGES_GEN_TITLE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41008882253824
+    m_Key: EDGES_GEN_SUBTITLE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41658030489600
+    m_Key: Generate Nodes
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 5405681434955874552
+  references:
+    version: 2
+    RefIds:
+    - rid: 5405681434955874552
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1769759764327

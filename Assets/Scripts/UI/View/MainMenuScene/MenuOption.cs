@@ -1,7 +1,6 @@
 ﻿using System;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 namespace UI.View.MainMenuScene
@@ -10,14 +9,14 @@ namespace UI.View.MainMenuScene
     {
         [SerializeField] private Button _button;
         [SerializeField] private Image _icon;
-        [SerializeField] private TMP_Text _title;
-        [SerializeField] private UnityEvent _action;
+        [SerializeField] private LocalizeStringEvent _lse;
         private Action _buttonUnsubscribe;
         
-        public void Load(Sprite icon, string title, Action onOptionPress)
+        public void Load(Sprite icon, string entryKey, Action onOptionPress)
         {
             _icon.sprite = icon;
-            _title.SetText(title);
+            _lse.SetEntry(entryKey);
+            _lse.RefreshString();
 
             void ButtonAction() => onOptionPress();
             _button.onClick.AddListener(ButtonAction);
@@ -27,7 +26,8 @@ namespace UI.View.MainMenuScene
         public void Clear()
         {
             _icon.sprite = null;
-            _title.SetText(string.Empty);
+            _lse.SetEntry(string.Empty);
+            _lse.RefreshString();
             _buttonUnsubscribe();
             _buttonUnsubscribe = () => { };
         }

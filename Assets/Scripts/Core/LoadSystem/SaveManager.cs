@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Other;
 using UnityEngine;
 
 namespace Core.LoadSystem
@@ -21,6 +22,7 @@ namespace Core.LoadSystem
             if (!_settingsLoaded) LoadSettings();
             var value = _settings[key];
             // funny cast because Newton serializes floats as double, so we have to cast back to float and preserve generic.
+            Debug.Log($"Attempt to get {key}:{typeof(T)}, value with this key is {value}:{value.GetType()}");
             return typeof(T) == typeof(float) ? (T)(object)Convert.ToSingle(value) : (T)value;
         }
 
@@ -49,7 +51,9 @@ namespace Core.LoadSystem
             } 
             
             var json = PlayerPrefs.GetString(SETTINGS_KEY);
-            _settings = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new IntToInt32Converter());
+            _settings = JsonConvert.DeserializeObject<Dictionary<string, object>>(json, settings);
             _settingsLoaded = true;
         }
         

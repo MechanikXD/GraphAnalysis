@@ -21,10 +21,11 @@ namespace UI.Settings.Types
             SettingsChanged();
         }
 
-        public void Load(string settingName, bool value)
+        public void Load(string entryKey, bool value)
         {
-            _titleField.SetText(settingName);
-            Title = settingName;
+            _lse.SetEntry(entryKey);
+            _lse.RefreshString();
+            Title = entryKey;
             _defaultValue = value;
             IsOn = SaveManager.HasSetting(Title) ? SaveManager.GetSetting<bool>(Title) : _defaultValue;
             _switch.isOn = IsOn;
