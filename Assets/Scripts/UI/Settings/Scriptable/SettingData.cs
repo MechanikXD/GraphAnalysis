@@ -7,8 +7,8 @@ namespace UI.Settings.Scriptable
     public abstract class SettingData
     {
         [SerializeField] protected SettingPrefab _prefab;
-        [SerializeField] private string _settingName;
-        public string SettingName => _settingName;
+        [SerializeField] private string _settingNameEntry;
+        public string SettingNameEntry => _settingNameEntry;
 
         public abstract SettingPrefab Create();
     }
@@ -22,7 +22,7 @@ namespace UI.Settings.Scriptable
         {
             if (_prefab is not T typedPrefab)
             {
-                Debug.LogError($"{SettingName} expected prefab of type {typeof(T).Name}, got {_prefab.GetType().Name}");
+                Debug.LogError($"{SettingNameEntry} expected prefab of type {typeof(T).Name}, got {_prefab.GetType().Name}");
                 return null;
             }
             

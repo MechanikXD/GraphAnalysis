@@ -33,8 +33,8 @@ namespace Core.Graph
             Connections = new List<Edge>();
             _contextAction = new[] 
             {
-                new ContextAction("Link with", StartLink),
-                new ContextAction("Link to", StartOneSidedLink),
+                new ContextAction("Bidirectional Edge", StartLink),
+                new ContextAction("Outgoing Edge", StartOneSidedLink),
                 new ContextAction("Move", StartMove),
                 new ContextAction("Delete", DeleteNode)
             };

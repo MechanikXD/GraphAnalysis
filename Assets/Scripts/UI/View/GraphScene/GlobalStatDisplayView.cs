@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using Core.Structure;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 namespace UI.View.GraphScene
 {
@@ -14,17 +17,33 @@ namespace UI.View.GraphScene
             _textFiled.SetText(string.Empty);
         }
 
+        private void OnEnable()
+        {
+            LocalizationSettings.SelectedLocaleChanged += UpdateStats;
+        }
+
+        private void OnDisable()
+        {
+            LocalizationSettings.SelectedLocaleChanged -= UpdateStats;
+        }
+
+        private void UpdateStats(Locale locale)
+        {
+            _textFiled.SetText(FormatStats(GameManager.Instance.AdjacencyMatrix.GlobalStats));
+        }
+
         public void LoadText(Dictionary<string, float> stats)
         {
-            _textFiled.SetText(FormalStats(stats));
+            _textFiled.SetText(FormatStats(stats));
         }
         
-        private static string FormalStats(Dictionary<string, float> stats)
+        private static string FormatStats(Dictionary<string, float> stats)
         {
             var sb = new StringBuilder();
             foreach (var stat in stats)
             {
-                sb.Append(stat.Key).Append(": ").Append(stat.Value).AppendLine();
+                var localizedMetric = LocalizationSettings.StringDatabase.GetLocalizedString(stat.Key);
+                sb.Append(localizedMetric).Append(": ").Append(stat.Value).AppendLine();
             }
             
             // Remove last \n

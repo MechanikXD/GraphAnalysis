@@ -3,6 +3,8 @@ using System.Text;
 using Core.Graph;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 namespace UI.UiStructures.InfoStructures
 {
@@ -13,10 +15,20 @@ namespace UI.UiStructures.InfoStructures
         [SerializeField] private TMP_Text _statField;
         private Node _currentNode;
 
-        private void OnEnable() => _nameInput.onEndEdit.AddListener(RenameNode);
+        private void OnEnable()
+        {
+            _nameInput.onEndEdit.AddListener(RenameNode);
+            LocalizationSettings.SelectedLocaleChanged += UpdateNodeStats;
+        }
 
-        private void OnDisable() => _nameInput.onEndEdit.RemoveListener(RenameNode);
+        private void OnDisable()
+        {
+            _nameInput.onEndEdit.RemoveListener(RenameNode);
+            LocalizationSettings.SelectedLocaleChanged -= UpdateNodeStats;
+        }
 
+        private void UpdateNodeStats(Locale locale) => _statField.SetText(FormatStats(_currentNode.Stats));
+        
         public void DisplayNode(Node node)
         {
             _currentNode = node;
@@ -37,7 +49,8 @@ namespace UI.UiStructures.InfoStructures
             var sb = new StringBuilder();
             foreach (var stat in stats)
             {
-                sb.Append(stat.Key).Append(": ").Append(stat.Value.ToString("F3")).AppendLine();
+                var localizedMetric = LocalizationSettings.StringDatabase.GetLocalizedString(stat.Key);
+                sb.Append(localizedMetric).Append(": ").Append(stat.Value.ToString("F3")).AppendLine();
             }
             
             // Remove last \n

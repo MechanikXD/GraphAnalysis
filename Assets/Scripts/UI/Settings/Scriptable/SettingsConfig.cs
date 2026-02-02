@@ -26,7 +26,7 @@ namespace UI.Settings.Scriptable
             foreach (var settingData in _settings)
             {
                 var newSetting = settingData.Create();
-                created.Add(settingData.SettingName, newSetting);
+                created.Add(settingData.SettingNameEntry, newSetting);
             }
             
             return created;

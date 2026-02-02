@@ -13,7 +13,7 @@ namespace UI.Settings.Scriptable.Data
         public override BooleanSettingPrefab CreateTyped(BooleanSettingPrefab prefab)
         {
             var boolean = Object.Instantiate(prefab);
-            boolean.Load(SettingName, _isOnByDefault);
+            boolean.Load(SettingNameEntry, _isOnByDefault);
             return boolean;
         }
     }

@@ -275,6 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a73e18535daaf494b9843613ce6d0018, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _clearSettingOnStartup: 0
   _groupTabPrefab: {fileID: 6624454495966546031, guid: 9a043815097e4ae42bb681c3f869ac91, type: 3}
   _settingConfig: {fileID: 11400000, guid: fc12e040071dde34090100c33569a981, type: 2}
 --- !u!4 &455195708
@@ -2046,6 +2047,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3584872085321174699}
     m_Modifications:
+    - target: {fileID: 1885714367229387674, guid: c70b4e2e83cc79c4e9c691c1028c2482, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 1160868613849088
+      objectReference: {fileID: 0}
+    - target: {fileID: 1885714367229387674, guid: c70b4e2e83cc79c4e9c691c1028c2482, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: GUID:c5fab75043d9b884aa7b5432aef5332d
+      objectReference: {fileID: 0}
     - target: {fileID: 5511735865181209708, guid: c70b4e2e83cc79c4e9c691c1028c2482, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

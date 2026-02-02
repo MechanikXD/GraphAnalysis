@@ -4,6 +4,7 @@ using UI.Settings.Types;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+using UnityEngine.SceneManagement;
 
 namespace Other
 {
@@ -13,8 +14,14 @@ namespace Other
 
         private IEnumerator Start()
         {
-            SettingsManager.AddEventOnSetting<DropDownSettingPrefab>(_localizationSettingKey, LocaleSelected);
             LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+            SceneManager.activeSceneChanged += (_, _) => StartCoroutine(InitializeSetting());
+            yield return InitializeSetting();
+        }
+
+        private IEnumerator InitializeSetting()
+        {
+            SettingsManager.AddEventOnSetting<DropDownSettingPrefab>(_localizationSettingKey, LocaleSelected);
             yield return LocalizationSettings.InitializationOperation;
             OnLocaleChanged(LocalizationSettings.SelectedLocale);
         }

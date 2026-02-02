@@ -15,7 +15,7 @@ namespace UI.Settings.Scriptable.Data
         public override SliderSettingPrefab CreateTyped(SliderSettingPrefab prefab)
         {
             var slider = Object.Instantiate(prefab);
-            slider.Load(SettingName, _defaultValue, _bounds, _wholeNumbers);
+            slider.Load(SettingNameEntry, _defaultValue, _bounds, _wholeNumbers);
             return slider;
         }
     }

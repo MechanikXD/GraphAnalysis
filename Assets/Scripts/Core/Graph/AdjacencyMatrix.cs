@@ -18,7 +18,7 @@ namespace Core.Graph
         public static string BgFilePath { get; set; }
         public List<Node> Nodes { get; } = new List<Node>();
         private List<List<float>> _matrix = new List<List<float>>();
-        private Dictionary<string, float> _globalStats;
+        public Dictionary<string, float> GlobalStats { get; private set; }
         public int Length { get; private set; }
         public bool IsOriented { get; private set; }
         public bool IsWeighted { get; set; }
@@ -81,7 +81,7 @@ namespace Core.Graph
             if (Length <= 0)
             {
                 UIManager.Instance.GetHUDCanvas<GlobalStatDisplayView>().Hide();
-                _globalStats?.Clear();
+                GlobalStats?.Clear();
                 return;
             }
             
@@ -96,7 +96,7 @@ namespace Core.Graph
                 > 250 => await MetricProvider.ProcessMatrixParallel(clone)
             };
 
-            _globalStats = stats.global;
+            GlobalStats = stats.global;
 
             var targetMetricLow = float.PositiveInfinity;
             var targetMetricHigh = float.NegativeInfinity;
@@ -147,7 +147,7 @@ namespace Core.Graph
         public void UpdateGlobalStatView()
         {
             var hud = UIManager.Instance.GetHUDCanvas<GlobalStatDisplayView>();
-            hud.LoadText(_globalStats);
+            hud.LoadText(GlobalStats);
             if (!hud.IsEnabled) UIManager.Instance.ShowHUD<GlobalStatDisplayView>();
         }
 
@@ -187,7 +187,7 @@ namespace Core.Graph
                 serializableEdges[i] = allEdges[i].SerializeSelf();
             }
             
-            return new SerializableAdjacencyMatrix(_globalStats, nodes, serializableEdges, BgFilePath, Length, IsOriented, IsWeighted);
+            return new SerializableAdjacencyMatrix(GlobalStats, nodes, serializableEdges, BgFilePath, Length, IsOriented, IsWeighted);
         }
 
         public void DeserializeSelf(SerializableAdjacencyMatrix serialized)
@@ -196,7 +196,7 @@ namespace Core.Graph
             if (serialized.GlobalStats == null) return;
 
             BgFilePath = serialized._bgFilePath;
-            _globalStats = serialized.GlobalStats;
+            GlobalStats = serialized.GlobalStats;
             IsOriented = serialized._isOriented;
             IsWeighted = serialized._isWeighted;
             Length = serialized._length;

@@ -13,7 +13,7 @@ namespace UI.Settings.Scriptable.Data
         public override DropDownSettingPrefab CreateTyped(DropDownSettingPrefab prefab) 
         {
             var dropDown = Object.Instantiate(prefab);
-            dropDown.Load(SettingName, _values);
+            dropDown.Load(SettingNameEntry, _values);
             return dropDown;
         }
     }

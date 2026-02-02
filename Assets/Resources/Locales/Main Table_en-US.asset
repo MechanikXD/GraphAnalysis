@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 35678999805952
-    m_Localized: New Project
+    m_Localized: Projects
     m_Metadata:
       m_Items: []
   - m_Id: 21708674957312
@@ -100,6 +100,82 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 41658030489600
     m_Localized: Generate Nodes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153672568111104
+    m_Localized: Assortativity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153714737643520
+    m_Localized: Density
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153759394398208
+    m_Localized: Diameter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153791006867456
+    m_Localized: Entropy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153804361531392
+    m_Localized: Betweenness Centrality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153855095832576
+    m_Localized: Clustering Coefficient
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153887844958208
+    m_Localized: Efficiency
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153910322233344
+    m_Localized: Eigenvector Centrality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153938377932800
+    m_Localized: Laplacian Spectrum
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153966161002496
+    m_Localized: Removal Tolerance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1154243417079808
+    m_Localized: Node Degree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1154935577903104
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1160490358931456
+    m_Localized: Exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1160868613849088
+    m_Localized: New Project
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1161816228757504
+    m_Localized: General
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1174225198776320
+    m_Localized: Move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1174315753799680
+    m_Localized: Outgoing Edge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1174296124456960
+    m_Localized: Bidirectional Edge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1174532649648128
+    m_Localized: New Node
     m_Metadata:
       m_Items: []
   references:

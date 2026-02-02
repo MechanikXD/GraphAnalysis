@@ -10,6 +10,7 @@ namespace Core.Structure
 {
     public class SettingsManager : SingletonBase<SettingsManager>
     {
+        [SerializeField] private bool _clearSettingOnStartup;
         [SerializeField] private SettingGroupTab _groupTabPrefab;
         [SerializeField] private SettingsConfig _settingConfig;
         private readonly static Dictionary<string, SettingPrefab> Settings = new Dictionary<string, SettingPrefab>();
@@ -20,6 +21,7 @@ namespace Core.Structure
         protected override void Awake()
         {
             ToSingleton(true);
+            if (_clearSettingOnStartup) SaveManager.DeleteAll();
             Initialize();
         }
 
@@ -27,8 +29,10 @@ namespace Core.Structure
 
         public static void AddEventOnSetting<T>(string settingName, Action<T> action) where T : SettingPrefab
         {
+            Debug.Log($"Attempt to bind {settingName}");
             if (Settings.TryGetValue(settingName, out var setting))
             {
+                Debug.Log($"Found prefab: {setting.gameObject.name}");
                 setting.OnSettingChanged += prefab =>
                 {
                     if (prefab is T typed) action(typed);
@@ -80,6 +84,14 @@ namespace Core.Structure
                     foreach (var setting in createdSettings)
                     {
                         Settings.Add(setting.Key, setting.Value);
+                    }
+                }
+                // Override old prefabs, because they've changed somewhere
+                else
+                {
+                    foreach (var setting in createdSettings)
+                    {
+                        Settings[setting.Key] = setting.Value;
                     }
                 }
                 

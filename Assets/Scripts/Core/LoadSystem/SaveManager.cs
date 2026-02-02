@@ -22,7 +22,6 @@ namespace Core.LoadSystem
             if (!_settingsLoaded) LoadSettings();
             var value = _settings[key];
             // funny cast because Newton serializes floats as double, so we have to cast back to float and preserve generic.
-            Debug.Log($"Attempt to get {key}:{typeof(T)}, value with this key is {value}:{value.GetType()}");
             return typeof(T) == typeof(float) ? (T)(object)Convert.ToSingle(value) : (T)value;
         }
 
@@ -101,5 +100,7 @@ namespace Core.LoadSystem
             PlayerPrefs.DeleteKey(key);
             _sessionKeys.Remove(key);
         }
+
+        public static void DeleteAll() => PlayerPrefs.DeleteAll();
     }
 }

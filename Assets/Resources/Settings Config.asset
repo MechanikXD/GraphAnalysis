@@ -23,7 +23,7 @@ MonoBehaviour:
       type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
       data:
         _prefab: {fileID: 1861295958409776114, guid: 5d2a00018fc5dc04aa8640e2f29ea419, type: 3}
-        _settingName: Language
+        _settingNameEntry: Language
         _values:
         - English
         - Ukrainian

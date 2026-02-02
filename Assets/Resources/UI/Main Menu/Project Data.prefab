@@ -511,6 +511,7 @@ GameObject:
   - component: {fileID: 2891111065493035607}
   - component: {fileID: 2044295664414231900}
   - component: {fileID: 1140697261062347474}
+  - component: {fileID: 1371963069661207395}
   m_Layer: 0
   m_Name: Placeholder
   m_TagString: Untagged
@@ -592,10 +593,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 55
+  m_fontSize: 49.1
   m_fontSizeBase: 55
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 2
@@ -656,6 +657,46 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &1371963069661207395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6299068259434324845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:c5fab75043d9b884aa7b5432aef5332d
+    m_TableEntryReference:
+      m_KeyId: 23134700568576
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2044295664414231900}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: SetText
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &7725257385514263166
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,7 +708,6 @@ GameObject:
   - component: {fileID: 6729876309379196140}
   - component: {fileID: 1453509249817079711}
   - component: {fileID: 5085418263283941005}
-  - component: {fileID: 1249939296990181742}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -793,46 +833,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &1249939296990181742
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7725257385514263166}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_StringReference:
-    m_TableReference:
-      m_TableCollectionName: GUID:c5fab75043d9b884aa7b5432aef5332d
-    m_TableEntryReference:
-      m_KeyId: 23134700568576
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  m_FormatArguments: []
-  m_UpdateString:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5085418263283941005}
-        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
-        m_MethodName: SetText
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  references:
-    version: 2
-    RefIds: []
 --- !u!1001 &1345404639684617624
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -848,6 +848,14 @@ PrefabInstance:
     - target: {fileID: 452451052425202574, guid: c70b4e2e83cc79c4e9c691c1028c2482, type: 3}
       propertyPath: m_fontSize
       value: 43.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 1885714367229387674, guid: c70b4e2e83cc79c4e9c691c1028c2482, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 27344578019328
+      objectReference: {fileID: 0}
+    - target: {fileID: 1885714367229387674, guid: c70b4e2e83cc79c4e9c691c1028c2482, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: GUID:c5fab75043d9b884aa7b5432aef5332d
       objectReference: {fileID: 0}
     - target: {fileID: 5511735865181209708, guid: c70b4e2e83cc79c4e9c691c1028c2482, type: 3}
       propertyPath: m_Pivot.x
@@ -969,6 +977,14 @@ PrefabInstance:
     - target: {fileID: 452451052425202574, guid: c70b4e2e83cc79c4e9c691c1028c2482, type: 3}
       propertyPath: m_fontSize
       value: 43.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 1885714367229387674, guid: c70b4e2e83cc79c4e9c691c1028c2482, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 27035168407552
+      objectReference: {fileID: 0}
+    - target: {fileID: 1885714367229387674, guid: c70b4e2e83cc79c4e9c691c1028c2482, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: GUID:c5fab75043d9b884aa7b5432aef5332d
       objectReference: {fileID: 0}
     - target: {fileID: 5511735865181209708, guid: c70b4e2e83cc79c4e9c691c1028c2482, type: 3}
       propertyPath: m_Pivot.x
