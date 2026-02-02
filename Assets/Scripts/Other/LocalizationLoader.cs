@@ -4,28 +4,27 @@ using UI.Settings.Types;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
-using UnityEngine.SceneManagement;
 
 namespace Other
 {
-    public class LocalizationController : MonoBehaviour
+    public class LocalizationLoader : MonoBehaviour
     {
         [SerializeField] private string _localizationSettingKey = "Language";
 
         private IEnumerator Start()
         {
             LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
-            SceneManager.activeSceneChanged += (_, _) => StartCoroutine(InitializeSetting());
-            yield return InitializeSetting();
-        }
-
-        private IEnumerator InitializeSetting()
-        {
             SettingsManager.AddEventOnSetting<DropDownSettingPrefab>(_localizationSettingKey, LocaleSelected);
             yield return LocalizationSettings.InitializationOperation;
+            // call on start, because LocalizationSettings does not inform about current locale.
             OnLocaleChanged(LocalizationSettings.SelectedLocale);
         }
 
+        private void OnDisable()
+        {
+            LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+        }
+        
         private void OnLocaleChanged(Locale newLocale)
         {
             var availableLocalesList = LocalizationSettings.AvailableLocales.Locales;

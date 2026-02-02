@@ -13,9 +13,9 @@ namespace Core.Structure
         [SerializeField] private bool _clearSettingOnStartup;
         [SerializeField] private SettingGroupTab _groupTabPrefab;
         [SerializeField] private SettingsConfig _settingConfig;
-        private readonly static Dictionary<string, SettingPrefab> Settings = new Dictionary<string, SettingPrefab>();
+        private static Dictionary<string, SettingPrefab> _settings = new Dictionary<string, SettingPrefab>();
         
-        private readonly List<SettingGroupTab> _groupTabs = new List<SettingGroupTab>();
+        private List<SettingGroupTab> _groupTabs = new List<SettingGroupTab>();
         private int _currentGroupIndex;
 
         protected override void Awake()
@@ -25,14 +25,12 @@ namespace Core.Structure
             Initialize();
         }
 
-        public static T GetSetting<T>(string settingName) where T : SettingPrefab => (T)Settings[settingName];
+        public static T GetSetting<T>(string settingName) where T : SettingPrefab => (T)_settings[settingName];
 
         public static void AddEventOnSetting<T>(string settingName, Action<T> action) where T : SettingPrefab
         {
-            Debug.Log($"Attempt to bind {settingName}");
-            if (Settings.TryGetValue(settingName, out var setting))
+            if (_settings.TryGetValue(settingName, out var setting))
             {
-                Debug.Log($"Found prefab: {setting.gameObject.name}");
                 setting.OnSettingChanged += prefab =>
                 {
                     if (prefab is T typed) action(typed);
@@ -65,10 +63,10 @@ namespace Core.Structure
 
         public void CreateGroups(Transform contentRoot, Transform groupTabRoot)
         {
-            _groupTabs.Clear();
+            _groupTabs = new List<SettingGroupTab>();
+            _settings = new Dictionary<string, SettingPrefab>();
             _currentGroupIndex = 0;
             var firstDisplayed = false;
-            var loadSettings = Settings.Count <= 0;
             for (var i = 0; i < _settingConfig.SettingGroups.Length; i++)
             {
                 // Create new group tab
@@ -78,21 +76,9 @@ namespace Core.Structure
 
                 // Create settings for this group
                 var createdSettings = newGroup.LoadSettings(_settingConfig.SettingGroups[i]);
-                // Load settings into dictionary if it's empty
-                if (loadSettings)
+                foreach (var setting in createdSettings)
                 {
-                    foreach (var setting in createdSettings)
-                    {
-                        Settings.Add(setting.Key, setting.Value);
-                    }
-                }
-                // Override old prefabs, because they've changed somewhere
-                else
-                {
-                    foreach (var setting in createdSettings)
-                    {
-                        Settings[setting.Key] = setting.Value;
-                    }
+                    _settings.Add(setting.Key, setting.Value);
                 }
                 
                 // Enable only first tab
@@ -105,7 +91,7 @@ namespace Core.Structure
                 else newGroup.HideGroup();
             }
             
-            foreach (var kvp in Settings) kvp.Value.SettingsChanged();
+            foreach (var kvp in _settings) kvp.Value.SettingsChanged();
         }
     }
 }

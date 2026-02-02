@@ -227,6 +227,7 @@ Transform:
   m_Children:
   - {fileID: 920102247}
   - {fileID: 1773519657}
+  - {fileID: 1487557764}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &260292987 stripped
@@ -255,7 +256,6 @@ GameObject:
   m_Component:
   - component: {fileID: 455195708}
   - component: {fileID: 455195707}
-  - component: {fileID: 455195709}
   m_Layer: 0
   m_Name: Settings Manager
   m_TagString: Untagged
@@ -293,19 +293,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &455195709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 455195706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea8b4b2f4b034b8b9f4e075fe49cedee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _localizationSettingKey: Language
 --- !u!1 &589948655
 GameObject:
   m_ObjectHideFlags: 0
@@ -1206,6 +1193,51 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &1487557763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1487557764}
+  - component: {fileID: 1487557765}
+  m_Layer: 0
+  m_Name: Localization Loader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1487557764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487557763}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 147009671}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1487557765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487557763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea8b4b2f4b034b8b9f4e075fe49cedee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _localizationSettingKey: Language
 --- !u!1 &1516019414
 GameObject:
   m_ObjectHideFlags: 0
