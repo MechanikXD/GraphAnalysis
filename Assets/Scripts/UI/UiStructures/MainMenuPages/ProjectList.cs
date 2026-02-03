@@ -1,5 +1,6 @@
 ﻿using Core.LoadSystem;
 using Cysharp.Threading.Tasks;
+using UI.View.MainMenuScene;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ namespace UI.UiStructures.MainMenuPages
     {
         [SerializeField] private Transform _projectRoot;
         [SerializeField] private MenuProjectData _projectDataPrefab;
+        [SerializeField] private Button _importButton;
         [SerializeField] private Button _newProjButton;
         private const string PROJECT_NAME_TEMPLATE = "New Project ";
         private int _projectCounter;
@@ -34,19 +36,21 @@ namespace UI.UiStructures.MainMenuPages
         private void OnEnable()
         {
             _newProjButton.onClick.AddListener(CreateNewProject);
+            _importButton.onClick.AddListener(ShowImportView);
         }
 
         private void OnDisable()
         {
             OnApplicationFocus(false);
             _newProjButton.onClick.RemoveListener(CreateNewProject);
+            _importButton.onClick.RemoveListener(ShowImportView);
         }
 
-        private void CreateNewProject()
+        private void CreateNewProject() => CreateNewProject(GetTemplateName());
+        public void CreateNewProject(string sessionName)
         {
             var newProject = Instantiate(_projectDataPrefab, _projectRoot);
-            newProject.Load(PROJECT_NAME_TEMPLATE + _projectCounter);
-            _projectCounter++;
+            newProject.Load(sessionName);
         }
 
         private void LoadSessions()
@@ -61,5 +65,14 @@ namespace UI.UiStructures.MainMenuPages
 
             _projectCounter = allSessions.Count;
         }
+
+        public string GetTemplateName()
+        {
+            var template = PROJECT_NAME_TEMPLATE + _projectCounter;
+            _projectCounter++;
+            return template;
+        }
+
+        private static void ShowImportView() => UIManager.Instance.ShowHUD<GraphImportView>();
     }
 }

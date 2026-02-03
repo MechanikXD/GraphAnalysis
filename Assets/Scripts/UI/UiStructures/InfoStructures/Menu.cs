@@ -17,6 +17,11 @@ namespace UI.UiStructures.InfoStructures
         [SerializeField] private Button _createNodesButton;
         [SerializeField] private Button _generateEdgesButton;
         [SerializeField] private Button _changeBgButton;
+
+        [SerializeField] private Button _exportGraphButton;
+        [SerializeField] private Button _exportAdjMatrixButton;
+        [SerializeField] private Button _exportStatsButton;
+        
         [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _exitButton;
 
@@ -29,6 +34,10 @@ namespace UI.UiStructures.InfoStructures
             _createNodesButton.onClick.AddListener(ShowGenerateNodesPrompt);
             _settingsButton.onClick.AddListener(OpenSettings);
             _exitButton.onClick.AddListener(SaveAndExit);
+            
+            _exportGraphButton.onClick.AddListener(() => Export(ExportGraph, "newGraph"));
+            _exportAdjMatrixButton.onClick.AddListener(() => Export(ExportAdjMatrix, "newAdjacencyMatrix"));
+            _exportStatsButton.onClick.AddListener(() => Export(ExportStats, "newStats"));
         }
 
         private void OnDisable()
@@ -38,6 +47,10 @@ namespace UI.UiStructures.InfoStructures
             _createNodesButton.onClick.RemoveListener(ShowGenerateNodesPrompt);
             _settingsButton.onClick.RemoveListener(OpenSettings);
             _exitButton.onClick.RemoveListener(SaveAndExit);
+            
+            _exportGraphButton.onClick.RemoveAllListeners();
+            _exportAdjMatrixButton.onClick.RemoveAllListeners();
+            _exportStatsButton.onClick.RemoveAllListeners();
         }
 
         private void OpenSettings() => UIManager.Instance.ShowUI<SettingsView>();
@@ -91,5 +104,17 @@ namespace UI.UiStructures.InfoStructures
                 _bgController.ChangeBackground(sprite);
             }
         }
+
+        private void Export(FileBrowser.OnSuccess exportMethod, string fileName) => 
+            FileBrowser.ShowSaveDialog(exportMethod, null, FileBrowser.PickMode.Files, initialFilename:fileName);
+
+        private void ExportGraph(string[] path) => 
+            File.WriteAllText(path[0] + ".json", GameManager.Instance.GetGraphJson());
+        
+        private void ExportAdjMatrix(string[] path) => 
+            File.WriteAllText(path[0] + ".csv", GameManager.Instance.GetGraphAsCsv());
+        
+        private void ExportStats(string[] path) => 
+            File.WriteAllText(path[0] + ".csv", GameManager.Instance.GetNodeStatsAsCsv());
     }
 }

@@ -178,6 +178,34 @@ MonoBehaviour:
     m_Localized: New Node
     m_Metadata:
       m_Items: []
+  - m_Id: 1470391564107776
+    m_Localized: Node Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1483594897555456
+    m_Localized: Import
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1485663863832576
+    m_Localized: Import Project
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1489892598874112
+    m_Localized: Select file...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1498451973767168
+    m_Localized: Export Graph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1498662284558336
+    m_Localized: Export Adj. Matrix
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1498862566768640
+    m_Localized: Export Stats
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

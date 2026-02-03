@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 using Core.Behaviour;
 using Core.Graph;
@@ -9,6 +11,7 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using UI.UiStructures.InfoStructures;
 using UI.View.GraphScene;
+using UnityEngine.Localization.Settings;
 
 namespace Core.Structure
 {
@@ -76,11 +79,71 @@ namespace Core.Structure
             
             if (!isFocus)
             {
-                var serializable = AdjacencyMatrix.SerializeSelf();
-                var json = JsonConvert.SerializeObject(serializable);
-                SaveManager.StoreSession(_sessionKey, json);
+                SaveManager.StoreSession(_sessionKey, GetGraphJson());
                 SaveManager.SerializeSessionKeys();
             }
+        }
+
+        public string GetGraphJson() => JsonConvert.SerializeObject(AdjacencyMatrix.SerializeSelf());
+
+        public string GetGraphAsCsv(bool createHeader=true)
+        {
+            if (AdjacencyMatrix.Length == 0) return string.Empty;
+            
+            var sb = new StringBuilder();
+            var rowSb = new StringBuilder();
+            if (createHeader) sb.Append(GetConcatNodes());
+            // Build csv
+            for (var i = 0; i < AdjacencyMatrix.Length; i++)
+            {
+                for (var j = 0; j < AdjacencyMatrix.Length; j++)
+                {
+                    rowSb.Append(AdjacencyMatrix[i, j]).Append(',');
+                }
+                if (rowSb.Length > 0) rowSb.Remove(rowSb.Length - 1, 1);
+                sb.AppendLine(rowSb.ToString());
+                rowSb.Clear();
+            }
+
+            return sb.ToString();
+        }
+        
+        public string GetNodeStatsAsCsv(bool createHeaders=true)
+        {
+            if (AdjacencyMatrix.Length == 0) return string.Empty;
+            
+            var sb = new StringBuilder();
+            var rowSb = new StringBuilder();
+            if (createHeaders) sb.Append(',').AppendLine(GetConcatNodes());
+
+            var statOrder = AdjacencyMatrix.Nodes[0].Stats.Keys.ToArray();
+            // Build csv
+            foreach (var currentStat in statOrder)
+            {
+                rowSb.Append(LocalizationSettings.StringDatabase.GetLocalizedString(currentStat)).Append(',');
+                for (var i = 0; i < AdjacencyMatrix.Length; i++)
+                {
+                    rowSb.Append(AdjacencyMatrix.Nodes[i].Stats[currentStat]).Append(',');
+                }
+                if (rowSb.Length > 0) rowSb.Remove(rowSb.Length - 1, 1);
+                sb.AppendLine(rowSb.ToString());
+                rowSb.Clear();
+            }
+
+            return sb.ToString();
+        }
+
+        private string GetConcatNodes()
+        {
+            var sb = new StringBuilder();
+            // Concat Node Names
+            foreach (var node in AdjacencyMatrix.Nodes)
+            {
+                sb.Append(node.NodeName).Append(',');
+            }
+            // Remove last comma
+            if (sb.Length > 0) sb.Remove(sb.Length - 1, 1);
+            return sb.ToString();
         }
 
         public Node CreateNode(Vector2 worldPos, [CanBeNull] string nodeName, bool addNodeToMatrix = true)

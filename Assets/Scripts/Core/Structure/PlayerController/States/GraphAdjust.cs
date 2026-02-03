@@ -1,7 +1,7 @@
 ﻿using Core.Behaviour.StateMachine;
 using Cysharp.Threading.Tasks;
+using Other;
 using UI;
-using UI.View;
 using UI.View.GraphScene;
 using UnityEngine;
 
@@ -24,6 +24,7 @@ namespace Core.Structure.PlayerController.States
             FocusCamera().Forget();
             TempNodesController.Enable();
             UIManager.Instance.ShowHUD<GraphAdjustView>();
+            CoordinateTracker.Instance.Disable();
         }
 
         public override void ExitState()
@@ -31,6 +32,7 @@ namespace Core.Structure.PlayerController.States
             GameManager.Instance.ApplyTempNodes();
             TempNodesController.Disable();
             UIManager.Instance.HideHUD<GraphAdjustView>();
+            CoordinateTracker.Instance.Enable();
         }
 
         public override void FrameUpdate() { }
