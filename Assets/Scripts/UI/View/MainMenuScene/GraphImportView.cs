@@ -2,6 +2,7 @@
 using System.IO;
 using Core.LoadSystem;
 using Core.LoadSystem.Serializable;
+using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using SimpleFileBrowser;
 using TMPro;
@@ -18,12 +19,16 @@ namespace UI.View.MainMenuScene
         [SerializeField] private TMP_InputField _pathField;
         [SerializeField] private Button _confirmButton;
         [SerializeField] private Button _cancelButton;
+        [SerializeField] private GameObject _failFileLoadMessage;
+        [SerializeField] private float _messageHoldTime;
         private string _json;
+        private bool _failMessageIsShown;
 
         public override void Show(bool isInitialHide = false)
         {
             base.Show(isInitialHide);
             _confirmButton.interactable = false;
+            _failFileLoadMessage.SetActive(false);
             _pathField.SetTextWithoutNotify(string.Empty);
             _json = string.Empty;
             _sessionName.SetTextWithoutNotify(string.Empty);
@@ -77,9 +82,18 @@ namespace UI.View.MainMenuScene
             // Any error while deserializing/reading file
             catch (Exception)
             {
-                // TODO: Display error message to user
+                if (!_failMessageIsShown) ShowFailMessage().Forget();
                 _confirmButton.interactable = false;
             }
+        }
+
+        private async UniTask ShowFailMessage()
+        {
+            _failMessageIsShown = true;
+            _failFileLoadMessage.SetActive(true);
+            await UniTask.WaitForSeconds(_messageHoldTime);
+            _failMessageIsShown = false;
+            _failFileLoadMessage.SetActive(false);
         }
     }
 }
