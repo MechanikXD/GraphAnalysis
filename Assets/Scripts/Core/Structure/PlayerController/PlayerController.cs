@@ -1,7 +1,7 @@
 ﻿using Core.Behaviour.StateMachine;
 using Core.Graph;
 using Core.Structure.PlayerController.States;
-using UI.View;
+using UI.View.GraphScene;
 using UnityEngine;
 
 namespace Core.Structure.PlayerController
@@ -11,7 +11,7 @@ namespace Core.Structure.PlayerController
         [SerializeField] private LayerMask _raycastMask;
 
         public LayerMask RaycastMask => _raycastMask;
-        
+
         private static PlayerStateMachine _controller;
         public ContextAction[] EmptyContextActions { get; private set; }
         private Vector2 _lastContextActionPosition;
@@ -23,7 +23,7 @@ namespace Core.Structure.PlayerController
                 new ContextAction("New Node", CreateNode)
             };
         }
-        
+
         private void Start()
         {
             _controller = new PlayerStateMachine();
@@ -31,13 +31,13 @@ namespace Core.Structure.PlayerController
             var nodeLink = new NodeLink(_controller, this);
             var nodeMove = new NodeMove(_controller, this);
             var graphAdjust = new GraphAdjust(_controller, this);
-            
+
             _controller.Initialize(defaultState);
             _controller.AddState(nodeLink);
             _controller.AddState(nodeMove);
             _controller.AddState(graphAdjust);
         }
-        
+
         private void CreateNode()
         {
             GameManager.Instance.CreateNodeFromScreenPos(_lastContextActionPosition, null);
@@ -54,14 +54,14 @@ namespace Core.Structure.PlayerController
             ((NodeMove)_controller.GetState<NodeMove>()).SetNode(node);
             _controller.ChangeState<NodeMove>();
         }
-        
+
         public static void EnterGraphAdjust() => _controller.ChangeState<GraphAdjust>();
         public static void EnterDefault() => _controller.ChangeState<Default>();
 
         private void Update() => _controller.CurrentState.FrameUpdate();
 
         private void FixedUpdate() => _controller.CurrentState.FixedFrameUpdate();
-        
+
         public void OnLeftClick()
         {
             _controller.CurrentState.OnLeftClick();

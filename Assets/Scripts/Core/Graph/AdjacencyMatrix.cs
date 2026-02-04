@@ -6,8 +6,9 @@ using Core.LoadSystem;
 using Core.LoadSystem.Serializable;
 using Core.Structure;
 using Cysharp.Threading.Tasks;
+using Other;
 using UI;
-using UI.View;
+using UI.View.GraphScene;
 using UnityEngine;
 
 namespace Core.Graph
@@ -18,7 +19,7 @@ namespace Core.Graph
         public static string BgFilePath { get; set; }
         public List<Node> Nodes { get; } = new List<Node>();
         private List<List<float>> _matrix = new List<List<float>>();
-        private Dictionary<string, float> _globalStats;
+        public Dictionary<string, float> GlobalStats { get; private set; }
         public int Length { get; private set; }
         public bool IsOriented { get; private set; }
         public bool IsWeighted { get; set; }
@@ -81,7 +82,7 @@ namespace Core.Graph
             if (Length <= 0)
             {
                 UIManager.Instance.GetHUDCanvas<GlobalStatDisplayView>().Hide();
-                _globalStats?.Clear();
+                GlobalStats?.Clear();
                 return;
             }
             
@@ -89,6 +90,7 @@ namespace Core.Graph
             _cts = new CancellationTokenSource();
             var clone = Clone();
 
+            InfoFeed.Instance.LogInfo(GlobalStorage.InfoKeys.LOG_PROCESSING_STATS);
             var stats = Length switch
             {
                 <= 80 => MetricProvider.ProcessMetrics(clone),
@@ -96,7 +98,7 @@ namespace Core.Graph
                 > 250 => await MetricProvider.ProcessMatrixParallel(clone)
             };
 
-            _globalStats = stats.global;
+            GlobalStats = stats.global;
 
             var targetMetricLow = float.PositiveInfinity;
             var targetMetricHigh = float.NegativeInfinity;
@@ -109,13 +111,17 @@ namespace Core.Graph
                 if (targetMetricHigh < targetMetric) targetMetricHigh = targetMetric;
             }
 
-            foreach (var node in Nodes)
+            if (Length > 1)
             {
-                node.AssignColor(GameManager.Instance.TargetMetric, targetMetricLow, targetMetricHigh);
+                foreach (var node in Nodes)
+                {
+                    node.AssignColor(GameManager.Instance.TargetMetric, targetMetricLow, targetMetricHigh);
+                }
             }
             
             GameManager.Instance.UpdateEdgeColors();
             UpdateGlobalStatView();
+            InfoFeed.Instance.LogInfo(GlobalStorage.InfoKeys.LOG_PROCESSING_STATS_FINISHED);
         }
 
         public void UpdateNodeColors()
@@ -129,17 +135,22 @@ namespace Core.Graph
                 if (targetMetricHigh < targetMetric) targetMetricHigh = targetMetric;
             }
 
-            foreach (var node in Nodes)
+            if (Length > 1)
             {
-                node.AssignColor(GameManager.Instance.TargetMetric, targetMetricLow, targetMetricHigh);
+                foreach (var node in Nodes)
+                {
+                    node.AssignColor(GameManager.Instance.TargetMetric, targetMetricLow,
+                        targetMetricHigh);
+                }
             }
+
             GameManager.Instance.UpdateEdgeColors();
         }
 
         public void UpdateGlobalStatView()
         {
             var hud = UIManager.Instance.GetHUDCanvas<GlobalStatDisplayView>();
-            hud.LoadText(_globalStats);
+            hud.LoadText(GlobalStats);
             if (!hud.IsEnabled) UIManager.Instance.ShowHUD<GlobalStatDisplayView>();
         }
 
@@ -179,7 +190,7 @@ namespace Core.Graph
                 serializableEdges[i] = allEdges[i].SerializeSelf();
             }
             
-            return new SerializableAdjacencyMatrix(_globalStats, nodes, serializableEdges, BgFilePath, Length, IsOriented, IsWeighted);
+            return new SerializableAdjacencyMatrix(GlobalStats, nodes, serializableEdges, BgFilePath, Length, IsOriented, IsWeighted);
         }
 
         public void DeserializeSelf(SerializableAdjacencyMatrix serialized)
@@ -188,7 +199,7 @@ namespace Core.Graph
             if (serialized.GlobalStats == null) return;
 
             BgFilePath = serialized._bgFilePath;
-            _globalStats = serialized.GlobalStats;
+            GlobalStats = serialized.GlobalStats;
             IsOriented = serialized._isOriented;
             IsWeighted = serialized._isWeighted;
             Length = serialized._length;

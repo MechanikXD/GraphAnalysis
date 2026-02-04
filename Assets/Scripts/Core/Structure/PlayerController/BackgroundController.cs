@@ -13,7 +13,7 @@ namespace Core.Structure.PlayerController
         private static bool _enabled = true;
         
         [SerializeField] private bool _preserveBounds = true;
-        [SerializeField] private float _dragSpeed;
+        [SerializeField] private Vector2 _dragSpeed;
         
         [SerializeField] private float _scrollSpeed;
         [SerializeField] private float _scaleLerpSpeed;
@@ -64,6 +64,15 @@ namespace Core.Structure.PlayerController
             ZoomCameraToDesired().Forget();
         }
 
+        private float ScaledDragSpeed()
+        {
+            var relativeZoom = _desiredOrthoSize;
+            relativeZoom -= _scrollBounds.x;
+            relativeZoom /= _scrollBounds.y;
+
+            return _dragSpeed.x + _dragSpeed.y * relativeZoom;
+        }
+
         private void UpdateBounds()
         {
             var camHeight = _camera.orthographicSize;
@@ -79,7 +88,7 @@ namespace Core.Structure.PlayerController
         public void OnDrag(PointerEventData eventData)
         {
             if (!_enabled) return; 
-            Vector3 delta = -eventData.delta * _dragSpeed * Time.deltaTime;
+            Vector3 delta = -eventData.delta * ScaledDragSpeed() * Time.deltaTime;
             MoveCamera(_camera.transform.position + new Vector3(delta.x, delta.y, 0f));
         }
 
@@ -133,6 +142,8 @@ namespace Core.Structure.PlayerController
                 }
             }
             adjMatrix.RemoveRange(nodesToRemove);
+            if (nodesToRemove.Count > 0) InfoFeed.Instance.LogWarning(GlobalStorage.InfoKeys.WARNING_NODE_REMOVED);
+            else InfoFeed.Instance.LogInfo(GlobalStorage.InfoKeys.LOG_BACKGROUND_UPDATED);
         }
 
         private bool WithinBounds(Vector2 pos)

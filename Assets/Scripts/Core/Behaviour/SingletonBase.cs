@@ -21,7 +21,7 @@ namespace Core.Behaviour {
             if (dontDestroyOnLoad) DontDestroyOnLoad(gameObject);
         }
 
-        protected abstract void Initialize();
+        protected virtual void Initialize() {}
         protected virtual void BeforeDestroy() {}
 
         protected virtual void OnDestroy() {

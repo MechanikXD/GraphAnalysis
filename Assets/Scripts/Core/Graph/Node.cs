@@ -6,8 +6,8 @@ using Core.Structure.PlayerController;
 using Cysharp.Threading.Tasks;
 using Other;
 using UI;
-using UI.InfoStructures;
-using UI.View;
+using UI.UiStructures.InfoStructures;
+using UI.View.GraphScene;
 using UnityEngine;
 
 namespace Core.Graph
@@ -33,8 +33,8 @@ namespace Core.Graph
             Connections = new List<Edge>();
             _contextAction = new[] 
             {
-                new ContextAction("Link with", StartLink),
-                new ContextAction("Link to", StartOneSidedLink),
+                new ContextAction("Bidirectional Edge", StartLink),
+                new ContextAction("Outgoing Edge", StartOneSidedLink),
                 new ContextAction("Move", StartMove),
                 new ContextAction("Delete", DeleteNode)
             };
@@ -67,10 +67,19 @@ namespace Core.Graph
 
         public void AssignColor(string targetMetric, float min, float max)
         {
-            var metricValue = Stats[targetMetric];
-            metricValue -= min;
-            metricValue /= max - min;
+            float metricValue;
+            if (Mathf.Approximately(min, max))
+            {
+                metricValue = max;
+            }
+            else
+            {
+                metricValue = Stats[targetMetric];
+                metricValue -= min;
+                metricValue /= max - min;
+            }
             _targetColor = Color.Lerp(GameManager.Instance.LowColor, GameManager.Instance.HighColor, metricValue);
+            
             if (!_isChangingColor) ChangeColor().Forget();
         }
         

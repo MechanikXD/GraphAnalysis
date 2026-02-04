@@ -6,8 +6,9 @@ using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Other;
 using UI;
-using UI.InfoStructures;
+using UI.UiStructures.InfoStructures;
 using UI.View;
+using UI.View.GraphScene;
 using UnityEngine;
 
 namespace Core.Graph
