@@ -9,6 +9,7 @@ using Core.LoadSystem.Serializable;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using Other;
 using UI.UiStructures.InfoStructures;
 using UI.View.GraphScene;
 using UnityEngine.Localization.Settings;
@@ -51,6 +52,7 @@ namespace Core.Structure
             }
             
             InfoView.GetInfo<Menu>().SetBackground(AdjacencyMatrix.BgFilePath);
+            InfoFeed.Instance.LogInfo(GlobalStorage.InfoKeys.LOG_DATA_LOAD_SUCCESS);
             // To prevent OnApplicationFocus early calls
             await UniTask.Yield(PlayerLoopTiming.PostLateUpdate, destroyCancellationToken);
             _initialized = true;

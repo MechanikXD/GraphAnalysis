@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 namespace Other
 {
@@ -15,9 +16,9 @@ namespace Other
         private bool _feedIsDisplayed;
 
         public void ClearMessage() => Log(string.Empty, _logColor, 0f);
-        public void LogInfo(string msg, float feedTime = 5f) => Log(msg, _logColor, feedTime);
-        public void LogWarning(string msg, float feedTime = 5f) => Log(msg, _warningColor, feedTime);
-        public void LogError(string msg, float feedTime = 5f) => Log(msg, _errorColor, feedTime);
+        public void LogInfo(string entryKey, float feedTime = 5f) => Log(entryKey, _logColor, feedTime);
+        public void LogWarning(string entryKey, float feedTime = 5f) => Log(entryKey, _warningColor, feedTime);
+        public void LogError(string entryKey, float feedTime = 5f) => Log(entryKey, _errorColor, feedTime);
 
         protected override void Awake()
         {
@@ -25,9 +26,9 @@ namespace Other
             ClearMessage();
         }
 
-        private void Log(string msg, Color color, float feedTime = 5f)
+        private void Log(string entryKey, Color color, float feedTime = 5f)
         {
-            _feed.SetText(msg);
+            _feed.SetText(LocalizationSettings.StringDatabase.GetLocalizedString(entryKey));
             _feed.color = color;
             _remainingFeedTime = feedTime;
             if (!_feedIsDisplayed) HideFeedLater().Forget();

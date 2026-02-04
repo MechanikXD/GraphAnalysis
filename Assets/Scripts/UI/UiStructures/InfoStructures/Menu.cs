@@ -3,6 +3,7 @@ using System.IO;
 using Core.Graph;
 using Core.Structure;
 using Core.Structure.PlayerController;
+using Other;
 using SimpleFileBrowser;
 using UI.UiStructures.Prompts;
 using UI.View.GraphScene;
@@ -21,7 +22,7 @@ namespace UI.UiStructures.InfoStructures
         [SerializeField] private Button _exportGraphButton;
         [SerializeField] private Button _exportAdjMatrixButton;
         [SerializeField] private Button _exportStatsButton;
-        
+
         [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _exitButton;
 
@@ -34,9 +35,10 @@ namespace UI.UiStructures.InfoStructures
             _createNodesButton.onClick.AddListener(ShowGenerateNodesPrompt);
             _settingsButton.onClick.AddListener(OpenSettings);
             _exitButton.onClick.AddListener(SaveAndExit);
-            
+
             _exportGraphButton.onClick.AddListener(() => Export(ExportGraph, "newGraph"));
-            _exportAdjMatrixButton.onClick.AddListener(() => Export(ExportAdjMatrix, "newAdjacencyMatrix"));
+            _exportAdjMatrixButton.onClick.AddListener(() =>
+                Export(ExportAdjMatrix, "newAdjacencyMatrix"));
             _exportStatsButton.onClick.AddListener(() => Export(ExportStats, "newStats"));
         }
 
@@ -47,7 +49,7 @@ namespace UI.UiStructures.InfoStructures
             _createNodesButton.onClick.RemoveListener(ShowGenerateNodesPrompt);
             _settingsButton.onClick.RemoveListener(OpenSettings);
             _exitButton.onClick.RemoveListener(SaveAndExit);
-            
+
             _exportGraphButton.onClick.RemoveAllListeners();
             _exportAdjMatrixButton.onClick.RemoveAllListeners();
             _exportStatsButton.onClick.RemoveAllListeners();
@@ -60,38 +62,42 @@ namespace UI.UiStructures.InfoStructures
             GameManager.Instance.ForceSave();
             SceneManager.LoadScene("MainMenu");
         }
-        
+
         private void ChangeBackground()
         {
-            FileBrowser.SetFilters( true, new FileBrowser.Filter( "Images", ".jpg", ".png" ));
+            FileBrowser.SetFilters(true, new FileBrowser.Filter("Images", ".jpg", ".png"));
             FileBrowser.ShowLoadDialog(OnImageSelected, null, FileBrowser.PickMode.Files);
         }
 
-        private static void ShowGenerateEdgesPrompt() => UIManager.Instance.GetHUDCanvas<GlobalHUD>()
+        private static void ShowGenerateEdgesPrompt() => UIManager.Instance
+            .GetHUDCanvas<GlobalHUD>()
             .GetPrompt<GenerateEdgesPrompt>().ShowPrompt();
-        
-        private static void ShowGenerateNodesPrompt() => UIManager.Instance.GetHUDCanvas<GlobalHUD>()
+
+        private static void ShowGenerateNodesPrompt() => UIManager.Instance
+            .GetHUDCanvas<GlobalHUD>()
             .GetPrompt<GenerateNodesPrompt>().ShowPrompt();
 
-        public void SetBackground(string filepath) => OnImageSelected(new[]{filepath});
+        public void SetBackground(string filepath) => OnImageSelected(new[] { filepath });
 
         private void OnImageSelected(IList<string> paths)
         {
             if (string.IsNullOrWhiteSpace(paths[0])) return;
             if (!File.Exists(paths[0]))
             {
-                Debug.LogWarning("Image file not found: " + paths[0]);
+                InfoFeed.Instance.LogWarning(GlobalStorage.InfoKeys.WARNING_FILE_NOT_FOUND +
+                                             paths[0]);
                 AdjacencyMatrix.BgFilePath = string.Empty;
                 return;
             }
 
-            var imageBytes= File.ReadAllBytes(paths[0]);
+            var imageBytes = File.ReadAllBytes(paths[0]);
             var texture = new Texture2D(2, 2); // Size doesn't matter, will auto-resize
             var loaded = texture.LoadImage(imageBytes);
 
             if (!loaded)
             {
-                Debug.LogWarning("File is not a valid PNG/JPG image: " + paths[0]);
+                InfoFeed.Instance.LogWarning(GlobalStorage.InfoKeys.WARNING_IMAGE_NOT_VALID +
+                                             paths[0]);
                 Destroy(texture);
             }
             else
@@ -105,16 +111,19 @@ namespace UI.UiStructures.InfoStructures
             }
         }
 
-        private void Export(FileBrowser.OnSuccess exportMethod, string fileName) => 
-            FileBrowser.ShowSaveDialog(exportMethod, null, FileBrowser.PickMode.Files, initialFilename:fileName);
+        private void Export(FileBrowser.OnSuccess exportMethod, string fileName)
+        {
+            FileBrowser.ShowSaveDialog(exportMethod, null, FileBrowser.PickMode.Files, initialFilename: fileName);
+            InfoFeed.Instance.LogInfo(GlobalStorage.InfoKeys.FILE_EXPORT_SUCCESS);
+        }
 
-        private void ExportGraph(string[] path) => 
+        private static void ExportGraph(string[] path) => 
             File.WriteAllText(path[0] + ".json", GameManager.Instance.GetGraphJson());
-        
-        private void ExportAdjMatrix(string[] path) => 
+
+        private static void ExportAdjMatrix(string[] path) => 
             File.WriteAllText(path[0] + ".csv", GameManager.Instance.GetGraphAsCsv());
-        
-        private void ExportStats(string[] path) => 
+
+        private static void ExportStats(string[] path) => 
             File.WriteAllText(path[0] + ".csv", GameManager.Instance.GetNodeStatsAsCsv());
     }
 }

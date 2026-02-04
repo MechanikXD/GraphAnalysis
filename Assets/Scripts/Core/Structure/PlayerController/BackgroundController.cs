@@ -142,6 +142,8 @@ namespace Core.Structure.PlayerController
                 }
             }
             adjMatrix.RemoveRange(nodesToRemove);
+            if (nodesToRemove.Count > 0) InfoFeed.Instance.LogWarning(GlobalStorage.InfoKeys.WARNING_NODE_REMOVED);
+            else InfoFeed.Instance.LogInfo(GlobalStorage.InfoKeys.LOG_BACKGROUND_UPDATED);
         }
 
         private bool WithinBounds(Vector2 pos)

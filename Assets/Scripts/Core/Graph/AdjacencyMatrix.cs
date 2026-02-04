@@ -6,6 +6,7 @@ using Core.LoadSystem;
 using Core.LoadSystem.Serializable;
 using Core.Structure;
 using Cysharp.Threading.Tasks;
+using Other;
 using UI;
 using UI.View.GraphScene;
 using UnityEngine;
@@ -89,6 +90,7 @@ namespace Core.Graph
             _cts = new CancellationTokenSource();
             var clone = Clone();
 
+            InfoFeed.Instance.LogInfo(GlobalStorage.InfoKeys.LOG_PROCESSING_STATS);
             var stats = Length switch
             {
                 <= 80 => MetricProvider.ProcessMetrics(clone),
@@ -119,6 +121,7 @@ namespace Core.Graph
             
             GameManager.Instance.UpdateEdgeColors();
             UpdateGlobalStatView();
+            InfoFeed.Instance.LogInfo(GlobalStorage.InfoKeys.LOG_PROCESSING_STATS_FINISHED);
         }
 
         public void UpdateNodeColors()
