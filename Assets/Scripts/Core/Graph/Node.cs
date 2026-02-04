@@ -14,7 +14,6 @@ namespace Core.Graph
 {
     public class Node : MonoBehaviour, IInteractable, ISerializable<SerializableNode>
     {
-        private const float COLOR_SNAP_DISTANCE = 0.1f;
         [SerializeField] private float _colorChangeSpeed;
         [SerializeField] private SpriteRenderer _renderer;
         private Color _targetColor;
@@ -118,7 +117,7 @@ namespace Core.Graph
         private async UniTask ChangeColor()
         {
             _isChangingColor = true;
-            while (_renderer.color.Distance(_targetColor) > COLOR_SNAP_DISTANCE)
+            while (_renderer.color.Distance(_targetColor) > GlobalStorage.SNAP_DISTANCE)
             {
                 _renderer.color = Color.Lerp(_renderer.color, _targetColor, _colorChangeSpeed * Time.deltaTime);
                 await UniTask.NextFrame(destroyCancellationToken);

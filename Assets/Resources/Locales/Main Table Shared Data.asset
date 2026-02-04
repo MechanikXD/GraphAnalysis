@@ -207,6 +207,42 @@ MonoBehaviour:
     m_Key: File incorrect format
     m_Metadata:
       m_Items: []
+  - m_Id: 1837880974245888
+    m_Key: LOG_PROCESSING_STATS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1837905561255936
+    m_Key: LOG_PROCESSING_STATS_FINISHED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838084943249408
+    m_Key: LOG_DATA_LOAD_SUCCESS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838100885798912
+    m_Key: WARNING_NODE_REMOVED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838113430962176
+    m_Key: LOG_BACKGROUND_UPDATED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838129172185088
+    m_Key: LOG_SETTINGS_UPDATED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838144137461760
+    m_Key: WARNING_FILE_NOT_FOUND
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838162256855040
+    m_Key: WARNING_IMAGE_NOT_VALID
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838183966572544
+    m_Key: FILE_EXPORT_SUCCESS
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

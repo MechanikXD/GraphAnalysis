@@ -210,6 +210,42 @@ MonoBehaviour:
     m_Localized: The File was not in correct format
     m_Metadata:
       m_Items: []
+  - m_Id: 1837905561255936
+    m_Localized: Graph was updated
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1837880974245888
+    m_Localized: Processing Stats...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838183966572544
+    m_Localized: File export success
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838162256855040
+    m_Localized: 'File is not a valid PNG/JPG image: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838144137461760
+    m_Localized: 'File not found: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838129172185088
+    m_Localized: Settings were updated
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838113430962176
+    m_Localized: Background updated successfully
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838100885798912
+    m_Localized: Some nodes outside new boundaries were removed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838084943249408
+    m_Localized: Data loaded successfully
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

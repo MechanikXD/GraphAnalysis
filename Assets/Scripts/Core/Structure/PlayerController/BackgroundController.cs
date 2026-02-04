@@ -8,8 +8,6 @@ namespace Core.Structure.PlayerController
 {
     public class BackgroundController : MonoBehaviour, IDragHandler, IScrollHandler
     {
-        private const float PIXEL_TO_UNIT_RATIO = 100f;
-        private const float SCALE_SNAP_DISTANCE = 0.01f;
         private static bool _enabled = true;
         
         [SerializeField] private bool _preserveBounds = true;
@@ -100,7 +98,7 @@ namespace Core.Structure.PlayerController
 
         private async UniTask ZoomCameraToDesired()
         {
-            while (Mathf.Abs(_desiredOrthoSize - _camera.orthographicSize) > SCALE_SNAP_DISTANCE)
+            while (Mathf.Abs(_desiredOrthoSize - _camera.orthographicSize) > GlobalStorage.SCALE_SNAP_DISTANCE)
             {
                 _camera.orthographicSize = Mathf.Lerp(
                     _camera.orthographicSize,
@@ -120,8 +118,8 @@ namespace Core.Structure.PlayerController
         {
             var newSize = new Vector2
             {
-                x = newSprite.texture.width / PIXEL_TO_UNIT_RATIO,
-                y = newSprite.texture.height / PIXEL_TO_UNIT_RATIO
+                x = newSprite.texture.width / GlobalStorage.PIXEL_TO_UNIT_RATIO,
+                y = newSprite.texture.height / GlobalStorage.PIXEL_TO_UNIT_RATIO
             };
 
             _spriteRenderer.sprite = newSprite;

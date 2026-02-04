@@ -7,25 +7,18 @@ using JetBrains.Annotations;
 using Other;
 using UI;
 using UI.UiStructures.InfoStructures;
-using UI.View;
 using UI.View.GraphScene;
 using UnityEngine;
 
 namespace Core.Graph
 {
+    /*
+     *  Second Node                        First Node
+     *  Base Color    <------------->      Gradient
+     * Forward Arrow                    Backward arrow
+     */
     public class Edge : MonoBehaviour, IInteractable, ISerializable<SerializableEdge>
     {
-        private const float COLOR_SNAP_DISTANCE = 0.1f;
-        private const float CROP_WHEN_TWO_SIDED = 0.6f;
-        private const float CROP_WHEN_ONE_SIDED = 0.4f;
-        private const float OFFSET_WHEN_ONE_SIDED = 0.1f;
-        private const float ARROW_WIDTH = 0.05f;
-        /*
-         * Reminder:
-         *  Second Node                        First Node
-         *  Base Color    <------------->      Gradient
-         * Forward Arrow                    Backward arrow
-         */
         [SerializeField] private BoxCollider2D _collider;
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private SpriteRenderer _gradientRenderer;
@@ -57,8 +50,6 @@ namespace Core.Graph
                 _weight = value;
             }
         }
-
-        public float OffsetWhenOneSided => OFFSET_WHEN_ONE_SIDED;
         
         private ContextAction[] _contextAction;
 
@@ -89,13 +80,13 @@ namespace Core.Graph
         
         public void SetLenght(float value)
         {
-            if (_isOneSided) value -= CROP_WHEN_ONE_SIDED;
-            else value -= CROP_WHEN_TWO_SIDED;
+            if (_isOneSided) value -= GlobalStorage.EdgeData.CROP_WHEN_ONE_SIDED;
+            else value -= GlobalStorage.EdgeData.CROP_WHEN_TWO_SIDED;
             if (value < 0) value = 0;
             
             _collider.size = new Vector2(value, _collider.size.y);
-            _spriteRenderer.size = new Vector2(value, ARROW_WIDTH);
-            _gradientRenderer.transform.localScale = new Vector3(ARROW_WIDTH, value, 1);
+            _spriteRenderer.size = new Vector2(value, GlobalStorage.EdgeData.ARROW_WIDTH);
+            _gradientRenderer.transform.localScale = new Vector3(GlobalStorage.EdgeData.ARROW_WIDTH, value, 1);
 
             var halfValue = value / 2;
             _forwardArrow.transform.localPosition = new Vector3(-halfValue + _arrowOffset, 0, 0);
@@ -106,7 +97,7 @@ namespace Core.Graph
         {
             Vector3 dir = start - end;
             var newPosition = (end + start) / 2;
-            if (_isOneSided) newPosition += (Vector2)dir.normalized * OFFSET_WHEN_ONE_SIDED;
+            if (_isOneSided) newPosition += (Vector2)dir.normalized * GlobalStorage.EdgeData.OFFSET_WHEN_ONE_SIDED;
             transform.position = newPosition;
             
             var lenght = Vector2.Distance(end, start);
@@ -256,8 +247,8 @@ namespace Core.Graph
                 var firstNodeColor = _first.NodeColor;
                 var secondNodeColor = _second.NodeColor;
                 var thisFrameChangeSpeed = _colorChangeSpeed * Time.deltaTime;
-                var forwardColorStatus = _spriteRenderer.color.Distance(secondNodeColor) < COLOR_SNAP_DISTANCE;
-                var backwardColorStatus = _gradientRenderer.color.Distance(firstNodeColor) < COLOR_SNAP_DISTANCE;
+                var forwardColorStatus = _spriteRenderer.color.Distance(secondNodeColor) < GlobalStorage.SNAP_DISTANCE;
+                var backwardColorStatus = _gradientRenderer.color.Distance(firstNodeColor) < GlobalStorage.SNAP_DISTANCE;
 
                 if (!forwardColorStatus)
                 {

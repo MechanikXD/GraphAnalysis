@@ -11,8 +11,7 @@ namespace Core.Structure.PlayerController.States
     {
         private readonly Camera _camera;
         private const float SNAP_DISTANCE = 0.01f;
-        private const float MAX_ZOOM = 10f;
-        private const float MOVE_SPEED = 10f;
+        
 
         public GraphAdjust(PlayerStateMachine sm, PlayerController owner) : base(sm, owner)
         {
@@ -50,11 +49,11 @@ namespace Core.Structure.PlayerController.States
             while (true)
             {
                 var atDestination = Vector3.Distance(_camera.transform.position, targetPos) < SNAP_DISTANCE;
-                var atTargetZoom = Mathf.Abs(MAX_ZOOM - _camera.orthographicSize) < SNAP_DISTANCE;
+                var atTargetZoom = Mathf.Abs(GlobalStorage.MAX_ZOOM - _camera.orthographicSize) < SNAP_DISTANCE;
                 if (atDestination && atTargetZoom)
                 {
                     _camera.transform.position = targetPos;
-                    _camera.orthographicSize = MAX_ZOOM;
+                    _camera.orthographicSize = GlobalStorage.MAX_ZOOM;
                     break;
                 }
 
@@ -63,15 +62,15 @@ namespace Core.Structure.PlayerController.States
                     _camera.transform.position = Vector3.Lerp(
                         _camera.transform.position,
                         targetPos,
-                        MOVE_SPEED * Time.deltaTime);
+                        GlobalStorage.MOVE_SPEED * Time.deltaTime);
                 }
 
                 if (!atTargetZoom)
                 {
                     _camera.orthographicSize = Mathf.Lerp(
                         _camera.orthographicSize,
-                        MAX_ZOOM,
-                        MOVE_SPEED * Time.deltaTime
+                        GlobalStorage.MAX_ZOOM,
+                        GlobalStorage.MOVE_SPEED * Time.deltaTime
                     );
                 }
                 
