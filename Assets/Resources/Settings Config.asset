@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: Settings Config
   m_EditorClassIdentifier: 
   _settingGroups:
-  - _groupTitle: Program
+  - _groupTitle: Display
     _settings:
     - rid: 5405681434955874564
+    - rid: 539357853690102017
+    - rid: 539357853690102018
+    - rid: 539357853690102019
+    - rid: 539357853690102020
   - _groupTitle: Controlls
     _settings:
     - rid: 539357853690101761
@@ -96,6 +100,40 @@ MonoBehaviour:
         _prefab: {fileID: 8028288456128711950, guid: 2867ad35a4b425c45a9fc602c81f91c3, type: 3}
         _settingNameEntry: High color
         _defaultColor: {r: 0, g: 1, b: 0, a: 1}
+    - rid: 539357853690102017
+      type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 1861295958409776114, guid: 5d2a00018fc5dc04aa8640e2f29ea419, type: 3}
+        _settingNameEntry: Screen mode
+        _values:
+        - Fullscreen
+        - Windowed
+    - rid: 539357853690102018
+      type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 1861295958409776114, guid: 5d2a00018fc5dc04aa8640e2f29ea419, type: 3}
+        _settingNameEntry: Frame Rate Limit
+        _values:
+        - No Limit
+        - 30
+        - 60
+        - 144
+    - rid: 539357853690102019
+      type: {class: BooleanSettingsData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 8141075785303709259, guid: f0131790dce5c0943a0693afc70a9ca8, type: 3}
+        _settingNameEntry: VSync
+        _isOnByDefault: 0
+    - rid: 539357853690102020
+      type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 1861295958409776114, guid: 5d2a00018fc5dc04aa8640e2f29ea419, type: 3}
+        _settingNameEntry: Anti-aliasing
+        _values:
+        - No Anti-aliasing
+        - FXAA
+        - SMAA
+        - TAA
     - rid: 5405681434955874564
       type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
       data:
