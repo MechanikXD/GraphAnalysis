@@ -1,7 +1,6 @@
 ﻿using System;
 using Core.Behaviour.StateMachine;
 using UI;
-using UI.View;
 using UI.View.GraphScene;
 using UnityEngine;
 

@@ -14,9 +14,10 @@ namespace Core.Graph
 {
     public class Node : MonoBehaviour, IInteractable, ISerializable<SerializableNode>
     {
+        private const string NODE_DEGREE_KEY = "Node Degree";
         [SerializeField] private float _colorChangeSpeed;
         [SerializeField] private SpriteRenderer _renderer;
-        private Color _targetColor;
+        private Color _targetColor; 
         private bool _isChangingColor;
         public Color NodeColor => _targetColor;
         public Dictionary<string, float> Stats { get; private set; }
@@ -62,6 +63,7 @@ namespace Core.Graph
             {
                 Stats[kvp.Key] = kvp.Value[NodeIndex];
             }
+            Stats.Add("Node Degree", Connections.Count);
         }
 
         public void AssignColor(string targetMetric, float min, float max)

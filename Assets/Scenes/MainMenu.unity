@@ -4287,6 +4287,8 @@ MonoBehaviour:
   _pathField: {fileID: 1280163695}
   _confirmButton: {fileID: 1510843794}
   _cancelButton: {fileID: 1236021509}
+  _failFileLoadMessage: {fileID: 0}
+  _messageHoldTime: 0
 --- !u!224 &2089838762
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4354,7 +4356,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089838760}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}

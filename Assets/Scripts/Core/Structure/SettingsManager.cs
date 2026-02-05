@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Core.Behaviour;
 using Core.LoadSystem;
-using Other;
 using UI.Settings;
 using UI.Settings.Scriptable;
 using UnityEngine;
@@ -60,7 +59,6 @@ namespace Core.Structure
             }
             
             SaveManager.SaveSettings();
-            InfoFeed.Instance.LogInfo(GlobalStorage.InfoKeys.LOG_SETTINGS_UPDATED);
         }
 
         public void CreateGroups(Transform contentRoot, Transform groupTabRoot)

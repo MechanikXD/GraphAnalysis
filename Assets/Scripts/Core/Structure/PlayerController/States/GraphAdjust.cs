@@ -10,8 +10,6 @@ namespace Core.Structure.PlayerController.States
     public class GraphAdjust : PlayerState
     {
         private readonly Camera _camera;
-        private const float SNAP_DISTANCE = 0.01f;
-        
 
         public GraphAdjust(PlayerStateMachine sm, PlayerController owner) : base(sm, owner)
         {
@@ -48,8 +46,8 @@ namespace Core.Structure.PlayerController.States
             var targetPos = new Vector3(0, 0, _camera.transform.position.z);
             while (true)
             {
-                var atDestination = Vector3.Distance(_camera.transform.position, targetPos) < SNAP_DISTANCE;
-                var atTargetZoom = Mathf.Abs(GlobalStorage.MAX_ZOOM - _camera.orthographicSize) < SNAP_DISTANCE;
+                var atDestination = Vector3.Distance(_camera.transform.position, targetPos) < GlobalStorage.SCALE_SNAP_DISTANCE;
+                var atTargetZoom = Mathf.Abs(GlobalStorage.MAX_ZOOM - _camera.orthographicSize) < GlobalStorage.SCALE_SNAP_DISTANCE;
                 if (atDestination && atTargetZoom)
                 {
                     _camera.transform.position = targetPos;

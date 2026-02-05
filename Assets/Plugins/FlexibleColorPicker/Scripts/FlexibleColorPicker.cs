@@ -54,11 +54,8 @@ public class FlexibleColorPicker : MonoBehaviour {
 
     [Tooltip("Connection to the FCP's hexadecimal input field.")]
     [SerializeField]
-#if TMPro
+
     private TMPro.TMP_InputField hexInput;
-#else
-    private InputField hexInput;
-#endif
 
     [Tooltip("Connection to the FCP's mode dropdown menu.")]
     [SerializeField]
@@ -68,7 +65,7 @@ public class FlexibleColorPicker : MonoBehaviour {
     private Dropdown modeDropdown;
 #endif
 
-    private Canvas canvas;
+    // private Canvas canvas;
 
     [Tooltip("The (starting) 2D picking mode, i.e. the 2 color values that can be picked with the large square picker.")]
     [SerializeField]
@@ -232,10 +229,6 @@ public class FlexibleColorPicker : MonoBehaviour {
     * ----------------------------------------------------------
     */
 
-    private void Awake() {
-        canvas = GetComponentInParent<Canvas>();
-    }
-
     private void OnEnable() {
         if(this.bufferedColor == null)
             this.bufferedColor = new BufferedColor(startingColor);
@@ -249,7 +242,7 @@ public class FlexibleColorPicker : MonoBehaviour {
         MakeModeOptions();
         UpdateMarkers();
         UpdateHex();
-        onColorChange.Invoke(startingColor);
+        // onColorChange.Invoke(startingColor);
     }
 
     private void Update() {
@@ -285,7 +278,8 @@ public class FlexibleColorPicker : MonoBehaviour {
     /// </summary>
     /// <param name="e">Pointer event</param>
     public void PointerUpdate(BaseEventData e) {
-        Vector2 v = GetNormalizedPointerPosition(canvas, focusedPicker.image.rectTransform, e);
+        // Vector2 v = GetNormalizedPointerPosition(canvas, focusedPicker.image.rectTransform, e);
+        Vector2 v = GetNormScreenSpace(focusedPicker.image.rectTransform, e);
         this.bufferedColor = PickColor(this.bufferedColor, focusedPickerType, v);
 
         UpdateMarkers();

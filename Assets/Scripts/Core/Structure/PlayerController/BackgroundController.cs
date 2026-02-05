@@ -12,6 +12,7 @@ namespace Core.Structure.PlayerController
         
         [SerializeField] private bool _preserveBounds = true;
         [SerializeField] private Vector2 _dragSpeed;
+        [SerializeField] private float _dragSpeedMultiply = 1f;
         
         [SerializeField] private float _scrollSpeed;
         [SerializeField] private float _scaleLerpSpeed;
@@ -68,7 +69,7 @@ namespace Core.Structure.PlayerController
             relativeZoom -= _scrollBounds.x;
             relativeZoom /= _scrollBounds.y;
 
-            return _dragSpeed.x + _dragSpeed.y * relativeZoom;
+            return (_dragSpeed.x + _dragSpeed.y * relativeZoom) * _dragSpeedMultiply;
         }
 
         private void UpdateBounds()

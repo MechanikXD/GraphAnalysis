@@ -8,7 +8,7 @@ namespace UI.Settings
     {
         [SerializeField] protected LocalizeStringEvent _lse;
         protected string Title;
-        public bool WasChanged { get; private set; }
+        public bool WasChanged { get; protected set; }
         public void ClearChanged() => WasChanged = false;
         public abstract void WriteChangesInStorage();
         // Event that invokes all changes.
