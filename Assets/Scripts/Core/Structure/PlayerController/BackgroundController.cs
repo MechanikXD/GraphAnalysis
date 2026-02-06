@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Other;
+using UI.Settings.Types;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,14 +11,15 @@ namespace Core.Structure.PlayerController
     {
         private static bool _enabled = true;
         
-        [SerializeField] private bool _preserveBounds = true;
         [SerializeField] private Vector2 _dragSpeed;
-        [SerializeField] private float _dragSpeedMultiply = 1f;
+        private float _dragSpeedMultiply = 1f;
         
-        [SerializeField] private float _scrollSpeed;
+        private float _scrollSpeed = 0.2f;
         [SerializeField] private float _scaleLerpSpeed;
         [SerializeField] private Vector2 _scrollBounds;
-        
+
+        private bool _preserveBounds = true;
+        private bool _deleteOutOfBoundsNodes = true;
         private SpriteRenderer _spriteRenderer;
         private BoxCollider2D _collider2D;
         private Camera _camera;
@@ -39,7 +41,33 @@ namespace Core.Structure.PlayerController
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _collider2D = GetComponent<BoxCollider2D>();
             _collider2D.size = _spriteRenderer.size;
+            
+            var newSize = new Vector2
+            {
+                x = _spriteRenderer.sprite.texture.width / GlobalStorage.PIXEL_TO_UNIT_RATIO,
+                y = _spriteRenderer.sprite.texture.height / GlobalStorage.PIXEL_TO_UNIT_RATIO
+            };
+            _spriteRenderer.size = newSize;
+            _collider2D.size = newSize;
+            
             UpdateBounds();
+        }
+
+        private void Start()
+        {
+            void UpdatePreserveBounds(BooleanSettingPrefab boolean) => _preserveBounds = boolean.IsOn;
+            void UpdateDeleteNodes(BooleanSettingPrefab boolean) => _deleteOutOfBoundsNodes = boolean.IsOn;
+            void UpdateScrollSpeed(SliderSettingPrefab slider) => _scrollSpeed = slider.CurrentValue;
+            void UpdateDragSpeed(SliderSettingPrefab slider) => _dragSpeedMultiply = slider.CurrentValue;
+            
+            SettingsManager.AddEventOnSetting<BooleanSettingPrefab>(
+                GlobalStorage.SettingKeys.Controls.RESTRICT_MOVEMENT_TO_BACKGROUND_SIZE, UpdatePreserveBounds);
+            SettingsManager.AddEventOnSetting<BooleanSettingPrefab>(
+                GlobalStorage.SettingKeys.Controls.DELETE_NODES_OUTSIDE_BACKGROUND, UpdateDeleteNodes);
+            SettingsManager.AddEventOnSetting<SliderSettingPrefab>(
+                GlobalStorage.SettingKeys.Controls.DRAG_SPEED, UpdateDragSpeed);
+            SettingsManager.AddEventOnSetting<SliderSettingPrefab>(
+                GlobalStorage.SettingKeys.Controls.SCROLL_SPEED, UpdateScrollSpeed);
         }
 
         public static void Enable() => _enabled = true;
@@ -132,15 +160,19 @@ namespace Core.Structure.PlayerController
             // Delete nodes outside new boundaries
             var adjMatrix = GameManager.Instance.AdjacencyMatrix;
             var nodesToRemove = new List<int>();
-            foreach (var node in adjMatrix.Nodes)
+            if (_deleteOutOfBoundsNodes)
             {
-                if (!WithinBounds(node.Position))
+                foreach (var node in adjMatrix.Nodes)
                 {
-                    nodesToRemove.Add(node.NodeIndex);
-                    node.SilentDestroy(); // Will be marked for destroy but not destroyed yet
+                    if (!WithinBounds(node.Position))
+                    {
+                        nodesToRemove.Add(node.NodeIndex);
+                        node.SilentDestroy(); // Will be marked for destroy but not destroyed yet
+                    }
                 }
+                adjMatrix.RemoveRange(nodesToRemove);
             }
-            adjMatrix.RemoveRange(nodesToRemove);
+            
             if (nodesToRemove.Count > 0) InfoFeed.Instance.LogWarning(GlobalStorage.InfoKeys.WARNING_NODE_REMOVED);
             else InfoFeed.Instance.LogInfo(GlobalStorage.InfoKeys.LOG_BACKGROUND_UPDATED);
         }

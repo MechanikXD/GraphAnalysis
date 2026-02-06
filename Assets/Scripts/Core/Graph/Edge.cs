@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Other;
 using UI;
+using UI.Settings.Types;
 using UI.UiStructures.InfoStructures;
 using UI.View.GraphScene;
 using UnityEngine;
@@ -26,7 +27,7 @@ namespace Core.Graph
         [SerializeField] private SpriteRenderer _forwardArrow;
         [SerializeField] private SpriteRenderer _backwardArrow;
         [SerializeField] private float _arrowOffset;
-        [SerializeField] private float _colorChangeSpeed;
+        private float _colorChangeSpeed = 5f;
 
         private float _weight;
         private bool _isOneSided;
@@ -62,7 +63,14 @@ namespace Core.Graph
                 _isOneSided = value;
             }
         }
-        
+
+        private void Start()
+        {
+            void UpdateColorSpeed(SliderSettingPrefab slider) => _colorChangeSpeed = slider.CurrentValue;
+            SettingsManager.AddEventOnSetting<SliderSettingPrefab>(
+                GlobalStorage.SettingKeys.Controls.COLOR_CHANGE_SPEED, UpdateColorSpeed);
+        }
+
         private void Awake()
         {
             _contextAction = new[] 

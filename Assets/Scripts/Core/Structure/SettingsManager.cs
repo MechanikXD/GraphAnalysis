@@ -22,7 +22,6 @@ namespace Core.Structure
         {
             ToSingleton(true);
             if (_clearSettingOnStartup) SaveManager.DeleteAll();
-            Initialize();
         }
 
         public static T GetSetting<T>(string settingName) where T : SettingPrefab => (T)_settings[settingName];
@@ -90,7 +89,7 @@ namespace Core.Structure
                 }
                 else newGroup.HideGroup();
             }
-            
+
             foreach (var kvp in _settings) kvp.Value.SettingsChanged();
         }
     }

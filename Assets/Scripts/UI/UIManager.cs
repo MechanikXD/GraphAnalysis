@@ -9,28 +9,20 @@ namespace UI
 {
     public class UIManager : SingletonBase<UIManager>
     {
-        private Dictionary<Type, CanvasView> _uiCanvases;
-        private Dictionary<Type, CanvasView> _hudCanvases;
+        private readonly Dictionary<Type, CanvasView> _uiCanvases = new Dictionary<Type, CanvasView>();
+        private readonly Dictionary<Type, CanvasView> _hudCanvases = new Dictionary<Type, CanvasView>();
 
         [SerializeField] private bool _stopTimeScaleOnPause;
         [SerializeField] private GameObject _sceneInputBlock;
         [SerializeField] private CanvasView[] _sceneUiCanvases;
         [SerializeField] private CanvasView[] _sceneHudCanvases;
 
-        private Stack<CanvasView> _uiStack;
+        private readonly Stack<CanvasView> _uiStack = new Stack<CanvasView>();
         public bool HasOpenedUI { get; private set; }
-        
-        protected override void Initialize() {
-            _hudCanvases = new Dictionary<Type, CanvasView>();
-            _uiCanvases = new Dictionary<Type, CanvasView>();
-            _uiStack = new Stack<CanvasView>();
-            ExitPauseState();
-        }
 
-        private void Start()
-        {
-            SortCanvases();
-            DisableCanvases();
+        protected override void Initialize() {
+            ExitPauseState();
+            InitializeCanvases();
         }
         
         public static bool IsPointerOverUI(Vector2 screenPosition)
@@ -94,32 +86,25 @@ namespace UI
 
         public T GetUICanvas<T>() where T : CanvasView => (T)_uiCanvases[typeof(T)];
         public T GetHUDCanvas<T>() where T : CanvasView => (T)_hudCanvases[typeof(T)];
-
-        private void SortCanvases() {
+        
+        private void InitializeCanvases() {
+            // Initialize first
             foreach (var hudCanvas in _sceneHudCanvases) {
+                hudCanvas.Initialize();
                 _hudCanvases.Add(hudCanvas.GetType(), hudCanvas);
             }
-            
             foreach (var uiCanvas in _sceneUiCanvases) {
+                uiCanvas.Initialize();
                 _uiCanvases.Add(uiCanvas.GetType(), uiCanvas);
             }
-        }
-        
-        private void DisableCanvases() {
-            foreach (var uiCanvas in _uiCanvases.Values) {
-                // Safe exit from canvas (disables only canvas, not gameObject)
-                if (!uiCanvas.gameObject.activeInHierarchy) {
-                    uiCanvas.gameObject.SetActive(true);
-                }
-                if (uiCanvas.HideOnStart) uiCanvas.Hide(true);
-            }
-            
-            foreach (var hudCanvas in _hudCanvases.Values) {
-                // Safe exit from canvas (disables only canvas, not gameObject)
-                if (!hudCanvas.gameObject.activeInHierarchy) {
-                    hudCanvas.gameObject.SetActive(true);
-                }
+            // Then show/hide
+            foreach (var hudCanvas in _sceneHudCanvases) {
                 if (hudCanvas.HideOnStart) hudCanvas.Hide(true);
+                else hudCanvas.Show(true);
+            }
+            foreach (var uiCanvas in _sceneUiCanvases) {
+                if (uiCanvas.HideOnStart) uiCanvas.Hide(true);
+                else uiCanvas.Show(true);
             }
         }
     }

@@ -13,7 +13,7 @@ namespace UI.View.GraphScene
         [SerializeField] private PromptBase[] _prompts;
         private Dictionary<Type, PromptBase> _promptGetters;
 
-        protected override void Initialize()
+        internal override void Initialize()
         {
             base.Initialize();
             TypePrompt();

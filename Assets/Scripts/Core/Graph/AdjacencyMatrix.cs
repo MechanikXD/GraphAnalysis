@@ -124,22 +124,22 @@ namespace Core.Graph
             InfoFeed.Instance.LogInfo(GlobalStorage.InfoKeys.LOG_PROCESSING_STATS_FINISHED);
         }
 
-        public void UpdateNodeColors()
+        public void UpdateNodeColors(string targetMetric)
         {
             var targetMetricLow = float.PositiveInfinity;
             var targetMetricHigh = float.NegativeInfinity;
             foreach (var node in Nodes)
             {
-                var targetMetric = node.Stats[GameManager.Instance.TargetMetric];
-                if (targetMetricLow > targetMetric) targetMetricLow = targetMetric;
-                if (targetMetricHigh < targetMetric) targetMetricHigh = targetMetric;
+                var metric = node.Stats[targetMetric];
+                if (targetMetricLow > metric) targetMetricLow = metric;
+                if (targetMetricHigh < metric) targetMetricHigh = metric;
             }
 
             if (Length > 1)
             {
                 foreach (var node in Nodes)
                 {
-                    node.AssignColor(GameManager.Instance.TargetMetric, targetMetricLow,
+                    node.AssignColor(targetMetric, targetMetricLow,
                         targetMetricHigh);
                 }
             }

@@ -10,7 +10,7 @@ namespace UI.View.GraphScene
         [SerializeField] private Transform _contentRoot;
         [SerializeField] private Transform _groupTabRoot;
 
-        protected override void Initialize()
+        internal override void Initialize()
         {
             base.Initialize();
             SettingsManager.Instance.CreateGroups(_contentRoot, _groupTabRoot);
@@ -20,7 +20,7 @@ namespace UI.View.GraphScene
 
         private void OnDisable() => _closeButton.onClick.RemoveListener(ExitUICanvas);
 
-        private void ExitUICanvas()
+        private static void ExitUICanvas()
         {
             SettingsManager.Instance.SaveChangedSettings();
             if (UIManager.Instance != null) UIManager.Instance.ExitLastCanvas();

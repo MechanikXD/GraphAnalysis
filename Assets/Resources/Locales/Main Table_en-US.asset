@@ -246,6 +246,118 @@ MonoBehaviour:
     m_Localized: Data loaded successfully
     m_Metadata:
       m_Items: []
+  - m_Id: 2225409749680128
+    m_Localized: Display
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225429441937408
+    m_Localized: Screen mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225486652243968
+    m_Localized: Fullscreen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225522991693824
+    m_Localized: Windowed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225571515596800
+    m_Localized: Frame Rate Limit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225728550338560
+    m_Localized: No Limit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225783311171584
+    m_Localized: VSync
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225807067709440
+    m_Localized: Anti-aliasing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225856589856768
+    m_Localized: No Anti-aliasing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225897287188480
+    m_Localized: Controlls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225921651900416
+    m_Localized: Color change speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226021077876736
+    m_Localized: Drag speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226094151041024
+    m_Localized: Scroll speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226155392073728
+    m_Localized: Restrict movement to background size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226198006202368
+    m_Localized: Delete nodes outside background
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226234983186432
+    m_Localized: Graph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226278805274624
+    m_Localized: Target metric
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226363563769856
+    m_Localized: Low value color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226369540653056
+    m_Localized: High value color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232660963098624
+    m_Localized: FXAA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232689350148096
+    m_Localized: SMAA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232718978711552
+    m_Localized: TAA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232737735639040
+    m_Localized: English
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232758874931200
+    m_Localized: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232791754080256
+    m_Localized: 30
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232812155174912
+    m_Localized: 60
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232813803536384
+    m_Localized: 144
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570721781612544
+    m_Localized: ' '
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

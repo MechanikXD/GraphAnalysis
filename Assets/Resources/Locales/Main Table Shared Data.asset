@@ -243,6 +243,118 @@ MonoBehaviour:
     m_Key: FILE_EXPORT_SUCCESS
     m_Metadata:
       m_Items: []
+  - m_Id: 2225409749680128
+    m_Key: Display
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225429441937408
+    m_Key: Screen mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225486652243968
+    m_Key: Fullscreen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225522991693824
+    m_Key: Windowed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225571515596800
+    m_Key: Frame Rate Limit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225728550338560
+    m_Key: No Limit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225783311171584
+    m_Key: VSync
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225807067709440
+    m_Key: Anti-aliasing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225856589856768
+    m_Key: No Anti-aliasing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225897287188480
+    m_Key: Controlls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225921651900416
+    m_Key: Color change speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226021077876736
+    m_Key: Drag speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226094151041024
+    m_Key: Scroll speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226155392073728
+    m_Key: Restrict movement to background size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226198006202368
+    m_Key: Delete nodes outside background
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226234983186432
+    m_Key: Graph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226278805274624
+    m_Key: Target metric
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226363563769856
+    m_Key: Low value color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226369540653056
+    m_Key: High value color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232660963098624
+    m_Key: FXAA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232689350148096
+    m_Key: SMAA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232718978711552
+    m_Key: TAA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232737735639040
+    m_Key: English
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232758874931200
+    m_Key: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232791754080256
+    m_Key: 30
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232812155174912
+    m_Key: 60
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232813803536384
+    m_Key: 144
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570721781612544
+    m_Key: EMPTY
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -12,8 +12,9 @@ namespace UI.View.GraphScene
         private bool _hasContent;
         private List<Action> _unsubscribers;
 
-        protected override void Initialize()
+        internal override void Initialize()
         {
+            base.Initialize();
             _unsubscribers = new List<Action>();
         }
 

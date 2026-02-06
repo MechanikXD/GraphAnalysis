@@ -43,9 +43,9 @@ namespace UI.View.MainMenuScene
 
         private void OnDisable()
         {
-            _selectPathButton.onClick.AddListener(StartImportFile);
-            _confirmButton.onClick.AddListener(CreateNewSession);
-            _cancelButton.onClick.AddListener(CloseThisView);
+            _selectPathButton.onClick.RemoveListener(StartImportFile);
+            _confirmButton.onClick.RemoveListener(CreateNewSession);
+            _cancelButton.onClick.RemoveListener(CloseThisView);
         }
 
         private void CreateNewSession()

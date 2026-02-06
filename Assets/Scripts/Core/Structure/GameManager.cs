@@ -10,6 +10,7 @@ using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Other;
+using UI.Settings.Types;
 using UI.UiStructures.InfoStructures;
 using UI.View.GraphScene;
 using UnityEngine.Localization.Settings;
@@ -18,13 +19,11 @@ namespace Core.Structure
 {
     public class  GameManager : SingletonBase<GameManager>
     {
-        [SerializeField] private string _sessionKey;
-        [SerializeField] private string _tagetMetric = "Eigenvector Centrality";
-        [SerializeField] private Color _lowColor = Color.red;
-        [SerializeField] private Color _highColor = Color.green;
-        public string TargetMetric => _tagetMetric;
-        public Color LowColor => _lowColor;
-        public Color HighColor => _highColor;
+        private string _sessionKey;
+        // Pre-assign, because events that change those values are not called at once. Expect 3 updates on the start.
+        public string TargetMetric { get; private set; } = "Node Degree";
+        public Color LowColor { get; private set; } = Color.red;
+        public Color HighColor { get; private set; } = Color.green;
 
         [SerializeField] private Transform _tempRoot;
         private readonly List<Node> _tempNodes = new List<Node>();
@@ -50,18 +49,41 @@ namespace Core.Structure
                 var serialized = JsonConvert.DeserializeObject<SerializableAdjacencyMatrix>(json);
                 AdjacencyMatrix.DeserializeSelf(serialized);
             }
-            
+
+            SubscribeToSettings();
             InfoView.GetInfo<Menu>().SetBackground(AdjacencyMatrix.BgFilePath);
             InfoFeed.Instance.LogInfo(GlobalStorage.InfoKeys.LOG_DATA_LOAD_SUCCESS);
             // To prevent OnApplicationFocus early calls
             await UniTask.Yield(PlayerLoopTiming.PostLateUpdate, destroyCancellationToken);
             _initialized = true;
 
-            if (AdjacencyMatrix.Length > 0)
+            if (AdjacencyMatrix.Length > 0) AdjacencyMatrix.UpdateGlobalStatView();
+        }
+
+        private void SubscribeToSettings()
+        {
+            void UpdateTargetMetric(DropDownSettingPrefab dropDown)
             {
-                AdjacencyMatrix.UpdateGlobalStatView();
-                AdjacencyMatrix.UpdateNodeColors();
+                TargetMetric = dropDown.Options[dropDown.CurrentOption];
+                AdjacencyMatrix.UpdateNodeColors(TargetMetric);
             }
+            void UpdateHighColor(ColorSettingPrefab color)
+            {
+                HighColor = color.CurrentColor;
+                AdjacencyMatrix.UpdateNodeColors(TargetMetric);
+            }
+            void UpdateLowColor(ColorSettingPrefab color)
+            {
+                LowColor = color.CurrentColor;
+                AdjacencyMatrix.UpdateNodeColors(TargetMetric);
+            }
+            
+            SettingsManager.AddEventOnSetting<DropDownSettingPrefab>(
+                GlobalStorage.SettingKeys.Graph.TARGET_METRIC, UpdateTargetMetric);
+            SettingsManager.AddEventOnSetting<ColorSettingPrefab>(
+                GlobalStorage.SettingKeys.Graph.HIGH_VALUE_COLOR, UpdateHighColor);
+            SettingsManager.AddEventOnSetting<ColorSettingPrefab>(
+                GlobalStorage.SettingKeys.Graph.LOW_VALUE_COLOR, UpdateLowColor);
         }
 
         public void ConfigureLoadOptions(string key) => _sessionKey = key;

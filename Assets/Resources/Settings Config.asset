@@ -92,13 +92,13 @@ MonoBehaviour:
       type: {class: ColorSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
       data:
         _prefab: {fileID: 8028288456128711950, guid: 2867ad35a4b425c45a9fc602c81f91c3, type: 3}
-        _settingNameEntry: Low color
+        _settingNameEntry: Low value color
         _defaultColor: {r: 1, g: 0, b: 0, a: 1}
     - rid: 539357853690101987
       type: {class: ColorSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
       data:
         _prefab: {fileID: 8028288456128711950, guid: 2867ad35a4b425c45a9fc602c81f91c3, type: 3}
-        _settingNameEntry: High color
+        _settingNameEntry: High value color
         _defaultColor: {r: 0, g: 1, b: 0, a: 1}
     - rid: 539357853690102017
       type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}

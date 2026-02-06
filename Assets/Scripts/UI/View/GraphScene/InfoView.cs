@@ -26,8 +26,9 @@ namespace UI.View.GraphScene
             if (_currentInfo != null) _currentInfo.Show();
         }
 
-        protected override void Initialize()
+        internal override void Initialize()
         {
+            base.Initialize();
             OrderInfos();
         }
 

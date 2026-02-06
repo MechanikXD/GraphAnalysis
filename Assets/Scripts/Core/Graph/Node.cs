@@ -6,6 +6,7 @@ using Core.Structure.PlayerController;
 using Cysharp.Threading.Tasks;
 using Other;
 using UI;
+using UI.Settings.Types;
 using UI.UiStructures.InfoStructures;
 using UI.View.GraphScene;
 using UnityEngine;
@@ -14,12 +15,10 @@ namespace Core.Graph
 {
     public class Node : MonoBehaviour, IInteractable, ISerializable<SerializableNode>
     {
-        private const string NODE_DEGREE_KEY = "Node Degree";
-        [SerializeField] private float _colorChangeSpeed;
+        private float _colorChangeSpeed = 5f;
         [SerializeField] private SpriteRenderer _renderer;
-        private Color _targetColor; 
         private bool _isChangingColor;
-        public Color NodeColor => _targetColor;
+        public Color NodeColor { get; private set; }
         public Dictionary<string, float> Stats { get; private set; }
         private ContextAction[] _contextAction;
         public List<Edge> Connections { get; private set; }
@@ -38,6 +37,13 @@ namespace Core.Graph
                 new ContextAction("Move", StartMove),
                 new ContextAction("Delete", DeleteNode)
             };
+        }
+        
+        private void Start()
+        {
+            void UpdateColorSpeed(SliderSettingPrefab slider) => _colorChangeSpeed = slider.CurrentValue;
+            SettingsManager.AddEventOnSetting<SliderSettingPrefab>(
+                GlobalStorage.SettingKeys.Controls.COLOR_CHANGE_SPEED, UpdateColorSpeed);
         }
         
         public void OnLeftClick()
@@ -79,7 +85,7 @@ namespace Core.Graph
                 metricValue -= min;
                 metricValue /= max - min;
             }
-            _targetColor = Color.Lerp(GameManager.Instance.LowColor, GameManager.Instance.HighColor, metricValue);
+            NodeColor = Color.Lerp(GameManager.Instance.LowColor, GameManager.Instance.HighColor, metricValue);
             
             if (!_isChangingColor) ChangeColor().Forget();
         }
@@ -119,13 +125,13 @@ namespace Core.Graph
         private async UniTask ChangeColor()
         {
             _isChangingColor = true;
-            while (_renderer.color.Distance(_targetColor) > GlobalStorage.SNAP_DISTANCE)
+            while (_renderer.color.Distance(NodeColor) > GlobalStorage.SNAP_DISTANCE)
             {
-                _renderer.color = Color.Lerp(_renderer.color, _targetColor, _colorChangeSpeed * Time.deltaTime);
+                _renderer.color = Color.Lerp(_renderer.color, NodeColor, _colorChangeSpeed * Time.deltaTime);
                 await UniTask.NextFrame(destroyCancellationToken);
             }
 
-            _renderer.color = _targetColor;
+            _renderer.color = NodeColor;
             _isChangingColor = false;
         }
     }

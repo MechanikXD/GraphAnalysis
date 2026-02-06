@@ -1,4 +1,5 @@
 ﻿using Core.Behaviour;
+using Core.Structure;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace Other
         private float _remainingFeedTime;
         private bool _feedIsDisplayed;
 
-        public void ClearMessage() => Log(string.Empty, _logColor, 0f);
+        public void ClearMessage() => Log(GlobalStorage.EMPTY_ENTRY_KEY, _logColor, 0f);
         public void LogInfo(string entryKey, float feedTime = 5f) => Log(entryKey, _logColor, feedTime);
         public void LogWarning(string entryKey, float feedTime = 5f) => Log(entryKey, _warningColor, feedTime);
         public void LogError(string entryKey, float feedTime = 5f) => Log(entryKey, _errorColor, feedTime);
@@ -43,7 +44,7 @@ namespace Other
                 await UniTask.NextFrame(destroyCancellationToken);
             }
 
-            _remainingFeedTime = 0f;
+            ClearMessage();
             _feedIsDisplayed = false;
         }
     }

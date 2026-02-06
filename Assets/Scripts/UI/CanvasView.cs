@@ -9,12 +9,11 @@ namespace UI
         public bool HideOnStart => _hideOnStart;
         public bool IsEnabled { get; protected set; }
 
-        private void Awake()
+        internal virtual void Initialize()
         {
             ThisCanvas = GetComponent<Canvas>();
-            Initialize();
+            IsEnabled = ThisCanvas.enabled;
         }
-        protected virtual void Initialize() {}
         
         public virtual void Show(bool isInitialHide=false)
         {

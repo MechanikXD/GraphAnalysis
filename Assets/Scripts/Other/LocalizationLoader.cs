@@ -9,12 +9,11 @@ namespace Other
 {
     public class LocalizationLoader : MonoBehaviour
     {
-        [SerializeField] private string _localizationSettingKey = "Language";
-
         private IEnumerator Start()
         {
             LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
-            SettingsManager.AddEventOnSetting<DropDownSettingPrefab>(_localizationSettingKey, LocaleSelected);
+            SettingsManager.AddEventOnSetting<DropDownSettingPrefab>(
+                GlobalStorage.SettingKeys.Display.LANGUAGE, LocaleSelected);
             yield return LocalizationSettings.InitializationOperation;
             // call on start, because LocalizationSettings does not inform about current locale.
             OnLocaleChanged(LocalizationSettings.SelectedLocale);
@@ -25,11 +24,12 @@ namespace Other
             LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
         }
         
-        private void OnLocaleChanged(Locale newLocale)
+        private static void OnLocaleChanged(Locale newLocale)
         {
             var availableLocalesList = LocalizationSettings.AvailableLocales.Locales;
             var index = availableLocalesList.IndexOf(newLocale);
-            SettingsManager.GetSetting<DropDownSettingPrefab>(_localizationSettingKey).SilentSwitch(index);
+            SettingsManager.GetSetting<DropDownSettingPrefab>(
+                GlobalStorage.SettingKeys.Display.LANGUAGE).SilentSwitch(index);
         }
 
         private static void LocaleSelected(DropDownSettingPrefab p) => 

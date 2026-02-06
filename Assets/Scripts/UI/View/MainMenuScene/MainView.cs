@@ -17,10 +17,11 @@ namespace UI.View.MainMenuScene
         [SerializeField] private MenuPage[] _pages;
         private static MenuPage _currentPage;
         private static Dictionary<Type, MenuPage> _pagesDict;
-        
-        protected override void Initialize()
+
+        internal override void Initialize()
         {
-            OrderInfos();
+            base.Initialize();
+            OrderPages();
             LoadOptions();
         }
 
@@ -46,7 +47,7 @@ namespace UI.View.MainMenuScene
             if (_currentPage != null) _currentPage.Show();
         }
 
-        private void OrderInfos()
+        private void OrderPages()
         {
             _pagesDict = new Dictionary<Type, MenuPage>();
             foreach (var page in _pages)
@@ -56,12 +57,7 @@ namespace UI.View.MainMenuScene
                 if (!page.DisplayOnStart) page.Hide();
                 else
                 {
-                    if (_currentPage != null)
-                    {
-                        Debug.LogWarning("Several Pages are displayed on start!");
-                        _currentPage.Hide();
-                    }
-
+                    if (_currentPage != null) _currentPage.Hide();
                     _currentPage = page;
                 }
             }
