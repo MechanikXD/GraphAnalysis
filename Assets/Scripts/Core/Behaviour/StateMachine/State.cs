@@ -18,7 +18,6 @@ namespace Core.Behaviour.StateMachine
         public abstract void ExitState();
         
         public abstract void FrameUpdate();
-        public abstract void FixedFrameUpdate();
         
         public abstract void OnLeftClick();
         public abstract void OnRightClick();

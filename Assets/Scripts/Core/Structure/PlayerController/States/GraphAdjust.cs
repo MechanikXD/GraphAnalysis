@@ -34,8 +34,6 @@ namespace Core.Structure.PlayerController.States
 
         public override void FrameUpdate() { }
 
-        public override void FixedFrameUpdate() { }
-
         public override void OnLeftClick() { }
 
         public override void OnRightClick() { }

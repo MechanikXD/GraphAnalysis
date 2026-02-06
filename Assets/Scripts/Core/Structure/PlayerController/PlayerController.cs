@@ -60,8 +60,6 @@ namespace Core.Structure.PlayerController
 
         private void Update() => _controller.CurrentState.FrameUpdate();
 
-        private void FixedUpdate() => _controller.CurrentState.FixedFrameUpdate();
-
         public void OnLeftClick()
         {
             _controller.CurrentState.OnLeftClick();

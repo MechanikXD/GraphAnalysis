@@ -38,8 +38,6 @@ namespace Core.Structure.PlayerController.States
             _node.transform.position = newPos;
         }
 
-        public override void FixedFrameUpdate() { }
-
         public override void OnLeftClick()
         {
             var newPos = _camera.ScreenToWorldPoint(Input.mousePosition);

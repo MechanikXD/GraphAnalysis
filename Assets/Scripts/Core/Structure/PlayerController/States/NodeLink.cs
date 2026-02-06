@@ -39,8 +39,6 @@ namespace Core.Structure.PlayerController.States
         public override void FrameUpdate() => 
             _edge.AdjustEdge(_sourcePosition, _camera.ScreenToWorldPoint(Input.mousePosition));
 
-        public override void FixedFrameUpdate() { }
-
         public override void OnLeftClick()
         {
             var ray = _camera.ScreenPointToRay(Input.mousePosition);
