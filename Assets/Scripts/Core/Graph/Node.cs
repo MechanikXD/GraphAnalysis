@@ -23,6 +23,7 @@ namespace Core.Graph
         private ContextAction[] _contextAction;
         public List<Edge> Connections { get; private set; }
         public float Degree => Connections.Count;
+        public float WeightedDegree { get; private set; }
         public string NodeName { get; set; }
         public int NodeIndex { get; set; }
         public Vector2 Position => transform.position;
@@ -69,7 +70,7 @@ namespace Core.Graph
             {
                 Stats[kvp.Key] = kvp.Value[NodeIndex];
             }
-            Stats.Add("Node Degree", Connections.Count);
+            Stats["Node Degree"] = Degree;
         }
 
         public void AssignColor(string targetMetric, float min, float max)
@@ -94,22 +95,37 @@ namespace Core.Graph
         private void StartMove() => PlayerController.EnterNodeMove(this);
         private void StartOneSidedLink() => PlayerController.EnterNodeLink(this, true);
 
-        public void AddLink(Edge link) => Connections.Add(link);
-        public void RemoveLink(Edge link) => Connections.Remove(link);
+        public void AddLink(Edge link)
+        {
+            Connections.Add(link);
+            WeightedDegree += link.Weight;
+        }
+
+        public void RemoveLink(Edge link)
+        {
+            Connections.Remove(link);
+            WeightedDegree -= link.Weight;
+        }
+
+        public void ClearLinks()
+        {
+            Connections.Clear();
+            WeightedDegree = 0;
+        }
 
         public void DeleteNode()
         {
             foreach (var edge in Connections) edge.CascadeDestroy(this);
             
             GameManager.Instance.AdjacencyMatrix.RemoveNode(NodeIndex);
-            Connections.Clear();
+            ClearLinks();
             Destroy(gameObject);
         }
 
         public void SilentDestroy()
         {
             foreach (var edge in Connections) edge.CascadeDestroy(this, true);
-            Connections.Clear();
+            ClearLinks();
             Destroy(gameObject);
         }
 

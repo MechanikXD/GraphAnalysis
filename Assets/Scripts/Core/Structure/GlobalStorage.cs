@@ -55,6 +55,7 @@
                 public const string TARGET_METRIC = "Target metric";
                 public const string LOW_VALUE_COLOR = "Low value color";
                 public const string HIGH_VALUE_COLOR = "High value color";
+                public const string IS_WEIGHTED = "Is weighted";
             }
         }
     }

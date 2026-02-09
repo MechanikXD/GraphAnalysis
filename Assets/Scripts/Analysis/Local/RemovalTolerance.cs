@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Analysis.Metrics;
@@ -10,81 +11,75 @@ namespace Analysis.Local
         public override float[] Process(GraphCache cache)
         {
             var result = new float[cache.Matrix.Length];
-
-            var baselineEff = ComputeGlobalEfficiency(cache.AspsDistances, cache.Matrix.Length);
+            var baselineSize = GetLargestComponentSize(cache, excludedNode: -1);
 
             for (var i = 0; i < cache.Matrix.Length; i++)
-                result[i] = baselineEff - ComputeEfficiencyWithoutNode(cache, i);
+                result[i] = GetLargestComponentSize(cache, excludedNode: i) - baselineSize;
 
             return result;
         }
 
         protected override float[] ProcessParallel(GraphCache cache, CancellationToken token)
         {
-            float[] result = new float[cache.Matrix.Length];
-
-            float baselineEff = ComputeGlobalEfficiency(cache.AspsDistances, cache.Matrix.Length);
-
+            var result = new float[cache.Matrix.Length];
+            var baselineSize = GetLargestComponentSize(cache, excludedNode: -1);
             var rangePartitioner = Partitioner.Create(0, cache.Matrix.Length);
 
-            Parallel.ForEach(rangePartitioner, range =>
-            {
-                for (int i = range.Item1; i < range.Item2; i++)
+            Parallel.ForEach(rangePartitioner, new ParallelOptions { CancellationToken = token },
+                range =>
                 {
-                    result[i] = baselineEff - ComputeEfficiencyWithoutNode(cache, i);
-                }
-            });
+                    for (int i = range.Item1; i < range.Item2; i++)
+                    {
+                        result[i] = GetLargestComponentSize(cache, excludedNode: i) - baselineSize;
+                    }
+                });
 
             return result;
         }
-        
-        private static float ComputeGlobalEfficiency(float[,] dist, int n)
+
+        private static int GetLargestComponentSize(GraphCache cache, int excludedNode)
         {
-            var sum = 0f;
-            var pairs = n * (n - 1);
+            var n = cache.Matrix.Length;
+            var visited = new bool[n];
 
-            for (var u = 0; u < n; u++)
+            // Mark excluded node as visited
+            if (excludedNode >= 0)
+                visited[excludedNode] = true;
+
+            var largestComponentSize = 0;
+
+            for (var start = 0; start < n; start++)
             {
-                for (var v = 0; v < n; v++)
+                if (visited[start])
+                    continue;
+
+                // BFS to find component size
+                var componentSize = 0;
+                var queue = new Queue<int>();
+                queue.Enqueue(start);
+                visited[start] = true;
+
+                while (queue.Count > 0)
                 {
-                    if (u == v) continue;
-                    var d = dist[u, v];
-                    if (d > 0 && !float.IsPositiveInfinity(d))
-                        sum += 1f / d;
-                }
-            }
+                    var u = queue.Dequeue();
+                    componentSize++;
 
-            return sum / pairs;
-        }
-
-        private static float ComputeEfficiencyWithoutNode(GraphCache cache, int removedNode)
-        {
-            var sum = 0f;
-            var validPairs = 0;
-
-            var dist = cache.AspsDistances;
-
-            for (var u = 0; u < cache.Matrix.Length; u++)
-            {
-                if (u == removedNode) continue;
-
-                for (var v = 0; v < cache.Matrix.Length; v++)
-                {
-                    if (v == removedNode || u == v) continue;
-                    var d = dist![u, v];
-                    
-                    if (d > 0 && !float.IsPositiveInfinity(d))
+                    var neighbors = cache.OutNeighbors[u];
+                    foreach (var v in neighbors)
                     {
-                        sum += 1f / d;
-                        validPairs++;
+                        if (!visited[v])
+                        {
+                            visited[v] = true;
+                            queue.Enqueue(v);
+                        }
                     }
                 }
+
+                if (componentSize > largestComponentSize)
+                    largestComponentSize = componentSize;
             }
 
-            if (validPairs == 0)
-                return 0f;
-
-            return sum / validPairs;
+            return largestComponentSize;
         }
     }
 }

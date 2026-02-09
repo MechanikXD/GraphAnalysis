@@ -22,7 +22,7 @@ namespace Core.Graph
         public Dictionary<string, float> GlobalStats { get; private set; }
         public int Length { get; private set; }
         public bool IsOriented { get; private set; }
-        public bool IsWeighted { get; set; }
+        public bool IsWeighted { get; set; } = true;
 
         public void MakeOriented() => IsOriented = true;
         
@@ -76,6 +76,8 @@ namespace Core.Graph
         }
 
         public float this[int row, int column] => _matrix[row][column];
+
+        public void ForceStatUpdate() => ProcessStats().Forget();
 
         private async UniTask ProcessStats()
         {
@@ -232,6 +234,7 @@ namespace Core.Graph
 
         public void GenerateFromNodes(float lengthCutOff, bool preserveConnectivity)
         {
+            IsOriented = false;
             // Expected to have an empty matrix by now
             for (var i = 0; i < Nodes.Count; i++)
             {
@@ -240,17 +243,23 @@ namespace Core.Graph
                     if (i == j) _matrix[i][j] = 0;
                     else _matrix[i][j] = Vector2.Distance(Nodes[i].transform.position, Nodes[j].transform.position);
                 }
+                Nodes[i].ClearLinks();
             }
             // Get all edges that the graph will contain
             var edges = preserveConnectivity
                 ? BuildMstWithThreshold(lengthCutOff)
                 : FilteredEdges(lengthCutOff);
+            // Clear graph values 
+            for (var i = 0; i < Nodes.Count; i++)
+                for (var j = 0; j < Nodes.Count; j++) _matrix[i][j] = 0f;
             // Place edges
             var existingEdges = GameManager.Instance.CreatedEdges;
             var existingEdgesCount = existingEdges.Count;
             var existingEdgesIndex = 0;
             foreach (var edge in edges)
             {
+                _matrix[edge.from][edge.to] = edge.weight;
+                _matrix[edge.to][edge.from] = edge.weight;
                 Edge newEdge;
                 // Reuse existing ones
                 if (existingEdgesIndex < existingEdgesCount)
@@ -275,7 +284,6 @@ namespace Core.Graph
                 }
                 GameManager.Instance.RemoveEdgesAfter(existingEdgesIndex);
             }
-            
             // Update entire graph at once
             ProcessStats().Forget();
         }

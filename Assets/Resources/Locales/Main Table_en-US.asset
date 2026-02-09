@@ -358,6 +358,10 @@ MonoBehaviour:
     m_Localized: ' '
     m_Metadata:
       m_Items: []
+  - m_Id: 3620791150968832
+    m_Localized: Is weighted
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

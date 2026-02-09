@@ -24,7 +24,6 @@ namespace Analysis.Local
                     // local Brandes accumulators for sources in this range
                     for (var s = range.Item1; s < range.Item2; s++)
                     {
-                        // single-source Brandes (unweighted). For weighted graphs you should use Dijkstra.
                         var stack = new Stack<int>();
                         var predecessors = new List<int>[cache.Matrix.Length];
                         for (var i = 0; i < cache.Matrix.Length; i++) predecessors[i] = new List<int>();
@@ -81,13 +80,17 @@ namespace Analysis.Local
                         for (var i = 0; i < cache.Matrix.Length; i++) cb[i] += local[i];
                     }
                 });
-
-            // normalization for undirected graphs:
-            var denominate = !cache.Matrix.IsOriented
-                ? (cache.Matrix.Length - 1) * (cache.Matrix.Length - 2) / 2f
-                : (cache.Matrix.Length - 1) * (cache.Matrix.Length - 2);
+            // For undirected graphs, divide by 2 first
+            if (!cache.Matrix.IsOriented)
+            {
+                for (var i = 0; i < cache.Matrix.Length; i++)
+                    cb[i] /= 2f;
+            }
+            // Then normalize
+            var denominate = (cache.Matrix.Length - 1) * (cache.Matrix.Length - 2) / 2f;
             var result = new float[cache.Matrix.Length];
-            for (var i = 0; i < cache.Matrix.Length; i++) result[i] = denominate == 0 ? cb[i] : cb[i] / denominate;
+            for (var i = 0; i < cache.Matrix.Length; i++)
+                result[i] = denominate == 0 ? cb[i] : cb[i] / denominate;
             return result;
         }
     }

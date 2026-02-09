@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Analysis.Metrics;
-using UnityEngine;
 
 namespace Analysis.Local
 {
@@ -14,20 +13,43 @@ namespace Analysis.Local
         {
             var result = new float[cache.Matrix.Length];
             var part = Partitioner.Create(0, cache.Matrix.Length);
+    
             Parallel.ForEach(part, new ParallelOptions { CancellationToken = token }, range =>
             {
                 for (var i = range.Item1; i < range.Item2; i++)
                 {
-                    var sum = 0f;
-                    for (var j = 0; j < cache.Matrix.Length; j++)
+                    // Get neighbors from adjacency matrix (direct connections only)
+                    var neighbors = cache.OutNeighbors[i];
+                    if (neighbors.Length < 2)
                     {
-                        if (i == j) continue;
-                        var d = cache.AspsDistances![i, j];
-                        if (!float.IsInfinity(d)) sum += 1f / d;
+                        result[i] = 0f;
+                        continue;
                     }
-                    result[i] = sum / Mathf.Max(1, cache.Matrix.Length - 1);
+            
+                    // Compute efficiency among neighbors
+                    var sum = 0f;
+                    var count = 0;
+            
+                    for (var j = 0; j < neighbors.Length; j++)
+                    {
+                        for (var k = j + 1; k < neighbors.Length; k++)
+                        {
+                            var u = neighbors[j];
+                            var v = neighbors[k];
+                            var d = cache.AspsDistances![u, v];
+                    
+                            if (!float.IsInfinity(d) && d > 0)
+                            {
+                                sum += 1f / d;
+                                count++;
+                            }
+                        }
+                    }
+            
+                    result[i] = count > 0 ? sum / count : 0f;
                 }
             });
+    
             return result;
         }
     }

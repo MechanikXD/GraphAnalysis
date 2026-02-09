@@ -32,6 +32,7 @@ MonoBehaviour:
     - rid: 539357853690101768
     - rid: 539357853690101986
     - rid: 539357853690101987
+    - rid: 539357943346495572
   references:
     version: 2
     RefIds:
@@ -134,6 +135,12 @@ MonoBehaviour:
         - FXAA
         - SMAA
         - TAA
+    - rid: 539357943346495572
+      type: {class: BooleanSettingsData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 8141075785303709259, guid: f0131790dce5c0943a0693afc70a9ca8, type: 3}
+        _settingNameEntry: Is weighted
+        _isOnByDefault: 1
     - rid: 5405681434955874564
       type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
       data:

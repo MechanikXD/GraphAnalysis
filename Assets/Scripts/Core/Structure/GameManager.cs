@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -77,6 +78,12 @@ namespace Core.Structure
                 LowColor = color.CurrentColor;
                 AdjacencyMatrix.UpdateNodeColors(TargetMetric);
             }
+
+            void UpdateIsWeighted(BooleanSettingPrefab boolean)
+            {
+                AdjacencyMatrix.IsWeighted = boolean.IsOn;
+                AdjacencyMatrix.ForceStatUpdate();
+            }
             
             SettingsManager.AddEventOnSetting<DropDownSettingPrefab>(
                 GlobalStorage.SettingKeys.Graph.TARGET_METRIC, UpdateTargetMetric);
@@ -84,6 +91,8 @@ namespace Core.Structure
                 GlobalStorage.SettingKeys.Graph.HIGH_VALUE_COLOR, UpdateHighColor);
             SettingsManager.AddEventOnSetting<ColorSettingPrefab>(
                 GlobalStorage.SettingKeys.Graph.LOW_VALUE_COLOR, UpdateLowColor);
+            SettingsManager.AddEventOnSetting<BooleanSettingPrefab>(
+                GlobalStorage.SettingKeys.Graph.IS_WEIGHTED, UpdateIsWeighted);
         }
 
         public void ConfigureLoadOptions(string key) => _sessionKey = key;
@@ -116,13 +125,13 @@ namespace Core.Structure
             
             var sb = new StringBuilder();
             var rowSb = new StringBuilder();
-            if (createHeader) sb.Append(GetConcatNodes());
+            if (createHeader) sb.AppendLine(GetConcatNodes());
             // Build csv
             for (var i = 0; i < AdjacencyMatrix.Length; i++)
             {
                 for (var j = 0; j < AdjacencyMatrix.Length; j++)
                 {
-                    rowSb.Append(AdjacencyMatrix[i, j]).Append(',');
+                    rowSb.Append(AdjacencyMatrix[i, j].ToString(CultureInfo.InvariantCulture)).Append(',');
                 }
                 if (rowSb.Length > 0) rowSb.Remove(rowSb.Length - 1, 1);
                 sb.AppendLine(rowSb.ToString());
@@ -147,7 +156,7 @@ namespace Core.Structure
                 rowSb.Append(LocalizationSettings.StringDatabase.GetLocalizedString(currentStat)).Append(',');
                 for (var i = 0; i < AdjacencyMatrix.Length; i++)
                 {
-                    rowSb.Append(AdjacencyMatrix.Nodes[i].Stats[currentStat]).Append(',');
+                    rowSb.Append(AdjacencyMatrix.Nodes[i].Stats[currentStat].ToString(CultureInfo.InvariantCulture)).Append(',');
                 }
                 if (rowSb.Length > 0) rowSb.Remove(rowSb.Length - 1, 1);
                 sb.AppendLine(rowSb.ToString());

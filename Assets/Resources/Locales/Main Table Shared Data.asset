@@ -355,6 +355,10 @@ MonoBehaviour:
     m_Key: EMPTY
     m_Metadata:
       m_Items: []
+  - m_Id: 3620791150968832
+    m_Key: Is weighted
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
