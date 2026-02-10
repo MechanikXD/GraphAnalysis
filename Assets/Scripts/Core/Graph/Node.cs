@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Core.LoadSystem;
 using Core.LoadSystem.Serializable;
 using Core.Structure;
@@ -23,7 +24,7 @@ namespace Core.Graph
         private ContextAction[] _contextAction;
         public List<Edge> Connections { get; private set; }
         public float Degree => Connections.Count;
-        public float WeightedDegree { get; private set; }
+        public float WeightedDegree => Connections.Sum(edge => edge.Weight);
         public string NodeName { get; set; }
         public int NodeIndex { get; set; }
         public Vector2 Position => transform.position;
@@ -95,37 +96,19 @@ namespace Core.Graph
         private void StartMove() => PlayerController.EnterNodeMove(this);
         private void StartOneSidedLink() => PlayerController.EnterNodeLink(this, true);
 
-        public void AddLink(Edge link)
-        {
-            Connections.Add(link);
-            WeightedDegree += link.Weight;
-        }
-
-        public void RemoveLink(Edge link)
-        {
-            Connections.Remove(link);
-            WeightedDegree -= link.Weight;
-        }
-
-        public void ClearLinks()
-        {
-            Connections.Clear();
-            WeightedDegree = 0;
-        }
-
         public void DeleteNode()
         {
             foreach (var edge in Connections) edge.CascadeDestroy(this);
             
             GameManager.Instance.AdjacencyMatrix.RemoveNode(NodeIndex);
-            ClearLinks();
+            Connections.Clear();
             Destroy(gameObject);
         }
 
         public void SilentDestroy()
         {
             foreach (var edge in Connections) edge.CascadeDestroy(this, true);
-            ClearLinks();
+            Connections.Clear();
             Destroy(gameObject);
         }
 

@@ -11,12 +11,19 @@ namespace Other
     {
         private IEnumerator Start()
         {
-            LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+            var settingKey = GlobalStorage.SettingKeys.Display.LANGUAGE;
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[
+                    SettingsManager.GetSetting<DropDownSettingPrefab>(settingKey).CurrentOption];
             SettingsManager.AddEventOnSetting<DropDownSettingPrefab>(
-                GlobalStorage.SettingKeys.Display.LANGUAGE, LocaleSelected);
+                settingKey, LocaleSelected);
             yield return LocalizationSettings.InitializationOperation;
             // call on start, because LocalizationSettings does not inform about current locale.
             OnLocaleChanged(LocalizationSettings.SelectedLocale);
+        }
+
+        private void OnEnable()
+        {
+            LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
         }
 
         private void OnDisable()

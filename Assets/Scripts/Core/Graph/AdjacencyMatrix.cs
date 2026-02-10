@@ -243,7 +243,7 @@ namespace Core.Graph
                     if (i == j) _matrix[i][j] = 0;
                     else _matrix[i][j] = Vector2.Distance(Nodes[i].transform.position, Nodes[j].transform.position);
                 }
-                Nodes[i].ClearLinks();
+                Nodes[i].Connections.Clear();
             }
             // Get all edges that the graph will contain
             var edges = preserveConnectivity

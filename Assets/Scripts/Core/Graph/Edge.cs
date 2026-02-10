@@ -168,8 +168,8 @@ namespace Core.Graph
             _weight = weight;
             SetValueInMatrix(_weight, updateStats);
             
-            _first.AddLink(this);
-            _second.AddLink(this);
+            _first.Connections.Add(this);
+            _second.Connections.Add(this);
         }
         
         public void SetNodes(Node first, Node second, bool oneSided, bool updateStats=true)
@@ -181,8 +181,8 @@ namespace Core.Graph
 
             SetFallBackWeight(updateStats);
             
-            _first.AddLink(this);
-            _second.AddLink(this);
+            _first.Connections.Add(this);
+            _second.Connections.Add(this);
         }
 
         public void SetFallBackWeight(bool updateStats=true)
@@ -215,9 +215,9 @@ namespace Core.Graph
         public void CascadeDestroy(Node fromNode, bool isSilent=false)
         {
             if (_wasPlaced && !isSilent) SetValueInMatrix(0, true);
-                
-            if (fromNode != _first) _first.RemoveLink(this);
-            if (fromNode != _second) _second.RemoveLink(this);
+
+            if (fromNode != _first) _first.Connections.Remove(this);
+            if (fromNode != _second) _second.Connections.Remove(this);
             
             GameManager.Instance.RemoveEdge(this);
             Destroy(gameObject);
@@ -230,8 +230,8 @@ namespace Core.Graph
         {
             if (_wasPlaced) SetValueInMatrix(0, true);
             
-            if (_first != null) _first.RemoveLink(this);
-            if (_second != null) _second.RemoveLink(this);
+            if (_first != null) _first.Connections.Remove(this);
+            if (_second != null) _second.Connections.Remove(this);
             
             GameManager.Instance.RemoveEdge(this);
             Destroy(gameObject);

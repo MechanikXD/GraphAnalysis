@@ -43,7 +43,7 @@ namespace UI.View.GraphScene
             foreach (var stat in stats)
             {
                 var localizedMetric = LocalizationSettings.StringDatabase.GetLocalizedString(stat.Key);
-                sb.Append(localizedMetric).Append(": ").Append(stat.Value).AppendLine();
+                sb.Append(localizedMetric).Append(": ").Append(stat.Value.ToString("F3")).AppendLine();
             }
             
             // Remove last \n
