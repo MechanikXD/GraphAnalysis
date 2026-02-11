@@ -1,0 +1,367 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Main Table_en-US
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en-US
+  m_SharedData: {fileID: 11400000, guid: c5fab75043d9b884aa7b5432aef5332d, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 35678999805952
+    m_Localized: Projects
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21708674957312
+    m_Localized: Position
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22161894670336
+    m_Localized: Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23134700568576
+    m_Localized: Enter name...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27035168407552
+    m_Localized: Open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27344578019328
+    m_Localized: Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37064294531072
+    m_Localized: Connections
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37210189201408
+    m_Localized: From
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37325280903168
+    m_Localized: To
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37506810380288
+    m_Localized: Create Nodes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37699379265536
+    m_Localized: Create Edges
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37850743308288
+    m_Localized: Change Background
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37971476348928
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38099515867136
+    m_Localized: Save and Exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38891467571200
+    m_Localized: Keep Connected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39227515207680
+    m_Localized: Min. Edge Length
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39781935087616
+    m_Localized: Confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40026815332352
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40812895010816
+    m_Localized: Automaticaly Generate Edges?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41008882253824
+    m_Localized: This will replace existing ones
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41658030489600
+    m_Localized: Generate Nodes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153672568111104
+    m_Localized: Assortativity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153714737643520
+    m_Localized: Density
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153759394398208
+    m_Localized: Diameter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153791006867456
+    m_Localized: Entropy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153804361531392
+    m_Localized: Betweenness Centrality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153855095832576
+    m_Localized: Clustering Coefficient
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153887844958208
+    m_Localized: Efficiency
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153910322233344
+    m_Localized: Eigenvector Centrality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153938377932800
+    m_Localized: Laplacian Spectrum
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1153966161002496
+    m_Localized: Removal Tolerance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1154243417079808
+    m_Localized: Node Degree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1154935577903104
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1160490358931456
+    m_Localized: Exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1160868613849088
+    m_Localized: New Project
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1161816228757504
+    m_Localized: General
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1174225198776320
+    m_Localized: Move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1174315753799680
+    m_Localized: Outgoing Edge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1174296124456960
+    m_Localized: Bidirectional Edge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1174532649648128
+    m_Localized: New Node
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1470391564107776
+    m_Localized: Node Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1483594897555456
+    m_Localized: Import
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1485663863832576
+    m_Localized: Import Project
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1489892598874112
+    m_Localized: Select file...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1498451973767168
+    m_Localized: Export Graph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1498662284558336
+    m_Localized: Export Adj. Matrix
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1498862566768640
+    m_Localized: Export Stats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1501778421743616
+    m_Localized: The File was not in correct format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1837905561255936
+    m_Localized: Graph was updated
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1837880974245888
+    m_Localized: Processing Stats...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838183966572544
+    m_Localized: File export success
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838162256855040
+    m_Localized: 'File is not a valid PNG/JPG image: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838144137461760
+    m_Localized: 'File not found: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838129172185088
+    m_Localized: Settings were updated
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838113430962176
+    m_Localized: Background updated successfully
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838100885798912
+    m_Localized: Some nodes outside new boundaries were removed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1838084943249408
+    m_Localized: Data loaded successfully
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225409749680128
+    m_Localized: Display
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225429441937408
+    m_Localized: Screen mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225486652243968
+    m_Localized: Fullscreen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225522991693824
+    m_Localized: Windowed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225571515596800
+    m_Localized: Frame Rate Limit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225728550338560
+    m_Localized: No Limit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225783311171584
+    m_Localized: VSync
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225807067709440
+    m_Localized: Anti-aliasing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225856589856768
+    m_Localized: No Anti-aliasing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225897287188480
+    m_Localized: Controlls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2225921651900416
+    m_Localized: Color change speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226021077876736
+    m_Localized: Drag speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226094151041024
+    m_Localized: Scroll speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226155392073728
+    m_Localized: Restrict movement to background size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226198006202368
+    m_Localized: Delete nodes outside background
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226234983186432
+    m_Localized: Graph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226278805274624
+    m_Localized: Target metric
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226363563769856
+    m_Localized: Low value color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2226369540653056
+    m_Localized: High value color
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232660963098624
+    m_Localized: FXAA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232689350148096
+    m_Localized: SMAA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232718978711552
+    m_Localized: TAA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232737735639040
+    m_Localized: English
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232758874931200
+    m_Localized: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232791754080256
+    m_Localized: 30
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232812155174912
+    m_Localized: 60
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2232813803536384
+    m_Localized: 144
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2570721781612544
+    m_Localized: ' '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3620791150968832
+    m_Localized: Is weighted
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

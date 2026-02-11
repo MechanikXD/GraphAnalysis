@@ -1,0 +1,151 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3336bea4d165c4faf91ad7e4e91f45, type: 3}
+  m_Name: Settings Config
+  m_EditorClassIdentifier: 
+  _settingGroups:
+  - _groupTitle: Display
+    _settings:
+    - rid: 5405681434955874564
+    - rid: 539357853690102017
+    - rid: 539357853690102018
+    - rid: 539357853690102019
+    - rid: 539357853690102020
+  - _groupTitle: Controlls
+    _settings:
+    - rid: 539357853690101761
+    - rid: 539357853690101764
+    - rid: 539357853690101765
+    - rid: 539357853690101766
+    - rid: 539357853690101767
+  - _groupTitle: Graph
+    _settings:
+    - rid: 539357853690101768
+    - rid: 539357853690101986
+    - rid: 539357853690101987
+    - rid: 539357943346495572
+  references:
+    version: 2
+    RefIds:
+    - rid: 539357853690101761
+      type: {class: SliderSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 804583089059945844, guid: a5949df587267ce4d8ac227ddf85b838, type: 3}
+        _settingNameEntry: Color change speed
+        _defaultValue: 5
+        _bounds: {x: 1, y: 10}
+        _wholeNumbers: 0
+    - rid: 539357853690101764
+      type: {class: SliderSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 804583089059945844, guid: a5949df587267ce4d8ac227ddf85b838, type: 3}
+        _settingNameEntry: Drag speed
+        _defaultValue: 1
+        _bounds: {x: 0.2, y: 2}
+        _wholeNumbers: 0
+    - rid: 539357853690101765
+      type: {class: SliderSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 804583089059945844, guid: a5949df587267ce4d8ac227ddf85b838, type: 3}
+        _settingNameEntry: Scroll speed
+        _defaultValue: 0.2
+        _bounds: {x: 0.05, y: 1}
+        _wholeNumbers: 0
+    - rid: 539357853690101766
+      type: {class: BooleanSettingsData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 8141075785303709259, guid: f0131790dce5c0943a0693afc70a9ca8, type: 3}
+        _settingNameEntry: Restrict movement to background size
+        _isOnByDefault: 1
+    - rid: 539357853690101767
+      type: {class: BooleanSettingsData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 8141075785303709259, guid: f0131790dce5c0943a0693afc70a9ca8, type: 3}
+        _settingNameEntry: Delete nodes outside background
+        _isOnByDefault: 1
+    - rid: 539357853690101768
+      type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 1861295958409776114, guid: 5d2a00018fc5dc04aa8640e2f29ea419, type: 3}
+        _settingNameEntry: Target metric
+        _values:
+        - Node Degree
+        - Assortativity
+        - Density
+        - Diameter
+        - Entropy
+        - Betweenness Centrality
+        - Clustering Coefficient
+        - Efficiency
+        - Eigenvector Centrality
+        - Laplacian Spectrum
+        - Removal Tolerance
+    - rid: 539357853690101986
+      type: {class: ColorSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 8028288456128711950, guid: 2867ad35a4b425c45a9fc602c81f91c3, type: 3}
+        _settingNameEntry: Low value color
+        _defaultColor: {r: 1, g: 0, b: 0, a: 1}
+    - rid: 539357853690101987
+      type: {class: ColorSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 8028288456128711950, guid: 2867ad35a4b425c45a9fc602c81f91c3, type: 3}
+        _settingNameEntry: High value color
+        _defaultColor: {r: 0, g: 1, b: 0, a: 1}
+    - rid: 539357853690102017
+      type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 1861295958409776114, guid: 5d2a00018fc5dc04aa8640e2f29ea419, type: 3}
+        _settingNameEntry: Screen mode
+        _values:
+        - Fullscreen
+        - Windowed
+    - rid: 539357853690102018
+      type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 1861295958409776114, guid: 5d2a00018fc5dc04aa8640e2f29ea419, type: 3}
+        _settingNameEntry: Frame Rate Limit
+        _values:
+        - No Limit
+        - 30
+        - 60
+        - 144
+    - rid: 539357853690102019
+      type: {class: BooleanSettingsData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 8141075785303709259, guid: f0131790dce5c0943a0693afc70a9ca8, type: 3}
+        _settingNameEntry: VSync
+        _isOnByDefault: 0
+    - rid: 539357853690102020
+      type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 1861295958409776114, guid: 5d2a00018fc5dc04aa8640e2f29ea419, type: 3}
+        _settingNameEntry: Anti-aliasing
+        _values:
+        - No Anti-aliasing
+        - FXAA
+        - SMAA
+        - TAA
+    - rid: 539357943346495572
+      type: {class: BooleanSettingsData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 8141075785303709259, guid: f0131790dce5c0943a0693afc70a9ca8, type: 3}
+        _settingNameEntry: Is weighted
+        _isOnByDefault: 1
+    - rid: 5405681434955874564
+      type: {class: DropDownSettingData, ns: UI.Settings.Scriptable.Data, asm: Assembly-CSharp}
+      data:
+        _prefab: {fileID: 1861295958409776114, guid: 5d2a00018fc5dc04aa8640e2f29ea419, type: 3}
+        _settingNameEntry: Language
+        _values:
+        - English
+        - "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430"
