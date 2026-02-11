@@ -72,16 +72,14 @@ The application automatically computes the following network characteristics:
 
 ## Installation
 
-NOT FINISHED YET
-
-1. Go to the [Releases]() page
+1. Go to the [Releases](https://github.com/MechanikXD/GraphAnalysis/releases/tag/Release) page
 2. Download the latest release for your operating system:
-   - `Windows-app-name-v0.1.zip` for Windows
-   - `Linux-app-name-v0.1.tar.gz` for Linux
+   - `GraphTool-Windows-0.1.zip` for Windows
+   - `GraphTool-Linux-0.1.zip` for Linux
 3. Extract the archive to your preferred location
 4. Run the executable:
-   - Windows: `ComplexNetworksTool.exe`
-   - Linux: `./ComplexNetworksTool.x86_64`
+   - Windows: `GraphAnalysis.exe`
+   - Linux: `./LinuxBuild.x86_64`
 
 ## Usage
 
@@ -145,16 +143,14 @@ Access the main menu via the button in the top-right corner:
 
 ## Advanced Usage
 
-NOT YET FINISHED
-
 **Prerequisites:**
-- Unity 2022.3 LTS or later
+- Unity 6000.0.60f1 LTS or later
 - Git
 
 **Clone the Repository:**
 ```bash
-git clone https://github.com/yourusername/complex-networks-tool.git
-cd complex-networks-tool
+git clone https://github.com/MechanikXD/GraphAnalysis.git
+cd GraphAnalysis
 ```
 
 **Open in Unity:**
@@ -170,6 +166,7 @@ The project uses the following packages (automatically installed):
 - Newtonsoft.JSON
 - Runtime File Browser
 - Localization Package
+- Flexible Color Picker
 
 **Building the Application:**
 1. Open the project in Unity
@@ -180,7 +177,7 @@ The project uses the following packages (automatically installed):
 
 A Jupyter Notebook for verifying network calculations is available in the repository:
 
-**Location:** `/verification/network_verification.ipynb`
+**Location:** `/Git Files/Test Scripts/graph_tests.ipynb`
 
 **Running in Google Colab:**
 1. Open the notebook in GitHub
@@ -190,14 +187,14 @@ A Jupyter Notebook for verifying network calculations is available in the reposi
 **Running Locally:**
 ```bash
 pip install networkx jupyter matplotlib
-jupyter notebook verification/network_verification.ipynb
+jupyter notebook /Git Files/Test Scripts/graph_tests.ipynb
 ```
 
 The script compares results from the application with NetworkX library calculations.
 
 ## Changelog
 
-### Version 0.1.0 (Initial Release)
+### Version 0.1 (Initial Release)
 **Release Date:** February 2026
 
 ## Acknowledgments
@@ -205,7 +202,7 @@ The script compares results from the application with NetworkX library calculati
 This project was developed as part of a Bachelor's thesis on complex network analysis with application to retail network structures.
 
 **Technologies Used:**
-- Unity 2022.3 LTS
+- Unity 6000.0.60f1 LTS
 - UniTask for asynchronous operations
 - NetworkX for verification
 - Google Colab for testing environment
