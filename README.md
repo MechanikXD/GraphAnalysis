@@ -74,7 +74,7 @@ The application automatically computes the following network characteristics:
    - `GraphTool-Linux-v{current_version}.zip` for Linux
 3. Extract the archive to your preferred location
 4. Run the executable:
-   - Windows: `GraphTool-Windows-v{current_version}.exe`
+   - Windows: `GraphAnalusis.exe`
    - Linux: `./GraphTool-Linux-v{current_version}.x86_64`
 
 ## Usage
