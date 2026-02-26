@@ -7703,7 +7703,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: -9.999878, y: 10}
-  m_SizeDelta: {x: 410, y: 210}
+  m_SizeDelta: {x: 500, y: 320}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1246724366
 MonoBehaviour:
@@ -10378,7 +10378,11 @@ MonoBehaviour:
     dasfas
 
 
-    fa'
+    fa
+
+
+
+    a'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b675207793e05834faf1f97155de003d, type: 2}
   m_sharedMaterial: {fileID: 8589545435659216230, guid: b675207793e05834faf1f97155de003d, type: 2}
@@ -10405,7 +10409,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34
+  m_fontSize: 32.45
   m_fontSizeBase: 33
   m_fontWeight: 400
   m_enableAutoSizing: 1
