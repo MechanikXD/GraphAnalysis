@@ -70,12 +70,12 @@ The application automatically computes the following network characteristics:
 
 1. Go to the [Releases](https://github.com/MechanikXD/GraphAnalysis/releases/tag/Release) page
 2. Download the latest release for your operating system:
-   - `GraphTool-Windows-0.1.zip` for Windows
-   - `GraphTool-Linux-0.1.zip` for Linux
+   - `GraphTool-Windows-v{current_version}.zip` for Windows
+   - `GraphTool-Linux-v{current_version}.zip` for Linux
 3. Extract the archive to your preferred location
 4. Run the executable:
-   - Windows: `GraphAnalysis.exe`
-   - Linux: `./LinuxBuild.x86_64`
+   - Windows: `GraphTool-Windows-v{current_version}.exe`
+   - Linux: `./GraphTool-Linux-v{current_version}.x86_64`
 
 ## Usage
 
