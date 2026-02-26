@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Analysis;
@@ -10,6 +11,8 @@ using Other;
 using UI;
 using UI.View.GraphScene;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
+using Object = UnityEngine.Object;
 
 namespace Core.Graph
 {
@@ -20,6 +23,7 @@ namespace Core.Graph
         public List<Node> Nodes { get; } = new List<Node>();
         private List<List<float>> _matrix = new List<List<float>>();
         public Dictionary<string, float> GlobalStats { get; private set; }
+        public float[] LaplacianSpectrum { get; private set; }
         public int Length { get; private set; }
         public bool IsOriented { get; private set; }
         public bool IsWeighted { get; set; } = true;
@@ -85,6 +89,7 @@ namespace Core.Graph
             {
                 UIManager.Instance.GetHUDCanvas<GlobalStatDisplayView>().Hide();
                 GlobalStats?.Clear();
+                LaplacianSpectrum = Array.Empty<float>();
                 return;
             }
             
@@ -101,6 +106,8 @@ namespace Core.Graph
             };
 
             GlobalStats = stats.global;
+            LaplacianSpectrum = stats.local["Laplacian Spectrum"];
+            stats.local.Remove("Laplacian Spectrum");
 
             var targetMetricLow = float.PositiveInfinity;
             var targetMetricHigh = float.NegativeInfinity;
@@ -153,6 +160,7 @@ namespace Core.Graph
         {
             var hud = UIManager.Instance.GetHUDCanvas<GlobalStatDisplayView>();
             hud.LoadText(GlobalStats);
+            hud.AppendTextLine(FormatLaplacianSpectrum());
             if (!hud.IsEnabled) UIManager.Instance.ShowHUD<GlobalStatDisplayView>();
         }
 
@@ -192,7 +200,7 @@ namespace Core.Graph
                 serializableEdges[i] = allEdges[i].SerializeSelf();
             }
             
-            return new SerializableAdjacencyMatrix(GlobalStats, nodes, serializableEdges, BgFilePath, Length, IsOriented, IsWeighted);
+            return new SerializableAdjacencyMatrix(GlobalStats, LaplacianSpectrum, nodes, serializableEdges, BgFilePath, Length, IsOriented, IsWeighted);
         }
 
         public void DeserializeSelf(SerializableAdjacencyMatrix serialized)
@@ -202,6 +210,7 @@ namespace Core.Graph
 
             BgFilePath = serialized._bgFilePath;
             GlobalStats = serialized.GlobalStats;
+            LaplacianSpectrum = serialized._laplacianSpectrum;
             IsOriented = serialized._isOriented;
             IsWeighted = serialized._isWeighted;
             Length = serialized._length;
@@ -286,6 +295,24 @@ namespace Core.Graph
             }
             // Update entire graph at once
             ProcessStats().Forget();
+        }
+
+        private string FormatLaplacianSpectrum()
+        {
+            var title = LocalizationSettings.StringDatabase.GetLocalizedString("Laplacian Spectrum");
+            if (LaplacianSpectrum == null || LaplacianSpectrum.Length == 0) return $"{title}: -";
+
+            var zeroCount = 0;
+            var smallestValue = float.PositiveInfinity;
+            foreach (var value in LaplacianSpectrum)
+            {
+                if (value == 0) zeroCount++;
+                else if (smallestValue > value) smallestValue = value;
+            }
+
+            var zeros = LocalizationSettings.StringDatabase.GetLocalizedString("Zero Count");
+            var fiedler = LocalizationSettings.StringDatabase.GetLocalizedString("Fiedler value");
+            return $"{title}: \n\t{zeros}: {zeroCount}\n\t{fiedler}: {smallestValue}";
         }
         
         // !!! Auto-generated

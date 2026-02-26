@@ -7,6 +7,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace Analysis.Local
 {
+    // Has to be local, because of return type
     public class LaplacianSpectrum : LocalMetric
     {
         public override float[] Process(GraphCache cache)

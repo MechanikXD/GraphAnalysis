@@ -8,7 +8,7 @@ using UnityEngine.Localization.Settings;
 
 namespace UI.View.GraphScene
 {
-    public class GlobalStatDisplayView: CanvasView
+    public class GlobalStatDisplayView : CanvasView
     {
         [SerializeField] private TMP_Text _textFiled;
 
@@ -27,25 +27,32 @@ namespace UI.View.GraphScene
             LocalizationSettings.SelectedLocaleChanged -= UpdateStats;
         }
 
-        private void UpdateStats(Locale locale)
+        private static void UpdateStats(Locale locale)
         {
-            _textFiled.SetText(FormatStats(GameManager.Instance.AdjacencyMatrix.GlobalStats));
+            GameManager.Instance.AdjacencyMatrix.UpdateGlobalStatView();
         }
 
         public void LoadText(Dictionary<string, float> stats)
         {
             _textFiled.SetText(FormatStats(stats));
         }
-        
+
+        public void AppendTextLine(string text)
+        {
+            _textFiled.SetText(_textFiled.text + '\n' + text);
+        }
+
         private static string FormatStats(Dictionary<string, float> stats)
         {
             var sb = new StringBuilder();
             foreach (var stat in stats)
             {
-                var localizedMetric = LocalizationSettings.StringDatabase.GetLocalizedString(stat.Key);
-                sb.Append(localizedMetric).Append(": ").Append(stat.Value.ToString("F3")).AppendLine();
+                var localizedMetric =
+                    LocalizationSettings.StringDatabase.GetLocalizedString(stat.Key);
+                sb.Append(localizedMetric).Append(": ").Append(stat.Value.ToString("F3"))
+                    .AppendLine();
             }
-            
+
             // Remove last \n
             if (sb.Length > 0) sb.Remove(sb.Length - 1, 1);
             return sb.ToString();

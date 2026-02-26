@@ -40,17 +40,13 @@ The application automatically computes the following network characteristics:
 - Density
 - Assortativity
 - Entropy
-- Clustering coefficient
-- Efficiency
-- Robustness
+- Laplacian Spectrum
 
 **Node-Level Metrics:**
 - Degree centrality
-- Weighted degree centrality
 - Betweenness centrality
 - Eigenvector centrality
-- Laplacian centrality
-- Local clustering coefficient
+- Clustering coefficient
 - Local efficiency
 
 ### Visualization
