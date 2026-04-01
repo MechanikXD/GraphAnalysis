@@ -1,4 +1,5 @@
 ﻿using Core.Structure;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +16,9 @@ namespace UI.View.GraphScene
             base.Initialize();
             SettingsManager.Instance.CreateGroups(_contentRoot, _groupTabRoot);
         }
-        
+
+        private void Start() => SettingsManager.Instance.InvokeSettingsAfterStart().Forget();
+
         private void OnEnable() => _closeButton.onClick.AddListener(ExitUICanvas);
 
         private void OnDisable() => _closeButton.onClick.RemoveListener(ExitUICanvas);

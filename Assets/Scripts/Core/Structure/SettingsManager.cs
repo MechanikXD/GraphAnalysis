@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Core.Behaviour;
 using Core.LoadSystem;
+using Cysharp.Threading.Tasks;
 using UI.Settings;
 using UI.Settings.Scriptable;
 using UnityEngine;
@@ -89,7 +90,11 @@ namespace Core.Structure
                 }
                 else newGroup.HideGroup();
             }
+        }
 
+        public async UniTask InvokeSettingsAfterStart()
+        {
+            await UniTask.Yield(PlayerLoopTiming.PreUpdate);
             foreach (var kvp in _settings) kvp.Value.SettingsChanged();
         }
     }
