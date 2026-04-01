@@ -16,7 +16,6 @@ namespace UI.Settings
         // Method to invoke event. Called within settings when value changed.
         internal void SettingsChanged()
         {
-            Debug.Log($"{Title} was changed");
             OnSettingChanged?.Invoke(this);
             WasChanged = true;
         }
