@@ -1,4 +1,5 @@
 ﻿using Core.Structure;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace UI.UiStructures.MainMenuPages
@@ -12,6 +13,8 @@ namespace UI.UiStructures.MainMenuPages
         {
             SettingsManager.Instance.CreateGroups(_contentRoot, _groupTabRoot);
         }
+
+        private void Start() => SettingsManager.Instance.InvokeSettingsAfterStart().Forget();
 
         public override void Hide()
         {

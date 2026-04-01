@@ -18,10 +18,10 @@ namespace Core.Graph
 {
     public class AdjacencyMatrix : ISerializable<SerializableAdjacencyMatrix>
     {
-        private static CancellationTokenSource _cts = new CancellationTokenSource();
+        private static CancellationTokenSource _cts = new();
         public static string BgFilePath { get; set; }
-        public List<Node> Nodes { get; } = new List<Node>();
-        private List<List<float>> _matrix = new List<List<float>>();
+        public List<Node> Nodes { get; } = new();
+        private List<List<float>> _matrix = new();
         public Dictionary<string, float> GlobalStats { get; private set; }
         public float[] LaplacianSpectrum { get; private set; }
         public int Length { get; private set; }
@@ -167,17 +167,14 @@ namespace Core.Graph
         private AdjacencyMatrix Clone()
         {
             var clone = new AdjacencyMatrix();
-            foreach (var node in Nodes)
-            {
-                clone.AddNode(node, false);
-            }
+            foreach (var node in Nodes) clone.AddNode(node, false);
             for (var i = 0; i < _matrix.Count; i++)
             {
                 for (var j = 0; j < _matrix[i].Count; j++)
                 {
                     var value = 0f;
-                    if (!IsWeighted) value = _matrix[i][j];
-                    else if (!IsWeighted && _matrix[i][j] != 0f) value = 1f;
+                    if (IsWeighted) value = _matrix[i][j];
+                    else if (_matrix[i][j] != 0f) value = 1f;
                     clone.SetValue(value, i, j, false);
                 }
             }

@@ -5,7 +5,7 @@ using Analysis.Metrics;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace Analysis.Local
+namespace Analysis.Global
 {
     // Has to be local, because of return type
     public class LaplacianSpectrum : LocalMetric
